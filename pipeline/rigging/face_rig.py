@@ -1,5 +1,7 @@
 """
-Face rig cho Lumo: các bộ phận mặt rời gắn vào xương đầu, điều khiển bằng thuộc tính số trên rig
+Face rig, viết và kiểm tra trên bản Lumo rig bằng Rigify: vị trí mắt, lông mày, miệng đang theo mặt bản đó,
+xương đầu HEAD_BONE = "DEF-spine.006". Nhân vật mới: đo lại vị trí; rig Meshy dùng "mixamorig:Head".
+Các bộ phận mặt rời gắn vào xương đầu, điều khiển bằng thuộc tính số trên rig
 (keyframe được, kéo tay được). Driver chỉ dùng biểu thức đơn giản -> chạy không cần cho phép script.
 
 Thuộc tính (đặt trên object RIG-Lumo):

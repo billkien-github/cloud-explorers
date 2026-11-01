@@ -1,7 +1,7 @@
 """
 Hàm dùng chung cho mọi build script (Blender 5.2).
-Import trong build script nằm ở <studio>/<nhóm>/<thư mục>/ (ví dụ lab/shot02_max_power/):
-    STUDIO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+Import trong build script (ví dụ 04_PRODUCTION/EP001_.../sh010/build_shot.py, lùi lên tới thư mục gốc studio/):
+    STUDIO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
     sys.path.insert(0, os.path.join(STUDIO, "pipeline"))
     from lablib import *
 """
