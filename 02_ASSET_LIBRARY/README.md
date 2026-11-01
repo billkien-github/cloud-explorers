@@ -10,7 +10,7 @@
 ```
 Characters/Lumo/
 ├── concept/          Ảnh 2D: ảnh hero, turnaround, ảnh A-pose đưa vào Meshy
-├── source/           File gốc tải từ Meshy (FBX + animation). Không sửa, chỉ thêm bản mới
+├── source/           File gốc tải từ Meshy, mỗi lần tải một thư mục lumo_meshy_vNN/. Không sửa, chỉ thêm bản mới
 ├── build_lumo.py     Script: import source, thêm xương, face rig, material -> lumo_rig.blend
 ├── lumo_rig.blend    File đã rig, do script tạo ra (dùng trong shot)
 └── qa/               Ảnh kiểm tra tư thế, biểu cảm, số liệu độ méo
@@ -21,6 +21,6 @@ Characters/Lumo/
   - `<tên>_apose.png`, `<tên>_tpose.png`: nhân vật 2 chân ở A-pose / T-pose, nền trơn, đầu vào Meshy.
   - `<tên>_ref.png`: một đối tượng, nền trơn (nhân vật không chân, đạo cụ), đầu vào Meshy.
   - Bản đã sửa cho Meshy thì thêm hậu tố mô tả: `lumo_apose_meshy.png`.
-- File Meshy mới thì tăng số phiên bản (`lumo_meshy_v02.fbx`), không ghi đè bản cũ.
+- Lần tải Meshy mới thì tạo thư mục phiên bản mới (`source/lumo_meshy_v02/`), giữ nguyên tên file của Meshy vì FBX gọi texture theo tên, không ghi đè bản cũ.
 - Shot dùng asset bằng cách import hoặc link `<tên>_rig.blend`, không sửa asset ngay trong shot.
 - `Props/`, `Environments/` theo cùng cách. `Materials/` chứa material dùng chung, `Animation_Library/` chứa animation dùng lại cho nhiều nhân vật.

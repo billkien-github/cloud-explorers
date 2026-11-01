@@ -41,7 +41,7 @@ Lumo và Tavi (rig Humanoid):
 3. **Thấy rõ khớp:** cằm và cổ, vai, khuỷu tay, cổ tay, háng, đầu gối, cổ chân. Meshy đặt điểm đánh dấu xương đúng ở những chỗ này.
 4. **Đầu to là rủi ro:** Meshy chỉ ghi rằng tỉ lệ càng gần người thì tay chân càng ít méo. Concept có đầu gần bằng nửa chiều cao, cần sinh thử Lumo trước để biết Meshy còn đặt khớp đúng không.
 5. **Không đồ rộng, không cầm đồ.** Đồ ôm sát (mũ, gile) để liền được. Áo choàng, túi, bảo bối là model riêng (xem "Gắn đồ rời").
-6. **Không có phần chĩa xa khỏi thân** (đuôi). Meshy sẽ gắn nó vào xương chân, nhấc chân là đuôi méo theo.
+6. **Không có phần chĩa xa khỏi thân** (đuôi). Meshy sẽ gắn nó vào xương chân, nhấc chân là đuôi méo theo. Ảnh chính diện không thấy đuôi thì Meshy vẫn có thể tự thêm đuôi phía sau (đã gặp với Lumo): khi đó tách đuôi và gán lại trong Blender.
 
 Mọi nhân vật:
 - **Biểu cảm trung tính:** miệng khép, cười nhẹ, mắt mở nhìn thẳng. Miệng há (răng, lưỡi) tạo hốc lưới khó xử lý; biểu cảm do face rig làm.
@@ -57,7 +57,7 @@ Mọi nhân vật:
 3. Sinh 4 bản, chọn bản tách rõ tay khỏi thân, chân khỏi nhau, rồi mới chạy Texture/Refine.
 4. **Remesh:** Quad, khoảng 20–50k mặt (máy Vega 11 chỉ nên dùng dưới 50k).
 5. Lumo, Tavi: **Rig → Humanoid**, kiểm tra điểm đánh dấu ở 7 khớp. Sai thì bấm **Re-rig** rồi kéo lại. Chọn animation (idle, walk, run, jump, surprised, laugh, think…), không có sẵn thì thử Text to Motion.
-6. **Tải về:** FBX, skeleton template **Mixamo** (mặc định), kèm animation. Lưu vào `Characters/<Tên>/source/<tên>_meshy_v01.fbx`.
+6. **Tải về:** FBX, skeleton template **Mixamo** (mặc định), kèm animation. Mỗi animation là một FBX riêng có cả da (`..._Animation_<tên>_withSkin.fbx`), texture nhúng sẵn trong FBX và có thêm bản PNG đi kèm. Giải nén vào `Characters/<Tên>/source/<tên>_meshy_vNN/`, giữ nguyên tên file của Meshy.
 
 **Đạo cụ** không cần rig.
 
@@ -65,7 +65,7 @@ Mọi nhân vật:
 
 | Asset | File trong `concept/` | Dùng được chưa | Cần sửa trước khi đưa vào Meshy |
 |---|---|---|---|
-| Lumo | `lumo_apose.png` | ❌ | Bỏ áo choàng, túi đeo chéo; úp bàn tay; khép miệng |
+| Lumo | `lumo_apose_meshy.png`, `lumo_tpose_meshy.png` | ✅ | — (đã bỏ áo choàng, túi; bàn tay úp; miệng khép; chân có khe hở) |
 | Tavi | `tavi_apose.png` | ❌ | Bỏ ba lô, túi đeo, ống, cuộn giấy, đuôi; úp bàn tay. Mũ, kính, gile ôm sát giữ lại |
 | Nori | `nori_ref.png` | ❌ | Bỏ 4 cánh, 2 râu, 2 mẩu chân |
 | Piko | `piko_ref.png` | ❌ | Khép miệng (miệng há tạo hốc lưới, biểu cảm do face rig làm) |
@@ -179,7 +179,7 @@ Cute cartoon rain-making machine, chunky rounded body made of riveted pastel met
 ## Sau khi tải về
 
 - Scale theo chiều cao trong Character Bible (Lumo 1.00 · Tavi 0.85 · Nori 0.70 · Piko 0.80).
-- Rig Meshy dùng khung Mixamo, tên xương kiểu `mixamorig:Head`. Xương thêm vào (tai, đuôi) và bộ phận mặt gắn vào các xương này.
+- Rig Meshy là khung Mixamo **24 xương, không có xương ngón tay** (bàn tay cử động một khối), tên xương kiểu `mixamorig:Head`. Xương thêm vào (tai, đuôi, ngón nếu cần) và bộ phận mặt gắn vào các xương này.
 - Kiểm tra rig bằng `pipeline/rig_qa.py` trên các tư thế khó (giơ tay, bật nhảy, ngoái đầu, cúi). Đạt khi bad% dưới khoảng 2% và thể tích gần 1.0.
 - Mở model trong Meshy hoặc Blender, soát **bàn tay úp, ngón không dính nhau, miệng khép** trước khi rig. Sai thì sửa ảnh rồi sinh lại, không rig tiếp.
 
