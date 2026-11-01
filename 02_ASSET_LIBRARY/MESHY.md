@@ -78,18 +78,17 @@ Mọi nhân vật:
 
 Tải ảnh gốc lên GPT kèm prompt. Ảnh nhận về lưu cạnh ảnh gốc, thêm hậu tố mô tả (`lumo_apose_meshy.png`, `lumo_tpose_meshy.png`), rồi soát lại theo "Ảnh đầu vào chuẩn" trước khi đưa vào Meshy. Prompt tiếng Anh để GPT giữ đúng từng ý.
 
-**Bản T-pose** (Lumo, Tavi): dùng đúng prompt A-pose của nhân vật đó, chỉ thay dòng 3 bằng:
-```
-3. Symmetrical T-pose: arms straight, extended horizontally out to the sides at shoulder height, parallel to the ground, with a clear gap between the arms and the head.
-```
-Dòng 4 (bàn tay úp xuống đất) giữ nguyên: ở T-pose lòng bàn tay vẫn hướng xuống đất.
+**Lumo và Tavi:** một prompt ra 2 ảnh riêng, A-pose và T-pose. Nếu GPT ghép 2 tư thế vào một ảnh hoặc chỉ ra 1 ảnh, nhắn tiếp: `Now generate the T-pose version as a separate image, same rules.`
 
-**Lumo** (từ `lumo_apose.png`):
+**Lumo** (từ `lumo_apose.png`, lưu `lumo_apose_meshy.png` và `lumo_tpose_meshy.png`):
 ```
-Edit this image. Keep the character design, head size, proportions, colors, fur style, lighting and camera exactly the same. Change only the following:
+Edit this image and create TWO SEPARATE IMAGES of the same character, one pose per image (not side by side in one image):
+- Image 1: symmetrical A-pose, arms straight, angled about 45 degrees down from the shoulders.
+- Image 2: symmetrical T-pose, arms straight, extended horizontally out to the sides at shoulder height, parallel to the ground.
+In both images keep the character design, head size, proportions, colors, fur style, lighting and camera exactly the same, and apply all of these:
 1. Remove the red cape and its gold clasp completely. Show the orange fur of the shoulders, arms and back where the cape was.
 2. Remove the brown shoulder bag and its strap completely. No tail.
-3. Symmetrical A-pose: arms straight, angled about 45 degrees down from the shoulders, with a clear gap between the arms and the body.
+3. Clear gap between the arms and the body, and between the arms and the head.
 4. Hands: palms facing down toward the ground (not toward the camera), fingers straight and slightly apart, thumbs pointing forward.
 5. Legs straight, feet flat on the ground, shoulder-width apart, toes pointing forward, clear gap between the legs.
 6. Neutral friendly face: mouth closed with a gentle smile, eyes open looking straight at the camera.
@@ -97,12 +96,15 @@ Edit this image. Keep the character design, head size, proportions, colors, fur 
 8. Plain flat light gray background, soft even lighting, no ground shadow, no text.
 ```
 
-**Tavi** (từ `tavi_apose.png`):
+**Tavi** (từ `tavi_apose.png`, lưu `tavi_apose_meshy.png` và `tavi_tpose_meshy.png`):
 ```
-Edit this image. Keep the character design, head size, proportions, colors, crystal spikes, leather aviator cap and goggles exactly the same. Change only the following:
+Edit this image and create TWO SEPARATE IMAGES of the same character, one pose per image (not side by side in one image):
+- Image 1: symmetrical A-pose, arms straight, angled about 45 degrees down from the shoulders.
+- Image 2: symmetrical T-pose, arms straight, extended horizontally out to the sides at shoulder height, parallel to the ground.
+In both images keep the character design, head size, proportions, colors, crystal spikes, leather aviator cap and goggles exactly the same, and apply all of these:
 1. Remove the backpack, the scrolls, the glass tubes, the belt pouches and the wrist cuffs. Keep only the fitted beige vest and a simple belt.
 2. Remove the tail completely. Keep the crystal spikes along the back of the head and the spine, close to the body.
-3. Symmetrical A-pose: arms straight, angled about 45 degrees down from the shoulders, with a clear gap between the arms and the body.
+3. Clear gap between the arms and the body, and between the arms and the crystal spikes.
 4. Hands: palms facing down toward the ground (not toward the camera), four fingers straight and slightly apart, thumbs pointing forward.
 5. Legs straight, feet flat on the ground, shoulder-width apart, toes pointing forward, clear gap between the legs.
 6. Neutral friendly face: mouth closed with a gentle smile, eyes open looking straight at the camera.
