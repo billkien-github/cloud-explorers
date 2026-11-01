@@ -30,6 +30,7 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 | [`02_ASSET_LIBRARY/MESHY.md`](02_ASSET_LIBRARY/MESHY.md) | Làm nhân vật, đạo cụ bằng Meshy + Blender, prompt |
 | [`02_ASSET_LIBRARY/Third_Party/README.md`](02_ASSET_LIBRARY/Third_Party/README.md) | Nguồn asset bên ngoài, giấy phép |
 | [`pipeline/README.md`](pipeline/README.md) | Code dùng chung, cách render, Blender MCP |
+| [`CLAUDE.md`](CLAUDE.md) | Dặn dò cho agent: file nào sở hữu chủ đề nào, việc review và dọn tài liệu sau mỗi lần làm |
 
 ## Cấu trúc thư mục
 
@@ -51,7 +52,7 @@ studio/
 - **File gốc tải về không sửa:** file Meshy để trong `source/`, đồ bên thứ ba trong `Third_Party/`.
 - **Đặt tên:** thư mục viết hoa chữ đầu, nối bằng gạch dưới (`EP001_Great_Rain_Experiment`, `Wonder_Compass`). File viết thường, không dấu, nối bằng gạch dưới (`lumo_hero.png`). Không dùng dấu tiếng Việt trong tên file vì Blender và ffmpeg hay lỗi đường dẫn.
 - **Shot:** `sh010/` gồm `build_shot.py`, `sh010.blend`, `renders/`. Đánh số cách 10 để còn chèn shot vào giữa.
-- **Tài liệu chỉ ghi thông tin hiện hành**, mỗi thông tin chỉ nằm ở một file. Khi quyết định thay đổi thì sửa thẳng vào đó. Lịch sử đã có git.
+- **Tài liệu chỉ ghi thông tin hiện hành**, mỗi thông tin chỉ nằm ở một file (bảng file sở hữu và cách giữ tài liệu: `CLAUDE.md`). Lịch sử đã có git.
 
 ## Công cụ
 
