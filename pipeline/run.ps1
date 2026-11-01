@@ -8,7 +8,7 @@
 #   .\pipeline\run.ps1 mcp -Shot <shot>                 # mở kèm --online-mode để add-on MCP tự bật (cổng 9876)
 param(
     [Parameter(Position = 0)][ValidateSet("build", "stills", "preview", "final", "audio", "open", "mcp")][string]$Mode = "stills",
-    [Parameter(Position = 1)][string]$Frames = "",
+    [Parameter(Position = 1)][string[]]$Frames = @(),                 # PowerShell đọc 300,540 thành mảng
     [Parameter(Mandatory = $true)][string]$Shot
 )
 $Blender = "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe"
@@ -32,7 +32,7 @@ switch ($Mode) {
     default {
         if (-not (Test-Path $Blend)) { & $Blender -b --factory-startup -P $Build }
         $extra = @($Mode)
-        if ($Frames) { $extra += $Frames }
+        if ($Frames) { $extra += ($Frames -join ",") }
         & $Blender -b $Blend -P (Join-Path $PSScriptRoot "render.py") -- @extra
     }
 }

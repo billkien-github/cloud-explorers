@@ -44,4 +44,6 @@ Concept: `02_ASSET_LIBRARY/Props/<Tên>/concept/`.
 
 Chi tiết: `02_ASSET_LIBRARY/MESHY.md`.
 
+**Giới hạn khi diễn:** tay Lumo rất ngắn so với đầu, chỉ với tới ngang cằm: không gãi đầu, che mắt hay ôm đầu được. Động tác ngượng, bối rối dùng nhún vai, xòe tay, cụp tai, nghiêng đầu.
+
 **Mỗi nhân vật cần:** turnaround (front/side/back/3/4), 12 biểu cảm, pose sheet, prop sheet, 8–12 animation loop dùng lại được (idle, walk, run, jump, surprised, laugh, think…).

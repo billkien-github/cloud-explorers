@@ -13,7 +13,8 @@ Characters/Lumo/
 ├── source/           File gốc tải từ Meshy, mỗi lần tải một thư mục lumo_meshy_vNN/. Không sửa, chỉ thêm bản mới
 ├── build_lumo.py     Script: import source, thêm xương, face rig, material -> lumo_rig.blend
 ├── lumo_rig.blend    File đã rig, do script tạo ra (dùng trong shot)
-└── qa/               Ảnh kiểm tra tư thế, biểu cảm, số liệu độ méo
+├── qa_lumo.py        Script kiểm tra rig (dùng pipeline/rig_qa.py)
+└── qa/               Bảng ảnh tư thế, số liệu độ méo
 ```
 
 - Ảnh trong `concept/`:

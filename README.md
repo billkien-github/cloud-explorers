@@ -17,9 +17,10 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 ## Trạng thái
 
 - Có: concept 4 nhân vật, 4 bảo bối, ảnh thế giới; ảnh đầu vào Meshy cho cả 8 asset (Lumo đã đạt cả A-pose và T-pose; Tavi, Nori, Piko cần sửa ảnh bằng GPT trước, prompt trong `02_ASSET_LIBRARY/MESHY.md`); beat sheet tập 01 đã chốt (khoảng 7 phút); code dùng chung trong `pipeline/`.
-- Model: Lumo bản Meshy đầu tiên (`02_ASSET_LIBRARY/Characters/Lumo/source/lumo_meshy_v01/`): đã rig khung Mixamo, 1 animation. Chưa xử lý trong Blender: đuôi đang bị gắn vào xương đùi, chưa có face rig, texture 4K.
+- Lumo: `02_ASSET_LIBRARY/Characters/Lumo/lumo_rig.blend` dựng từ bản Meshy v01 bằng `build_lumo.py`: thêm xương đuôi, tai, IK chân, texture 2K; qua kiểm tra `qa_lumo.py` (bad% ≤ 2.4%). Chưa có face rig, chưa gắn áo choàng và túi.
+- Shot dựng thử `04_PRODUCTION/EP001_Great_Rain_Experiment/sh030`: Lumo vấp vết nứt (7 giây, animation hoàn toàn bằng code, chưa có tiếng).
 - Chưa có: kịch bản, model của Tavi, Nori, Piko và đạo cụ.
-- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`). Song song: viết `build_lumo.py` cho Lumo bản Meshy (import, tách và gán lại đuôi, kiểm tra bằng `pipeline/rig_qa.py`), và sinh thử bản T-pose để so.
+- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`). Song song: face rig cho Lumo, gắn áo choàng và túi.
 
 ## Tài liệu
 

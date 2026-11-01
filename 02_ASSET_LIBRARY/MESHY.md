@@ -69,6 +69,8 @@ Mọi nhân vật:
 | Tavi | `tavi_apose.png` | ❌ | Bỏ ba lô, túi đeo, ống, cuộn giấy, đuôi; úp bàn tay. Mũ, kính, gile ôm sát giữ lại |
 | Nori | `nori_ref.png` | ❌ | Bỏ 4 cánh, 2 râu, 2 mẩu chân |
 | Piko | `piko_ref.png` | ❌ | Khép miệng (miệng há tạo hốc lưới, biểu cảm do face rig làm) |
+| Túi của Lumo | `lumo_bag_ref.png` | ✅ | Đạo cụ không rig; dây đeo làm lại trong Blender để bám theo ngực |
+| Áo choàng của Lumo | `lumo_cape_ref.png` | — | Không đưa vào Meshy: áo choàng dựng bằng code, ảnh dùng để lấy dáng và hoa văn |
 | Wonder Compass | `wonder_compass_ref.png` | ✅ | Kim la bàn phải quay được: làm kim riêng trong Blender, mặt kính làm bằng shader |
 | Inventor Pack | `inventor_pack_ref.png` | ✅ | Ống tinh thể phát sáng làm bằng shader |
 | Story Lens | `story_lens_ref.png` | ✅ | Hình trong mặt kính thay theo từng manh mối: làm bằng shader, không để Meshy vẽ cố định |
@@ -178,6 +180,7 @@ Cute cartoon rain-making machine, chunky rounded body made of riveted pastel met
 
 ## Sau khi tải về
 
+- FBX của Meshy có armature scale 0.01 và xoay 90°: chuẩn hoá về tỉ lệ 1 trước khi thêm xương (làm mẫu: `Characters/Lumo/build_lumo.py`).
 - Scale theo chiều cao trong Character Bible (Lumo 1.00 · Tavi 0.85 · Nori 0.70 · Piko 0.80).
 - Rig Meshy là khung Mixamo **24 xương, không có xương ngón tay** (bàn tay cử động một khối), tên xương kiểu `mixamorig:Head`. Xương thêm vào (tai, đuôi, ngón nếu cần) và bộ phận mặt gắn vào các xương này.
 - Kiểm tra rig bằng `pipeline/rig_qa.py` trên các tư thế khó (giơ tay, bật nhảy, ngoái đầu, cúi). Đạt khi bad% dưới khoảng 2% và thể tích gần 1.0.

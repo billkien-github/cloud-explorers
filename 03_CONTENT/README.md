@@ -55,7 +55,7 @@ Nội dung hấp dẫn và nhịp nhanh quan trọng hơn con số. Tỉ lệ d�
 | 3. Storyboard | `Storyboards/EPxxx/` | Khung hình từng cảnh |
 | 4. Animatic | `Animatics/EPxxx/` | Storyboard có thời gian và tiếng tạm. Độ dài thật của tập đo ở bước này |
 
-Chỉ sang `04_PRODUCTION/` (chia shot `sh010`…) khi animatic đã chốt.
+Chỉ dựng hàng loạt shot ở `04_PRODUCTION/` khi animatic đã chốt. Trước đó chỉ dựng thử vài shot để kiểm tra pipeline; số shot sẽ đánh lại theo storyboard.
 
 **Kịch bản viết bằng [Fountain](https://fountain.io):** format kịch bản chuẩn (screenplay) dạng chữ thường. Xem thay đổi được trong git, xuất PDF đúng format bằng Highland, Fade In hoặc extension "Better Fountain" của VS Code.
 
