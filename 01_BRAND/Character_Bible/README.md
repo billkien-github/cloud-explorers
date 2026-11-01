@@ -15,7 +15,7 @@ Nguồn chuẩn cho mọi thông tin về nhân vật. Concept: [`cloud_explorer
 | Tính cách | Tò mò, năng động, luôn khởi xướng phiêu lưu | Thiên tài sáng chế, thích lắp ráp, thử nghiệm, nhiều ý tưởng "điên rồ" | Điềm đạm, tinh tế, giàu kiến thức, đưa ra manh mối và góc nhìn mới | Tinh nghịch, háu ăn, đáng yêu, cực kỳ khó đoán |
 | Chất hài | Hấp tấp, làm trước nghe sau | Giải pháp phức tạp cho việc đơn giản | Giải thích dài, bị ngắt lời | Chạm lung tung, dễ phân tâm vì đồ lấp lánh, hay gây bất ngờ "ngoài kịch bản" |
 | Ngoại hình | Cáo, tai rất to (trong hồng), chỏm lông trắng trên đầu, mắt nâu to, bụng và mõm màu kem, đuôi bông | Bò sát nhỏ, bụng kem, **gai tinh thể** dọc lưng và đuôi, mắt xanh lá | Khối tròn phát sáng, đầu liền thân, **4 cánh trong suốt**, 2 râu đầu ngôi sao vàng, tay nhỏ, vệt sáng thay chân | Khối thạch trong suốt, 2 sừng xanh đậm, tay nhỏ, giọt nước bắn quanh người |
-| Đồ đeo | Áo choàng đỏ viền hoa văn mây vàng, khuy tròn vàng, túi da đeo chéo có hình mây | Mũ phi công da + kính bảo hộ, áo gile kem nhiều túi, thắt lưng | — | — |
+| Đồ đeo | Áo choàng đỏ viền hoa văn mây vàng, khuy tròn vàng, túi da đeo chéo có hình mây | Mũ phi công da + kính bảo hộ, áo gile kem nhiều túi, thắt lưng, đeo Inventor Pack sau lưng | — | — |
 | Dáng | Đứng, đi 2 chân | Đứng, đi 2 chân, chân ngắn, có đuôi | **Bay, không chân** | **Không chân**, nảy và trườn trên đất |
 | Chiều cao | 1.00 (chuẩn) | 0.85 | 0.70 | 0.80 |
 | Màu tham chiếu | Lông cam `#FD8A2B`, kem `#FEECCF`, áo choàng `#FC6640` | Da `#7EA258`, bụng `#ECBA7B`, tinh thể `#14F5F4` | Thân `#A787F6`, cánh `#D3ABFC`, sao `#FEF7A0` | Thân `#3BDCFD` → `#0988D1`, lưỡi `#D23C55` |
