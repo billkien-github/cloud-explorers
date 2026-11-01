@@ -36,8 +36,13 @@ def video(path):
 
 
 if mode == "stills":
-    default = scene.get("lab_stills", "1,180,360,480,600,720")
-    frames = [int(f) for f in (argv[1] if len(argv) > 1 else default).split(",")]
+    if len(argv) > 1:
+        frames = [int(f) for f in argv[1].split(",")]
+    elif "stills" in scene:                       # shot tự đặt khung mẫu: scene["stills"] = "1,120,240"
+        frames = [int(f) for f in scene["stills"].split(",")]
+    else:                                         # mặc định: 6 khung rải đều cả shot
+        s, e = scene.frame_start, scene.frame_end
+        frames = sorted({round(s + (e - s) * i / 5) for i in range(6)})
     r.resolution_percentage = 50
     ee.taa_render_samples = 16
     r.image_settings.media_type = "IMAGE"
