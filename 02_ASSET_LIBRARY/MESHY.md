@@ -33,7 +33,10 @@ Meshy **không rig mặt** và **không rig phần thừa** (đuôi, cánh, râu
 Meshy dựng hình đúng theo ảnh: ảnh sai tư thế thì model và rig sai theo. Kiểm tra ảnh trước khi đưa vào Meshy.
 
 Lumo và Tavi (rig Humanoid):
-1. **A-pose đối xứng:** tay **thẳng**, dang chéo xuống khoảng 45°, có khe hở rõ giữa tay và thân. Chân thẳng, bàn chân đặt phẳng, rộng bằng vai, mũi chân hướng thẳng ra trước.
+1. **A-pose hoặc T-pose, đối xứng:** tay **thẳng**. A-pose: tay dang chéo xuống khoảng 45°. T-pose: tay dang ngang tầm vai, song song mặt đất. Có khe hở rõ giữa tay và thân. Chân thẳng, bàn chân đặt phẳng, rộng bằng vai, mũi chân hướng thẳng ra trước.
+   - A-pose: vai biến dạng đẹp hơn khi tay buông xuống (tư thế hay gặp nhất).
+   - T-pose: tay tách xa thân nhất nên Meshy dễ đặt khớp vai, khuỷu, cổ tay; hợp với nhân vật bụng tròn tay ngắn như Lumo, Tavi.
+   - Sinh thử cả hai cho Lumo, giữ bản nào qua `rig_qa.py` tốt hơn rồi dùng cùng tư thế đó cho Tavi.
 2. **Bàn tay úp:** lòng bàn tay **hướng xuống đất**, ngón tay duỗi thẳng và hơi tách nhau, ngón cái hướng ra trước. Ảnh có lòng bàn tay ngửa ra phía trước thì model sinh ra bị ngửa tay, rig Humanoid giữ nguyên tư thế sai đó nên animation trông gượng.
 3. **Thấy rõ khớp:** cằm và cổ, vai, khuỷu tay, cổ tay, háng, đầu gối, cổ chân. Meshy đặt điểm đánh dấu xương đúng ở những chỗ này.
 4. **Đầu to là rủi ro:** Meshy chỉ ghi rằng tỉ lệ càng gần người thì tay chân càng ít méo. Concept có đầu gần bằng nửa chiều cao, cần sinh thử Lumo trước để biết Meshy còn đặt khớp đúng không.
@@ -50,7 +53,7 @@ Mọi nhân vật:
 ## Các bước trên web
 
 1. **Ảnh đầu vào** cho **Image to 3D**: một đối tượng, nền trơn, chỉ gồm phần Meshy làm (bảng dưới). Chưa có ảnh đạt thì dùng **Text to 3D** với prompt bên dưới.
-2. Lumo, Tavi: đặt **Pose = A-Pose**. Mọi nhân vật: bật **Symmetry**. Texture **2048** là đủ (phim 1080p; 4096 nặng cho EEVEE trên Vega 11).
+2. Lumo, Tavi: đặt **Pose** khớp với ảnh (**A-Pose** hoặc **T-Pose**). Mọi nhân vật: bật **Symmetry**. Texture **2048** là đủ (phim 1080p; 4096 nặng cho EEVEE trên Vega 11).
 3. Sinh 4 bản, chọn bản tách rõ tay khỏi thân, chân khỏi nhau, rồi mới chạy Texture/Refine.
 4. **Remesh:** Quad, khoảng 20–50k mặt (máy Vega 11 chỉ nên dùng dưới 50k).
 5. Lumo, Tavi: **Rig → Humanoid**, kiểm tra điểm đánh dấu ở 7 khớp. Sai thì bấm **Re-rig** rồi kéo lại. Chọn animation (idle, walk, run, jump, surprised, laugh, think…), không có sẵn thì thử Text to Motion.
@@ -73,7 +76,13 @@ Mọi nhân vật:
 
 ### Prompt sửa ảnh bằng GPT
 
-Tải ảnh gốc lên GPT kèm prompt. Ảnh nhận về lưu cạnh ảnh gốc, thêm hậu tố mô tả (`lumo_apose_meshy.png`), rồi soát lại theo "Ảnh đầu vào chuẩn" trước khi đưa vào Meshy. Prompt tiếng Anh để GPT giữ đúng từng ý.
+Tải ảnh gốc lên GPT kèm prompt. Ảnh nhận về lưu cạnh ảnh gốc, thêm hậu tố mô tả (`lumo_apose_meshy.png`, `lumo_tpose_meshy.png`), rồi soát lại theo "Ảnh đầu vào chuẩn" trước khi đưa vào Meshy. Prompt tiếng Anh để GPT giữ đúng từng ý.
+
+**Bản T-pose** (Lumo, Tavi): dùng đúng prompt A-pose của nhân vật đó, chỉ thay dòng 3 bằng:
+```
+3. Symmetrical T-pose: arms straight, extended horizontally out to the sides at shoulder height, parallel to the ground, with a clear gap between the arms and the head.
+```
+Dòng 4 (bàn tay úp xuống đất) giữ nguyên: ở T-pose lòng bàn tay vẫn hướng xuống đất.
 
 **Lumo** (từ `lumo_apose.png`):
 ```
