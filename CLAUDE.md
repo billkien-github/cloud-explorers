@@ -12,8 +12,8 @@ Dặn dò cho agent làm việc trong repo **Cloud Explorers** (phim hoạt hìn
 |---|---|
 | Tổng quan dự án, trạng thái, cấu trúc thư mục, quy ước chung, công cụ, git | `README.md` |
 | Nhân vật: tính cách, ngoại hình, màu, chiều cao, bảo bối, cách làm 3D | `01_BRAND/Character_Bible/README.md` |
-| Hướng nội dung, series, khung tập | `03_CONTENT/README.md` |
-| Kịch bản, dàn ý từng tập | `03_CONTENT/Scripts/EPxxx_<tên>.md` |
+| Hướng nội dung, series, khung tập, cách viết kịch bản (Fountain) | `03_CONTENT/README.md` |
+| Beat sheet, kịch bản từng tập | `03_CONTENT/Scripts/EPxxx_<tên>.md` (beat sheet), `.fountain` (kịch bản) |
 | Quy ước thư mục asset | `02_ASSET_LIBRARY/README.md` |
 | Quy trình Meshy, prompt | `02_ASSET_LIBRARY/MESHY.md` |
 | Asset bên thứ ba, giấy phép | `02_ASSET_LIBRARY/Third_Party/README.md` |

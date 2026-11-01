@@ -16,16 +16,17 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 
 ## Trạng thái
 
-- Có: concept 4 nhân vật, 4 bảo bối, ảnh thế giới; dàn ý tập 01; code dùng chung trong `pipeline/`.
-- Chưa có: model 3D nào. **Bước tiếp theo:** sinh Lumo trên Meshy (gói Pro) để thử rig, theo `02_ASSET_LIBRARY/MESHY.md`.
+- Có: concept 4 nhân vật, 4 bảo bối, ảnh thế giới; beat sheet tập 01 đã chốt (khoảng 7 phút); code dùng chung trong `pipeline/`.
+- Chưa có: kịch bản, model 3D.
+- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`). Song song: sinh Lumo trên Meshy (gói Pro) để thử rig, theo `02_ASSET_LIBRARY/MESHY.md`.
 
 ## Tài liệu
 
 | File | Nội dung |
 |---|---|
 | [`01_BRAND/Character_Bible/README.md`](01_BRAND/Character_Bible/README.md) | Nhân vật: tính cách, ngoại hình, màu, chiều cao, bảo bối, cách làm 3D |
-| [`03_CONTENT/README.md`](03_CONTENT/README.md) | Hướng nội dung: công thức, 5 series, khung một tập, luật đạo cụ |
-| [`03_CONTENT/Scripts/EP001_great_rain_experiment.md`](03_CONTENT/Scripts/EP001_great_rain_experiment.md) | Dàn ý tập 01 |
+| [`03_CONTENT/README.md`](03_CONTENT/README.md) | Hướng nội dung: công thức, 5 series, khung tập 6–8 phút, nhịp cho trẻ em, luật đạo cụ, cách viết kịch bản |
+| [`03_CONTENT/Scripts/EP001_great_rain_experiment.md`](03_CONTENT/Scripts/EP001_great_rain_experiment.md) | Beat sheet tập 01 |
 | [`02_ASSET_LIBRARY/README.md`](02_ASSET_LIBRARY/README.md) | Quy ước thư mục asset |
 | [`02_ASSET_LIBRARY/MESHY.md`](02_ASSET_LIBRARY/MESHY.md) | Làm nhân vật, đạo cụ bằng Meshy + Blender, prompt |
 | [`02_ASSET_LIBRARY/Third_Party/README.md`](02_ASSET_LIBRARY/Third_Party/README.md) | Nguồn asset bên ngoài, giấy phép |
@@ -50,7 +51,7 @@ studio/
 
 - **Dựng bằng script:** mỗi asset hay shot có script build nằm cạnh nó. Sửa script rồi build lại, không sửa tay file `.blend` do script tạo ra (thử bằng tay qua Blender MCP xong thì chép thay đổi vào script).
 - **File gốc tải về không sửa:** file Meshy để trong `source/`, đồ bên thứ ba trong `Third_Party/`.
-- **Đặt tên:** thư mục viết hoa chữ đầu, nối bằng gạch dưới (`EP001_Great_Rain_Experiment`, `Wonder_Compass`). File viết thường, không dấu, nối bằng gạch dưới (`lumo_hero.png`). Không dùng dấu tiếng Việt trong tên file vì Blender và ffmpeg hay lỗi đường dẫn.
+- **Đặt tên:** thư mục viết hoa chữ đầu, nối bằng gạch dưới (`EP001_Great_Rain_Experiment`, `Wonder_Compass`). File viết thường, không dấu, nối bằng gạch dưới (`lumo_hero.png`); riêng mã tập giữ viết hoa (`EP001_great_rain_experiment.md`). Không dùng dấu tiếng Việt trong tên file vì Blender và ffmpeg hay lỗi đường dẫn.
 - **Shot:** `sh010/` gồm `build_shot.py`, `sh010.blend`, `renders/`. Đánh số cách 10 để còn chèn shot vào giữa.
 - **Tài liệu chỉ ghi thông tin hiện hành**, mỗi thông tin chỉ nằm ở một file (bảng file sở hữu và cách giữ tài liệu: `CLAUDE.md`). Lịch sử đã có git.
 
