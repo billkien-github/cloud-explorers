@@ -16,6 +16,11 @@ Characters/Lumo/
 └── qa/               Ảnh kiểm tra tư thế, biểu cảm, số liệu độ méo
 ```
 
+- Ảnh trong `concept/`:
+  - `<tên>_hero.png`: ảnh minh hoạ có bối cảnh, để tham khảo.
+  - `<tên>_apose.png`: nhân vật 2 chân ở A-pose, nền trơn, đầu vào Meshy.
+  - `<tên>_ref.png`: một đối tượng, nền trơn (nhân vật không chân, đạo cụ), đầu vào Meshy.
+  - Bản đã sửa cho Meshy thì thêm hậu tố mô tả: `lumo_apose_nocape.png`.
 - File Meshy mới thì tăng số phiên bản (`lumo_meshy_v02.fbx`), không ghi đè bản cũ.
 - Shot dùng asset bằng cách import hoặc link `<tên>_rig.blend`, không sửa asset ngay trong shot.
 - `Props/`, `Environments/` theo cùng cách. `Materials/` chứa material dùng chung, `Animation_Library/` chứa animation dùng lại cho nhiều nhân vật.

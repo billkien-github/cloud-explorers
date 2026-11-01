@@ -43,14 +43,27 @@ Mọi nhân vật:
 
 ## Các bước trên web
 
-1. **Ảnh đầu vào:** ảnh hero trong `concept/` có nền, có đồ, không ở A-pose nên chưa dùng thẳng cho Image to 3D được. Cách chắc nhất: vẽ thêm ảnh **chính diện, A-pose (Lumo, Tavi), nền trắng, không đồ rời** từ ảnh hero, lưu `concept/<tên>_apose.png`, rồi dùng **Image to 3D**. Chưa có ảnh đó thì dùng **Text to 3D** với prompt bên dưới.
-2. Lumo, Tavi: đặt **Pose = A-Pose**. Mọi nhân vật: bật **Symmetry**.
+1. **Ảnh đầu vào** cho **Image to 3D**: một đối tượng, nền trơn, chỉ gồm phần Meshy làm (bảng dưới). Chưa có ảnh đạt thì dùng **Text to 3D** với prompt bên dưới.
+2. Lumo, Tavi: đặt **Pose = A-Pose**. Mọi nhân vật: bật **Symmetry**. Texture **2048** là đủ (phim 1080p; 4096 nặng cho EEVEE trên Vega 11).
 3. Sinh 4 bản, chọn bản tách rõ tay khỏi thân, chân khỏi nhau, rồi mới chạy Texture/Refine.
 4. **Remesh:** Quad, khoảng 20–50k mặt (máy Vega 11 chỉ nên dùng dưới 50k).
 5. Lumo, Tavi: **Rig → Humanoid**, kiểm tra điểm đánh dấu ở 7 khớp. Sai thì bấm **Re-rig** rồi kéo lại. Chọn animation (idle, walk, run, jump, surprised, laugh, think…), không có sẵn thì thử Text to Motion.
 6. **Tải về:** FBX, skeleton template **Mixamo** (mặc định), kèm animation. Lưu vào `Characters/<Tên>/source/<tên>_meshy_v01.fbx`.
 
-**Đạo cụ:** ảnh concept trong `Props/<Tên>/concept/` là ảnh một vật ở giữa khung, dùng thẳng cho Image to 3D được. Đạo cụ không cần rig.
+**Đạo cụ** không cần rig.
+
+### Ảnh đầu vào hiện có
+
+| Asset | File trong `concept/` | Dùng được chưa | Cần sửa trước khi đưa vào Meshy |
+|---|---|---|---|
+| Lumo | `lumo_apose.png` | ❌ | Bỏ áo choàng và túi đeo chéo (làm riêng) |
+| Tavi | `tavi_apose.png` | ❌ | Bỏ ba lô, túi đeo, ống, cuộn giấy và đuôi (làm riêng). Mũ, kính, gile ôm sát giữ lại |
+| Nori | `nori_ref.png` | ❌ | Bỏ 4 cánh và 2 râu (làm trong Blender) |
+| Piko | `piko_ref.png` | ✅ | — |
+| Wonder Compass | `wonder_compass_ref.png` | ✅ | Kim la bàn phải quay được: làm kim riêng trong Blender, mặt kính làm bằng shader |
+| Inventor Pack | `inventor_pack_ref.png` | ✅ | Ống tinh thể phát sáng làm bằng shader |
+| Story Lens | `story_lens_ref.png` | ✅ | Hình trong mặt kính thay theo từng manh mối: làm bằng shader, không để Meshy vẽ cố định |
+| Pocket of Wonders | `pocket_of_wonders_ref.png` | ⚠️ | Đồ thò ra miệng túi sẽ dính liền vào túi. Piko cần rút từng món ra (thìa, vịt, ô), nên tốt hơn là túi rỗng, các món làm riêng |
 
 ## Prompt Text to 3D
 

@@ -1,6 +1,6 @@
 # Character Bible
 
-Nguồn chuẩn cho mọi thông tin về nhân vật. Concept: [`cloud_explorers_character_sheet.png`](cloud_explorers_character_sheet.png) và ảnh chính diện `02_ASSET_LIBRARY/Characters/<Tên>/concept/<tên>_hero.png`.
+Nguồn chuẩn cho mọi thông tin về nhân vật. Concept: [`cloud_explorers_character_sheet.png`](cloud_explorers_character_sheet.png) và ảnh trong `02_ASSET_LIBRARY/Characters/<Tên>/concept/` (`_hero` có bối cảnh, `_apose` / `_ref` chính diện nền trơn).
 
 **Nhóm Cloud Explorers:** khám phá những vùng đất kỳ diệu · giải mã bí ẩn của thế giới · học hỏi, sáng chế và trải nghiệm · tạo ra vô vàn tình huống dở khóc dở cười.
 
