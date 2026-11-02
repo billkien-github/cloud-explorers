@@ -39,11 +39,11 @@ Concept: `02_ASSET_LIBRARY/Props/<Tên>/concept/`.
 
 | Nhân vật | Cách làm |
 |---|---|
-| Lumo, Tavi | Meshy sinh thân và rig Humanoid (dùng được thư viện animation). Đồ rời (áo choàng, túi), đuôi, xương tai, gai, mặt làm trong Blender |
+| Lumo, Tavi | Meshy sinh thân và rig Humanoid (dùng được thư viện animation). Đồ rời (áo choàng, túi), đuôi, xương tai, gai, mặt làm trong Blender. Áo choàng của Lumo bản 3D ngắn tới hông (concept dài tới gối) để đuôi và chân không xuyên áo |
 | Nori, Piko | Giữ đúng concept: **không chân**. Meshy chỉ sinh hình thân. Rig bằng code trong Blender: thân co giãn bằng shape keys, tay nhỏ, cánh, râu, sừng, mặt |
 
 Chi tiết: `02_ASSET_LIBRARY/MESHY.md`.
 
-**Giới hạn khi diễn:** tay Lumo rất ngắn so với đầu, chỉ với tới ngang cằm: không gãi đầu, che mắt hay ôm đầu được. Động tác ngượng, bối rối dùng nhún vai, xòe tay, cụp tai, nghiêng đầu.
+**Giới hạn khi diễn:** tay Lumo rất ngắn so với đầu (vai tới cổ tay chỉ 0.22 m), chỉ với tới ngang cằm: không gãi đầu, che mắt, ôm đầu hay vỗ tay trước miệng được; tay giơ cao nhất chỉ tới ngang tai. Động tác ngượng, bối rối dùng nhún vai, xòe tay, cụp tai, nghiêng đầu.
 
 **Mỗi nhân vật cần:** turnaround (front/side/back/3/4), 12 biểu cảm, pose sheet, prop sheet, 8–12 animation loop dùng lại được (idle, walk, run, jump, surprised, laugh, think…).

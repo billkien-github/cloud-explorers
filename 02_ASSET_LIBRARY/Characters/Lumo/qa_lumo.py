@@ -1,5 +1,5 @@
 """
-Kiểm tra rig Lumo: đặt các tư thế khó, đo độ méo lưới, render bảng ảnh.
+Kiểm tra rig Lumo: đặt các tư thế khó, đo độ méo lưới và số đỉnh áo choàng, dây đeo lún vào người, render bảng ảnh.
     blender -b lumo_rig.blend -P qa_lumo.py      -> qa/rig_sheet.png + qa/rig_qa.txt
 Mỗi ô của bảng: chính diện chếch 30° | nhìn ngang, theo thứ tự trong POSES (trái sang phải, trên xuống dưới).
 """
@@ -7,9 +7,11 @@ import math
 import pathlib
 import sys
 
+import bmesh
 import bpy
 import numpy as np
 from mathutils import Vector
+from mathutils.bvhtree import BVHTree
 
 HERE = pathlib.Path(bpy.data.filepath).parent
 STUDIO = HERE.parents[2]
@@ -40,6 +42,7 @@ POSES = [
 scene = bpy.context.scene
 rig = bpy.data.objects["RIG-Lumo"]
 body = bpy.data.objects["LumoBody"]
+OUTFIT = [bpy.data.objects[n] for n in ("LumoCape", "LumoStrap")]
 rig.hide_render = True
 
 sun = bpy.data.objects.new("QA_Sun", bpy.data.lights.new("QA_Sun", "SUN"))
@@ -61,6 +64,30 @@ CENTER = Vector((0, 0, 0.56))
 VIEWS = [math.radians(-30), math.radians(90)]
 
 
+def evaluated_points(obj):
+    ev = obj.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    me = ev.to_mesh()
+    pts = [obj.matrix_world @ v.co for v in me.vertices]
+    ev.to_mesh_clear()
+    return pts
+
+
+def sunk(obj):
+    """Số đỉnh của obj nằm bên trong thân (tư thế hiện tại)."""
+    ev = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    bm = bmesh.new()
+    bm.from_mesh(ev.to_mesh())
+    bm.transform(body.matrix_world)
+    ev.to_mesh_clear()
+    bvh = BVHTree.FromBMesh(bm)
+    bm.free()
+    n = 0
+    for p in evaluated_points(obj):
+        loc, nrm, _, _ = bvh.find_nearest(p, 0.05)
+        n += loc is not None and (p - loc).dot(nrm) < -0.002
+    return n
+
+
 def shot(yaw):
     cam.location = CENTER + Vector((math.sin(yaw) * 5, -math.cos(yaw) * 5, 0.25))
     cam.rotation_euler = (math.radians(87), 0, yaw)
@@ -80,7 +107,7 @@ rows, tiles = [], []
 for name, pose in POSES:
     apply_pose(rig, pose)
     bpy.context.view_layer.update()
-    rows.append((name, *distortion(rest, body)))
+    rows.append((name, *distortion(rest, body), *(sunk(o) for o in OUTFIT)))
     tiles.append(np.concatenate([shot(v) for v in VIEWS], axis=1))
 reset_pose(rig)
 
@@ -97,7 +124,8 @@ img.filepath_raw, img.file_format = str(OUT / "rig_sheet.png"), "PNG"
 img.save()
 (OUT / "_tmp.png").unlink()
 
-lines = [f"{'Tư thế':14s} {'bad%':>6s} {'vol':>6s} {'amin':>6s} {'amax':>6s}"]
-lines += [f"{n:14s} {b:6.2f} {v:6.3f} {a0:6.2f} {a1:6.2f}" for n, b, v, a0, a1 in rows]
+lines = [f"{'Tư thế':14s} {'bad%':>6s} {'vol':>6s} {'amin':>6s} {'amax':>6s} {'áo lún':>7s} {'dây lún':>7s}"]
+lines += [f"{n:14s} {b:6.2f} {v:6.3f} {a0:6.2f} {a1:6.2f} {c:7d} {s:7d}" for n, b, v, a0, a1, c, s in rows]
+lines.append(f"(áo choàng {len(OUTFIT[0].data.vertices)} đỉnh, dây đeo {len(OUTFIT[1].data.vertices)} đỉnh)")
 (OUT / "rig_qa.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 print("\n".join(lines))

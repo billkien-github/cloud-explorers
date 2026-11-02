@@ -200,9 +200,8 @@ scene.frame_start, scene.frame_end = 1, FRAMES
 random.seed(30)
 
 with bpy.data.libraries.load(str(LUMO_BLEND), link=False) as (src, dst):
-    dst.objects = ["RIG-Lumo", "LumoBody"]
-for o in dst.objects:
-    scene.collection.objects.link(o)
+    dst.collections = ["Lumo"]                      # rig, thân, áo choàng, túi, dây đeo
+scene.collection.children.link(dst.collections[0])
 rig = bpy.data.objects["RIG-Lumo"]
 rig.hide_render = True
 rig.data.display_type = "STICK"

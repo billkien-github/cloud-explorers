@@ -17,10 +17,11 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 ## Trạng thái
 
 - Có: concept 4 nhân vật, 4 bảo bối, ảnh thế giới; ảnh đầu vào Meshy cho cả 8 asset (Lumo đã đạt cả A-pose và T-pose; Tavi, Nori, Piko cần sửa ảnh bằng GPT trước, prompt trong `02_ASSET_LIBRARY/MESHY.md`); beat sheet tập 01 đã chốt (khoảng 7 phút); code dùng chung trong `pipeline/`.
-- Lumo: `02_ASSET_LIBRARY/Characters/Lumo/lumo_rig.blend` dựng từ bản Meshy v01 bằng `build_lumo.py`: thêm xương đuôi, tai, IK chân, texture 2K; qua kiểm tra `qa_lumo.py` (bad% ≤ 2.4%). Chưa có face rig, chưa gắn áo choàng và túi.
+- Lumo: `02_ASSET_LIBRARY/Characters/Lumo/lumo_rig.blend` dựng từ bản Meshy v01 bằng `build_lumo.py`: thêm xương đuôi, tai, IK chân và tay (IK tay mặc định tắt), texture 2K; mặc áo choàng ngắn, đeo túi và dây chéo; mặt bản đầu: chớp mắt, mở miệng (thanh trượt `blink_L`, `blink_R`, `mouth_open`); qua kiểm tra `qa_lumo.py` (bad% ≤ 2.4%). Chưa có: lông mày, đồng tử, hình miệng khác; áo choàng và túi chưa có chuyển động riêng.
 - Shot dựng thử `04_PRODUCTION/EP001_Great_Rain_Experiment/sh030`: Lumo vấp vết nứt (7 giây, animation hoàn toàn bằng code, chưa có tiếng).
+- Clip thử `04_PRODUCTION/TEST_Lumo_Dance/sh010`: Lumo nhảy kiểu "Baby Shark" 16 giây, có hát (mở miệng theo nốt), chớp mắt, nhạc nền tự sáng tác (`build_audio.py`).
 - Chưa có: kịch bản, model của Tavi, Nori, Piko và đạo cụ.
-- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`). Song song: face rig cho Lumo, gắn áo choàng và túi.
+- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`). Song song: hoàn thiện face rig Lumo (lông mày, đồng tử, hình miệng), xương vạt áo choàng để áo bay khi chạy.
 
 ## Tài liệu
 
@@ -42,7 +43,7 @@ studio/
 ├── 01_BRAND/                Logo/, Brand_Guideline/ (world_key_art.png), Character_Bible/
 ├── 02_ASSET_LIBRARY/        Characters/, Props/, Environments/, Materials/, Animation_Library/, Third_Party/
 ├── 03_CONTENT/              Scripts/, Storyboards/, Animatics/
-├── 04_PRODUCTION/           Mỗi tập một thư mục, mỗi shot một thư mục con: EP001_Great_Rain_Experiment/sh010/
+├── 04_PRODUCTION/           Mỗi tập một thư mục, mỗi shot một thư mục con: EP001_Great_Rain_Experiment/sh010/; clip thử: TEST_<tên>/
 ├── 05_POST_PRODUCTION/      Editing/, Sound/, Dubbing/
 ├── 06_PUBLISHING/           Thumbnails/, Metadata/ (tiêu đề, mô tả, CREDITS.md), Final_Videos/
 ├── 07_ANALYTICS/            Monthly_Report/, Annual_Report/

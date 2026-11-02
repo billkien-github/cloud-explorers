@@ -69,8 +69,8 @@ Mọi nhân vật:
 | Tavi | `tavi_apose.png` | ❌ | Bỏ ba lô, túi đeo, ống, cuộn giấy, đuôi; úp bàn tay. Mũ, kính, gile ôm sát giữ lại |
 | Nori | `nori_ref.png` | ❌ | Bỏ 4 cánh, 2 râu, 2 mẩu chân |
 | Piko | `piko_ref.png` | ❌ | Khép miệng (miệng há tạo hốc lưới, biểu cảm do face rig làm) |
-| Túi của Lumo | `lumo_bag_ref.png` | ✅ | Đạo cụ không rig; dây đeo làm lại trong Blender để bám theo ngực |
-| Áo choàng của Lumo | `lumo_cape_ref.png` | — | Không đưa vào Meshy: áo choàng dựng bằng code, ảnh dùng để lấy dáng và hoa văn |
+| Túi của Lumo | `lumo_bag_ref.png` | ✅ đã sinh (`source/lumo_bag_meshy_v01`) | Chỉ dùng thân túi; dây đeo dựng lại bằng code |
+| Áo choàng của Lumo | `lumo_cape_ref.png` | ✅ đã sinh (`source/lumo_cape_meshy_v01`) | Quad 30k; khớp vào người bằng code |
 | Wonder Compass | `wonder_compass_ref.png` | ✅ | Kim la bàn phải quay được: làm kim riêng trong Blender, mặt kính làm bằng shader |
 | Inventor Pack | `inventor_pack_ref.png` | ✅ | Ống tinh thể phát sáng làm bằng shader |
 | Story Lens | `story_lens_ref.png` | ✅ | Hình trong mặt kính thay theo từng manh mối: làm bằng shader, không để Meshy vẽ cố định |
@@ -188,17 +188,17 @@ Cute cartoon rain-making machine, chunky rounded body made of riveted pastel met
 
 ## Gắn đồ rời (áo choàng, túi của Lumo; ba lô của Tavi)
 
-Làm sau khi rig thân đã đạt `rig_qa.py`. Trình tự: thân → túi → áo choàng → chạy lại kiểm tra với tư thế đi, chạy, giơ tay, đo chỗ áo xuyên vào người.
+Làm sau khi rig thân đã đạt kiểm tra. Lumo đã làm xong trong `Characters/Lumo/build_lumo.py` (bước 4), dùng làm mẫu cho Tavi.
 
 | | Áo choàng | Túi đeo chéo / ba lô |
 |---|---|---|
-| Làm ra | Dựng bằng code trong Blender: tấm vải cong, lưới tứ giác đều để uốn mượt (lưới Meshy không đều). Hoa văn mây vàng đắp bằng texture theo `lumo_cape_ref.png` | Meshy Image to 3D từ ảnh riêng của món đồ (`lumo_bag_ref.png`), không rig |
-| Khớp vào người | Đặt khít vai ở A-pose. Cổ áo và khuy vàng đi cứng theo xương ngực | Dây đeo là dải mỏng bám theo da thân (Surface Deform hoặc chép trọng số da từ thân), nên biến dạng theo ngực. Thân túi là vật cứng treo vào hông |
-| Chuyển động | 3–4 đốt xương dọc lưng áo. Code tạo độ trễ: chạy thì áo bay ra sau, dừng thì đung đưa rồi rủ xuống. Chồng lên mọi animation lấy từ thư viện Meshy | Lắc nhẹ theo nhịp bước bằng code. Cảnh lấy đồ trong túi thì chuyển túi sang đi theo tay |
+| Làm ra | Meshy Image to 3D (Quad 30k) từ `lumo_cape_ref.png` | Meshy Image to 3D từ `lumo_bag_ref.png`. Chỉ giữ thân túi: dây của model là vòng nhỏ theo cỡ túi, không vòng qua người được |
+| Khớp vào người | Co bán kính theo từng hướng quanh cổ để lỗ cổ ôm mặt cắt vai (nội suy liên tục theo góc, nếu không áo bị gờ dọc), co chiều dọc, giữ nếp và viền của model. Sau đó đẩy chỗ lún vào người ra ngoài | Thân túi đặt trước bụng, lệch phải, đi cứng theo xương hông. Dây đeo dựng bằng code: vòng elip chéo từ hông phải qua vai trái, bám mặt da |
+| Đi theo người | Chép trọng số da từ thân (Data Transfer), chỉ giữ ảnh hưởng của hông, lưng, ngực, cổ, vai; cánh tay 35%, đùi 30%; đầu, tai, đuôi, cẳng tay, cẳng chân không kéo áo | Dây: như áo choàng |
 
-- **Mô phỏng vải (Cloth)** chỉ dùng cho vài cận cảnh cần "wow" (áo quật trong bão): chậm, phải tính lại từng shot, dễ xuyên người.
-- **Áo choàng dài tới gối sẽ chạm chân khi bước.** Khi dựng áo: cho áo hơi xòe ra sau, hoặc ngắn bớt, hoặc thêm va chạm với chân.
-- Đồ rời là object riêng nên bật tắt được theo cảnh (ví dụ Lumo không mặc áo choàng).
+- **Áo choàng của Lumo ngắn tới hông**, không dài tới gối như concept: đuôi mọc ở độ cao 0.2–0.3 m và chân bước sẽ xuyên áo dài. Muốn áo dài phải khoét lỗ đuôi và thêm va chạm với chân.
+- **Kiểm tra:** `qa_lumo.py` đếm số đỉnh áo, dây lún vào người ở từng tư thế. Giơ tay và chạy lún nhiều nhất (khoảng 5% đỉnh áo, chủ yếu mặt trong, không thấy khi nhìn ngoài).
+- **Chưa có:** xương cho vạt áo để áo bay khi chạy, túi lắc theo bước. Mô phỏng vải (Cloth) chỉ dùng cho vài cận cảnh cần "wow" (áo quật trong bão): chậm, phải tính lại từng shot, dễ xuyên người.
 
 ## Nguồn (tra ngày 01/11/2026)
 
