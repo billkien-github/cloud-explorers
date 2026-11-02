@@ -44,23 +44,34 @@ def local(b):
 
 
 # ---------------------------------------------------------------- tay: vị trí cổ tay (toạ độ tư thế nghỉ, đi theo ngực)
-# Vai -> cổ tay chỉ dài 0.22 m: mọi vị trí phải nằm trong tầm đó quanh vai (±0.114, -0.10, 0.554).
+# Vai -> cổ tay chỉ dài 0.22 m. Giữ mọi vị trí trong 0.195 m (khuỷu luôn gập, IK không lật), tránh má lông
+# trước cằm và bụng tròn (trước ngực ở z 0.5 là y -0.23, trước bụng ở z 0.43 là y -0.25).
+REACH = 0.195
+
+
 def hands_in(name, t):
-    if name == "intro":                                   # buông thả, đung đưa theo nhịp
+    clap_l, clap_r = Vector((0.045, -0.27, 0.51)), Vector((-0.045, -0.27, 0.51))
+    if name == "intro":                                   # buông thả hai bên, đung đưa theo nhịp
         sw = 0.03 * math.sin(math.pi * t)
-        return Vector((0.20, -0.12 + sw, 0.37)), Vector((-0.20, -0.12 - sw, 0.37))
-    if name == "baby":                                    # hai bàn tay vỗ nhỏ ngang cằm, 2 lần mỗi nhịp
+        return Vector((0.22, -0.12 + sw, 0.42)), Vector((-0.22, -0.12 - sw, 0.42))
+    if name == "baby":                                    # vỗ nhỏ trước ngực, 2 lần mỗi nhịp
         o = abs(math.sin(2 * math.pi * t))
-        return Vector((0.04 + 0.05 * o, -0.28, 0.62)), Vector((-0.04 - 0.05 * o, -0.28, 0.62))
-    if name == "mommy":                                   # hai cẳng tay khép mở dọc, 1 lần mỗi nhịp
+        return clap_l.lerp(Vector((0.11, -0.26, 0.52)), o), clap_r.lerp(Vector((-0.11, -0.26, 0.52)), o)
+    if name == "mommy":                                   # dang rộng sang hai bên rồi vỗ, 1 lần mỗi nhịp
         o = abs(math.sin(math.pi * t))
-        return Vector((0.04, -0.29, 0.57 + 0.07 * o)), Vector((-0.04, -0.28, 0.52 - 0.07 * o))
-    if name == "daddy":                                   # cả cánh tay: một tay trên, một tay dưới, đập vào nhau
+        return clap_l.lerp(Vector((0.22, -0.19, 0.53)), o), clap_r.lerp(Vector((-0.22, -0.19, 0.53)), o)
+    if name == "daddy":                                   # hàm lớn: tay trái vung lên, tay phải vung xuống, đập vào nhau
         o = abs(math.sin(math.pi * t))
-        return Vector((0.04 + 0.04 * o, -0.30 + 0.10 * o, 0.56 + 0.20 * o)), Vector((-0.04 - 0.04 * o, -0.30 + 0.08 * o, 0.53 - 0.17 * o))
+        return clap_l.lerp(Vector((0.20, -0.16, 0.68)), o), Vector((-0.045, -0.27, 0.50)).lerp(Vector((-0.20, -0.17, 0.40)), o)
     if t < 2:                                             # xoay: dang tay
-        return Vector((0.31, -0.12, 0.56)), Vector((-0.31, -0.12, 0.56))
-    return Vector((0.26, -0.12, 0.70)), Vector((-0.26, -0.12, 0.70))     # "ta-da": giơ chữ V chéo ra hai bên
+        return Vector((0.29, -0.12, 0.56)), Vector((-0.29, -0.12, 0.56))
+    return Vector((0.24, -0.12, 0.68)), Vector((-0.24, -0.12, 0.68))     # "ta-da": giơ chữ V chéo ra hai bên
+
+
+def within_reach(target, side):
+    shoulder = rig.data.bones[P + ("Left" if side == "L" else "Right") + "Arm"].head_local
+    d = target - shoulder
+    return shoulder + d * min(1.0, REACH / d.length)
 
 
 def hands(b):
@@ -155,7 +166,7 @@ def pose_at(f):
     }
     rest = {s: rig.data.bones[f"IK_hand.{s}"].head_local for s in ("L", "R")}
     for s, target in zip(("L", "R"), hands(b)):
-        pose[f"IK_hand.{s}"] = {"loc": tuple(target - rest[s])}
+        pose[f"IK_hand.{s}"] = {"loc": tuple(within_reach(target, s) - rest[s])}
     flop = {"daddy": 14, "mommy": 9}.get(name, 6)
     for s, sg in (("L", 1), ("R", -1)):
         pose[f"ear.01.{s}"] = {"rot": [(X, flop * math.cos(2 * math.pi * t - 0.9)), (Y, -sg * tilt * 0.6)]}

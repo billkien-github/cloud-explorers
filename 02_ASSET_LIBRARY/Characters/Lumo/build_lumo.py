@@ -32,7 +32,8 @@ P = "mixamorig:"
 # ---------------------------------------------------------------- đồ rời (mét)
 COLLAR_TOP, HEM_BACK = 0.62, 0.31             # đỉnh cổ áo sau gáy, vạt sau (trên đuôi)
 SHOULDER_C, SHOULDER_R = np.array((0.0, -0.12)), np.array((0.155, 0.095))   # mặt cắt vai: tâm, bán trục x/y
-CAPE_CLEAR, CAPE_TAPER = 0.022, 0.55          # khe hở áo - người; độ xoè vạt áo so với model gốc
+CAPE_CLEAR, CAPE_TAPER = 0.022, 0.45          # khe hở áo - người; độ xoè vạt áo so với model gốc
+CAPE_WRAP = 0.55                              # vạt dưới khuy gom về sau lưng (1 = giữ nguyên): áo rủ sau cánh tay
 BAG_WIDTH, BAG_POS, BAG_YAW = 0.13, (-0.085, -0.272, 0.345), -18      # túi trước bụng, lệch sang phải
 STRAP_TOP, STRAP_LOW = Vector((0.11, -0.10, 0.60)), Vector((-0.15, -0.12, 0.36))  # vai trái, hông phải
 
@@ -115,7 +116,8 @@ for side, s, full in (("L", 1, "Left"), ("R", -1, "Right")):
     # IK tay: điều khiển ở cổ tay, đi theo ngực (lắc người thì tay đi theo); pole sau khuỷu
     hand, elbow = eb[P + full + "Hand"], eb[P + full + "ForeArm"].head.copy()
     new_bone(f"IK_hand.{side}", hand.head, hand.tail, P + "Spine2", deform=False, roll=hand.roll)
-    new_bone(f"pole_elbow.{side}", elbow + Vector((0, 0.30, 0)), elbow + Vector((0, 0.35, 0)), P + "Spine2", deform=False)
+    out = Vector((0.12 if side == "L" else -0.12, 0.22, -0.18))          # khuỷu chỉ xuống, ra sau, hơi ra ngoài
+    new_bone(f"pole_elbow.{side}", elbow + out, elbow + out * 1.15, P + "Spine2", deform=False)
 bpy.ops.object.mode_set(mode="OBJECT")
 
 # ---------------------------------------------------------------- trọng số da cho đuôi và tai
@@ -257,10 +259,16 @@ r_hole = np.where(np.isnan(r_hole), np.nanmean(r_hole), r_hole)
 r_hole = (np.roll(r_hole, 1) + 2 * r_hole + np.roll(r_hole, -1)) / 4
 centers = (bins[:-1] + bins[1:]) / 2
 rh = np.interp(th, np.r_[centers[-1] - 2 * np.pi, centers, centers[0] + 2 * np.pi], np.r_[r_hole[-1], r_hole, r_hole[0]])
-rb = 1 / np.sqrt((np.cos(th) / SHOULDER_R[0]) ** 2 + (np.sin(th) / SHOULDER_R[1]) ** 2) + CAPE_CLEAR
+# gom vạt về sau lưng: góc quanh cổ co về phía sau (+Y); từ khuy trở lên giữ nguyên, càng xuống thấp càng gom
+z_new = COLLAR_TOP - (top - V[:, 2]) * sz
+down = (COLLAR_TOP - z_new) / (COLLAR_TOP - HEM_BACK)
+k = 1 - (1 - CAPE_WRAP) * smoothstep(0.32, 0.65, down)
+back = np.pi / 2
+th2 = back + (np.angle(np.exp(1j * (th - back)))) * k
+rb = 1 / np.sqrt((np.cos(th2) / SHOULDER_R[0]) ** 2 + (np.sin(th2) / SHOULDER_R[1]) ** 2) + CAPE_CLEAR
 s = rb / rh
 r_new = np.where(r <= rh, r * s, rb + (r - rh) * s * CAPE_TAPER)
-V = np.stack([SHOULDER_C[0] + r_new * np.cos(th), SHOULDER_C[1] + r_new * np.sin(th), COLLAR_TOP - (top - V[:, 2]) * sz], axis=1)
+V = np.stack([SHOULDER_C[0] + r_new * np.cos(th2), SHOULDER_C[1] + r_new * np.sin(th2), z_new], axis=1)
 for it in range(3):                              # đẩy phần lún vào người ra ngoài
     D = np.zeros_like(V)
     for i, c in enumerate(V):
@@ -331,7 +339,7 @@ for obj in (cape, strap):
     for v in obj.data.vertices:
         for g in v.groups:
             Wo[v.index, g.group] = g.weight
-    keep = np.array([0.35 if n in (P + "LeftArm", P + "RightArm") else 0.3 if "UpLeg" in n else
+    keep = np.array([0.2 if n in (P + "LeftArm", P + "RightArm") else 0.3 if "UpLeg" in n else
                      1.0 if n in (P + "Hips", P + "Spine", P + "Spine1", P + "Spine2", P + "Neck", P + "LeftShoulder", P + "RightShoulder")
                      else 0.0 for n in names])              # đầu, tai, đuôi, cẳng tay, cẳng chân: không kéo áo
     lost = (Wo * (1 - keep)).sum(1)

@@ -193,8 +193,8 @@ Làm sau khi rig thân đã đạt kiểm tra. Lumo đã làm xong trong `Charac
 | | Áo choàng | Túi đeo chéo / ba lô |
 |---|---|---|
 | Làm ra | Meshy Image to 3D (Quad 30k) từ `lumo_cape_ref.png` | Meshy Image to 3D từ `lumo_bag_ref.png`. Chỉ giữ thân túi: dây của model là vòng nhỏ theo cỡ túi, không vòng qua người được |
-| Khớp vào người | Co bán kính theo từng hướng quanh cổ để lỗ cổ ôm mặt cắt vai (nội suy liên tục theo góc, nếu không áo bị gờ dọc), co chiều dọc, giữ nếp và viền của model. Sau đó đẩy chỗ lún vào người ra ngoài | Thân túi đặt trước bụng, lệch phải, đi cứng theo xương hông. Dây đeo dựng bằng code: vòng elip chéo từ hông phải qua vai trái, bám mặt da |
-| Đi theo người | Chép trọng số da từ thân (Data Transfer), chỉ giữ ảnh hưởng của hông, lưng, ngực, cổ, vai; cánh tay 35%, đùi 30%; đầu, tai, đuôi, cẳng tay, cẳng chân không kéo áo | Dây: như áo choàng |
+| Khớp vào người | Co bán kính theo từng hướng quanh cổ để lỗ cổ ôm mặt cắt vai (nội suy liên tục theo góc, nếu không áo bị gờ dọc), co chiều dọc, giữ nếp và viền của model. Từ khuy trở xuống gom vạt về sau lưng để áo rủ sau cánh tay (model gốc bọc kín quanh người, phủ lên tay: tay đưa ra trước là áo phồng và nhăn). Sau đó đẩy chỗ lún vào người ra ngoài | Thân túi đặt trước bụng, lệch phải, đi cứng theo xương hông. Dây đeo dựng bằng code: vòng elip chéo từ hông phải qua vai trái, bám mặt da |
+| Đi theo người | Chép trọng số da từ thân (Data Transfer), chỉ giữ ảnh hưởng của hông, lưng, ngực, cổ, vai; cánh tay 20%, đùi 30%; đầu, tai, đuôi, cẳng tay, cẳng chân không kéo áo | Dây: như áo choàng |
 
 - **Áo choàng của Lumo ngắn tới hông**, không dài tới gối như concept: đuôi mọc ở độ cao 0.2–0.3 m và chân bước sẽ xuyên áo dài. Muốn áo dài phải khoét lỗ đuôi và thêm va chạm với chân.
 - **Kiểm tra:** `qa_lumo.py` đếm số đỉnh áo, dây lún vào người ở từng tư thế. Giơ tay và chạy lún nhiều nhất (khoảng 5% đỉnh áo, chủ yếu mặt trong, không thấy khi nhìn ngoài).
