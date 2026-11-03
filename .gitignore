@@ -8,6 +8,8 @@ __pycache__/
 *.log
 # Output tạo lại được và rất nặng: render của các tập, video thành phẩm (lưu ổ riêng / cloud)
 **/renders/
+# Bản lưu từng giai đoạn do build script tạo
+**/backups/
 06_PUBLISHING/Final_Videos/*
 !06_PUBLISHING/Final_Videos/.gitkeep
 # Hệ điều hành

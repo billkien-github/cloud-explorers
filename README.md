@@ -20,8 +20,9 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 - Lumo: `02_ASSET_LIBRARY/Characters/Lumo/lumo_rig.blend` dựng từ bản Meshy v01 bằng `build_lumo.py`: thêm xương đuôi, tai, IK chân và tay (IK tay mặc định tắt), texture 2K; mặc áo choàng ngắn, đeo túi và dây chéo; mặt bản đầu: chớp mắt, mở miệng (thanh trượt `blink_L`, `blink_R`, `mouth_open`); qua kiểm tra `qa_lumo.py` (bad% ≤ 2.4%). Chưa có: lông mày, đồng tử, hình miệng khác; áo choàng và túi chưa có chuyển động riêng.
 - Shot dựng thử `04_PRODUCTION/EP001_Great_Rain_Experiment/sh030`: Lumo vấp vết nứt (7 giây, animation hoàn toàn bằng code, chưa có tiếng).
 - Clip thử `04_PRODUCTION/TEST_Lumo_Dance/sh010`: Lumo nhảy kiểu "Baby Shark" 16 giây, có hát (mở miệng theo nốt), chớp mắt, nhạc nền tự sáng tác (`build_audio.py`).
+- Previz thử `04_PRODUCTION/TEST_Previz_Corridor/sh010`: người hộp đi dọc hành lang gạch 30 giây, một cú máy không cắt (đổi cỡ cảnh, tiêu cự, nhấn ở hai lần dừng), làm video dẫn cho Seedance (quy trình đề xuất, chưa sinh thử: `04_PRODUCTION/SEEDANCE.md`).
 - Chưa có: kịch bản, model của Tavi, Nori, Piko và đạo cụ.
-- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`). Song song: hoàn thiện face rig Lumo (lông mày, đồng tử, hình miệng), xương vạt áo choàng để áo bay khi chạy.
+- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`). Song song: soạn prompt Seedance cho previz hành lang và sinh thử lần đầu; hoàn thiện face rig Lumo (lông mày, đồng tử, hình miệng), xương vạt áo choàng để áo bay khi chạy.
 
 ## Tài liệu
 
@@ -33,6 +34,7 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 | [`02_ASSET_LIBRARY/README.md`](02_ASSET_LIBRARY/README.md) | Quy ước thư mục asset |
 | [`02_ASSET_LIBRARY/MESHY.md`](02_ASSET_LIBRARY/MESHY.md) | Làm nhân vật, đạo cụ bằng Meshy + Blender, prompt |
 | [`02_ASSET_LIBRARY/Third_Party/README.md`](02_ASSET_LIBRARY/Third_Party/README.md) | Nguồn asset bên ngoài, giấy phép |
+| [`04_PRODUCTION/SEEDANCE.md`](04_PRODUCTION/SEEDANCE.md) | Dựng shot bằng previz Blender + Seedance, prompt theo giây |
 | [`pipeline/README.md`](pipeline/README.md) | Code dùng chung, cách render, Blender MCP |
 | [`CLAUDE.md`](CLAUDE.md) | Dặn dò cho agent: file nào sở hữu chủ đề nào, việc review và dọn tài liệu sau mỗi lần làm |
 
@@ -55,7 +57,7 @@ studio/
 - **Dựng bằng script:** mỗi asset hay shot có script build nằm cạnh nó. Sửa script rồi build lại, không sửa tay file `.blend` do script tạo ra (thử bằng tay qua Blender MCP xong thì chép thay đổi vào script).
 - **File gốc tải về không sửa:** file Meshy để trong `source/`, đồ bên thứ ba trong `Third_Party/`.
 - **Đặt tên:** thư mục viết hoa chữ đầu, nối bằng gạch dưới (`EP001_Great_Rain_Experiment`, `Wonder_Compass`). File viết thường, không dấu, nối bằng gạch dưới (`lumo_hero.png`); riêng mã tập giữ viết hoa (`EP001_great_rain_experiment.md`). Không dùng dấu tiếng Việt trong tên file vì Blender và ffmpeg hay lỗi đường dẫn.
-- **Shot:** `sh010/` gồm `build_shot.py`, `sh010.blend`, `renders/`. Đánh số cách 10 để còn chèn shot vào giữa.
+- **Shot:** `sh010/` gồm `build_shot.py`, `sh010.blend`, `renders/`; shot làm qua Seedance có thêm `seedance/` (`04_PRODUCTION/SEEDANCE.md`). Đánh số cách 10 để còn chèn shot vào giữa.
 - **Tài liệu chỉ ghi thông tin hiện hành**, mỗi thông tin chỉ nằm ở một file (bảng file sở hữu và cách giữ tài liệu: `CLAUDE.md`). Lịch sử đã có git.
 
 ## Công cụ
@@ -66,9 +68,10 @@ studio/
 | Python của Blender | `...\Blender 5.2\5.2\python\bin\python.exe`, có sẵn numpy |
 | Meshy (gói Pro) | Sinh hình, Remesh, rig Humanoid, thư viện animation |
 | Blender MCP | Cho Claude điều khiển Blender đang mở, xem `pipeline/README.md` |
+| Add-on Higgsfield 1.5.60 | Sinh 3D, ảnh, video, animation bằng AI ngay trong viewport (thanh prompt ở đáy 3D view, đăng nhập tài khoản Higgsfield, trừ credit). Cài vào repo `user_default` của Blender 5.2. Tài khoản này cũng dùng để chạy Seedance (`04_PRODUCTION/SEEDANCE.md`) |
 
 ## Git
 
 - Repo: https://github.com/billkien-github/cloud-explorers
 - File nhị phân (`.blend`, ảnh, video, âm thanh, FBX/GLB, zip) đi qua **Git LFS** (`.gitattributes`).
-- Không đưa lên git (`.gitignore`): `*.blend1`, log, cache Python, mọi thư mục `renders/`, `06_PUBLISHING/Final_Videos/`.
+- Không đưa lên git (`.gitignore`): `*.blend1`, log, cache Python, mọi thư mục `renders/` và `backups/` (bản lưu từng giai đoạn của build script), `06_PUBLISHING/Final_Videos/`.

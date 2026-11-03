@@ -17,6 +17,7 @@ Dặn dò cho agent làm việc trong repo **Cloud Explorers** (phim hoạt hìn
 | Quy ước thư mục asset | `02_ASSET_LIBRARY/README.md` |
 | Quy trình Meshy, prompt | `02_ASSET_LIBRARY/MESHY.md` |
 | Asset bên thứ ba, giấy phép | `02_ASSET_LIBRARY/Third_Party/README.md` |
+| Previz Blender + Seedance, quy ước khối previz, prompt theo giây | `04_PRODUCTION/SEEDANCE.md` |
 | Code dùng chung, render, Blender MCP, lưu ý kỹ thuật Blender | `pipeline/README.md` |
 | Cách giữ tài liệu, việc của agent sau mỗi lần làm | `CLAUDE.md` (file này) |
 
