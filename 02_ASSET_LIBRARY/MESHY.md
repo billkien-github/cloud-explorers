@@ -173,9 +173,9 @@ Cute small round glowing light spirit, head and body merged into one soft round 
 Cute bright aqua blue jelly slime creature, soft rounded blob body wider at the bottom, two dark blue rounded horns on top, very big shiny blue eyes, closed mouth with a playful smile, two small stubby arms, no legs, glossy jelly surface. Soft stylized 3D, rounded shapes, smooth glossy surfaces, pastel colors, kids animation style, front view, symmetrical
 ```
 
-**Rain-O-Matic 3000** (máy tạo mưa tập 01, chưa có concept)
+**Rain-O-Matic 3000** (máy tạo mưa tập 01, chưa có concept; bánh răng vàng làm riêng để tháo rời)
 ```
-Cute cartoon rain-making machine, chunky rounded body made of riveted pastel metal panels, large glowing blue crystal core in a glass dome on top, small rain cloud nozzle, row of colorful dials and a slider for intensity, one big round red button labeled MAX POWER, short stubby legs, playful whimsical design. Soft stylized 3D, smooth surfaces, pastel colors, kids animation style
+Cute cartoon rain-making machine, chunky rounded body made of riveted pastel metal panels on four short stubby legs, a glass dome on top with a small hatch and a glowing blue crystal core inside, a small chimney nozzle that puffs clouds, a round knob and a round gauge on the left side, one big round red push button on the right side, a small pull lever, no text, no lettering, playful handmade whimsical design. Soft stylized 3D, smooth surfaces, pastel colors, kids animation style
 ```
 
 ## Sau khi tải về

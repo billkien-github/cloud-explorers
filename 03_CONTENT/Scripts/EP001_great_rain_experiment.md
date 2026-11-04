@@ -1,56 +1,67 @@
 # EP001: The Great Rain Experiment (Cơn mưa đầu tiên) — khoảng 7 phút
 
-**Trạng thái:** beat sheet đã chốt. Bước tiếp theo: viết kịch bản `EP001_great_rain_experiment.fountain` từ `template.fountain`.
+**Trạng thái:** beat sheet đã chốt, còn chờ chốt tên Noah trong bản lồng tiếng Việt (mục Luật nhân quả). Bước tiếp theo: viết kịch bản `EP001_great_rain_experiment.fountain` từ `template.fountain`, viết xong chạy `/review EP001`.
 
-**Logline:** Thung lũng Mây khô hạn, Tavi chế máy tạo mưa. Lumo nóng vội cùng Piko đè trúng nút MAX POWER, mưa trút không dứt và tràn sang thế giới truyện con thuyền Noah. Cả nhóm phải hợp sức, làm từng việc một để tắt máy.
+**Logline:** Thung lũng Mây khô hạn, Lumo nóng vội cùng Piko đè trúng nút MAX POWER trên máy tạo mưa Tavi vừa chế: mưa trút không dứt, cổng truyện bật mở và Piko trôi sang câu chuyện con thuyền Noah. Cả nhóm phải hợp sức, làm từng việc một để tắt máy.
 
-**Chủ đề khoa học:** vòng tuần hoàn nước. Hơi nước gặp lạnh thành mây, mây nặng thì mưa, nắng làm nước bay hơi trở lại.
+**Chủ đề khoa học:** vòng tuần hoàn nước. Hơi nước gặp lạnh thành mây, mây nặng thì mưa, nắng làm nước bay hơi trở lại. Ý "gặp lạnh thành mây" quyết định cách tắt máy: thổi mây đi là vô ích, phải dừng phần làm lạnh.
 
-**Bài học (thể hiện bằng hành động):** nóng vội gây rắc rối. Dám nhận lỗi và làm từng việc một thì sửa được. Lumo: vội → gây lỗi → nhận lỗi → kiên nhẫn đếm từng bước.
+**Bài học (thể hiện bằng hành động):** nóng vội gây rắc rối. Dám nhận lỗi và làm từng việc một thì sửa được. Lumo: vội → gây lỗi → nhận lỗi → kiên nhẫn đếm từng bước. Chỉ một câu nói thành lời: lời dặn của Noah "làm từng việc một". Lumo nhận lỗi bằng hành động (chỉ vào mình rồi chỉ nút đỏ, tự dắt đôi voi, tự nhờ Tavi làm nắp che), không nói lời xin lỗi.
 
 ## Luật nhân quả
 
-- **Máy Rain-O-Matic 3000:** hút hơi nước, làm lạnh, tạo mây rồi mưa. Có núm **NHẸ** và **nút đỏ MAX POWER**.
-- **Nguyên nhân:** bánh răng vàng lạ lấy từ túi của Piko làm máy chạy quá sức. Khi nút MAX POWER bị đè, máy kẹt ở MAX.
-- **Tai nạn do hai người:** Lumo với tay vì muốn "thêm chút nữa", đúng lúc Piko nảy tới. Không ai cố ý, Lumo nhận lỗi.
-- **Lời giải chỉ có một kế hoạch:** chặn bánh răng lạ → rút nó ra → vặn về NHẸ → tắt máy. Mỗi bảo bối góp một phần, không vượt giới hạn.
-- **Thế giới truyện:** nước tràn qua cổng truyện sang câu chuyện con thuyền Noah. Noah đã chuẩn bị thuyền từ trước, nhóm chỉ giúp đưa thú lên thuyền. Nhóm không gây ra trận lụt trong truyện.
+- **Máy Rain-O-Matic 3000:** hút hơi nước, làm lạnh để tạo mây, mây phụt ra từ vòi trên nóc rồi mưa. Đặt trên đỉnh đồi vì trên cao lạnh hơn. Hông trái có núm **NHẸ** và đồng hồ, hông phải có **nút đỏ MAX POWER** (ngang ngực Lumo), thêm một **cần gạt TẮT**, tất cả trong tầm tay Tavi. Vòm kính trên nóc có **cửa nhỏ**, chứa lõi tinh thể và bánh răng. Vòm được lắp khi còn dưới đất rồi kéo bằng ròng rọc có móc đưa lên nóc; trên đó cao quá tầm tay cả nhóm, chỉ Nori bay tới, Piko nảy tới. Trên máy không có chữ, tên gọi chỉ có trong thoại.
+- **Nguyên nhân:** bánh răng vàng lạ từ túi của Piko làm bộ làm lạnh chạy quá sức. Khi nút MAX POWER bị đè, bánh răng quay điên, núm tự giật về MAX, gạt TẮT không ăn. Máy lạnh quá mức: vòm kính phủ sương giá, dây ròng rọc đóng băng gãy, kim đồng hồ đóng băng, bánh răng lạnh buốt không cầm tay được, mây sinh ra không ngừng. Ở MAX, bánh răng bắn tia sáng vàng làm cổng truyện trong Wonder Hub dưới chân đồi bật mở. Rút bánh răng ra thì tia sáng tắt, cổng khép dần.
+- **Tai nạn do hai người:** Lumo muốn "thêm chút nữa", vội vươn tay về nút đỏ, sực nhớ câu hô, khựng lại, tay còn lơ lửng trước nút. Nút lấp lánh hút mắt Piko. Lumo vừa định rụt tay thì Piko đáp lên lưng, ấn tay Lumo xuống nút. Không ai cố ý, Lumo nhận lỗi vì đã vội với tay.
+- **Lời giải chỉ có một kế hoạch:** mây sinh ra khi hơi nước gặp lạnh, nên phải dừng bánh răng làm lạnh. Tavi nói trước ba bước, xếp ba con ốc để đếm: chặn bánh răng → rút nó ra → vặn về NHẸ, gạt TẮT. Mỗi bảo bối góp một phần, không vượt giới hạn: la bàn chỉ ra bánh răng lạ, Story Lens cho hình bông tuyết để Nori và Tavi tự suy ra, túi của Piko cho con vịt làm miếng chèn, Inventor Pack đã cho cái móc ròng rọc ở Cảnh 2, nay Tavi gắn nó vào dây vì bánh răng quá lạnh để cầm.
+- **Thế giới truyện:** truyện con thuyền Noah đã có mưa và biển nước lặng của riêng nó. Thuyền đã nổi sẵn, neo sát một mỏm đồi khô có cây; cổng mở ra trên mỏm. Nước từ thung lũng qua cổng chỉ là một dòng nhỏ xíu so với biển, đổ xuống cầu ván bắc từ mỏm lên mạn thuyền, làm ván trơn: hậu quả nhỏ, nhìn thấy được, nhóm tự sửa bằng cách dắt đôi voi con lên thuyền. Đôi voi muốn lên chơi cùng bạn đang vẫy trên boong, không phải chạy trốn nước. Nhóm không gây ra trận lụt trong truyện.
+- **Noah:** bình thản, tử tế, nói đúng một câu dặn là lời khuyên đời thường, không trích kinh sách. Chỉ thể hiện từ xa, ngược sáng (đứng trên boong thuyền, trong nắng vàng ấm, viền sáng mềm, giọng hiền), hoặc qua bàn tay và giọng nói, không cho thấy rõ mặt, để tôn trọng khán giả các tôn giáo không vẽ mặt nhà tiên tri. **Chờ chốt:** tên trong bản lồng tiếng Việt (Noah hay ông Nô-ê).
 
 ## Gài trước, trả sau
 
 | Chi tiết | Gài | Trả |
 |---|---|---|
-| Nút đỏ MAX POWER + câu hô "Không chạm nút đỏ!" | Cảnh 2 | Bị đè ở Cảnh 3; được gắn nắp che ở Cảnh 7 |
-| Túi của Piko (luật bộ ba) | Thìa (Cảnh 1) | Vịt cao su (Cảnh 2 → cứu nguy ở Cảnh 6), ô (Cảnh 7) |
-| Bánh răng vàng lạ, la bàn rung khi lại gần | Cảnh 2 | La bàn chỉ ra nguyên nhân ở Cảnh 5 |
+| Nút đỏ MAX POWER + câu hô "Không chạm nút đỏ!" | Cảnh 2 | Bị đè ở Cảnh 3, Tavi hô muộn một nhịp; Cảnh 7 chính Lumo hô trước, cả nhóm hô theo |
+| Cần gạt TẮT | Cảnh 2 | Gạt không ăn ở Cảnh 4, gạt được ở Cảnh 6 |
+| Túi của Piko (luật bộ ba) | Thìa (Cảnh 1) | Vịt ngậm bánh răng (Cảnh 2 → vịt chèn bánh răng rồi về lại tay Piko ở Cảnh 6), ô (Cảnh 7) |
+| Bánh răng vàng lạ | La bàn chỉ vào túi Piko (Cảnh 1), lắp vào lõi (Cảnh 2) | La bàn chỉ ra nguyên nhân, tia sáng mở cổng (Cảnh 4); rút ra thì cổng khép, cất vào hộp ốc, kim la bàn nằm yên chỉ về hộp (Cảnh 6) |
+| Story Lens chỉ cho hình gợi ý | Hình cái cân, Nori tự chỉ điểm cân bằng (Cảnh 2) | Hình bông tuyết (Cảnh 6) |
+| Cửa nhỏ trên vòm kính | Tavi lắp bánh răng qua cửa (Cảnh 2) | Piko thả vịt qua cửa (Cảnh 6) |
+| Cái móc ròng rọc | Tavi dời móc tới điểm cân bằng (Cảnh 2) | Gắn vào dây của Noah để rút bánh răng (Cảnh 6) |
+| Cổng truyện trong Wonder Hub dưới chân đồi | Cảnh 2 (đang khép, le lói sáng) | Bật mở ở Cảnh 4, khép dần khi rút bánh răng ở Cảnh 6 |
+| Vòm phủ sương giá, dây ròng rọc gãy, đồng hồ đóng băng | Cảnh 4 | Ý khoa học; bánh răng lạnh buốt nên phải dùng móc và dây (Cảnh 6) |
+| Lumo thổi mây đi, mây lại có | Cảnh 4 | Ý "gặp lạnh thành mây" giải thích vì sao vô ích (Cảnh 6) |
+| Sợi dây của Noah | Dây ròng rọc gãy (Cảnh 4), Noah thả dây dắt đôi voi (Cảnh 5) | Rút bánh răng (Cảnh 6) |
+| Hơi nước gặp lạnh thành mây, trên cao lạnh hơn | Câu của Tavi (Cảnh 1) | Kế hoạch tắt máy (Cảnh 6), mây bé thành hình phía trên Piko (Cảnh 7) |
 | Đám mây bé che vừa một cái đầu | Cảnh 3 (trên đầu Lumo) | Twist ở Cảnh 7 (trên đầu Piko) |
-| Tật nóng vội của Lumo | Vấp chân (Cảnh 1) | Với tay (Cảnh 3) → Noah dặn (Cảnh 5) → đếm chậm (Cảnh 6) |
+| Bông hoa gục, sinh vật nhỏ ủ rũ | Cảnh 1 | Ngóc dậy, té nước vui vẻ ở Cảnh 7 |
+| Tật nóng vội của Lumo | Vấp chân (Cảnh 1), kéo ròng rọc vội nên vòm nghiêng (Cảnh 2) | Vội với tay về nút đỏ (Cảnh 3), thổi mây (Cảnh 4) → trượt ván, Noah dặn (Cảnh 5) → kéo dây chậm, đếm từng bước (Cảnh 6) |
 
 ## Các cảnh
 
 | # | Cảnh | Nhịp khung tập | Thời gian | Diễn biến |
 |---|---|---|---|---|
-| 1 | Hook + vấn đề | Hook, Discovery | 0:00–0:50 | Giọt sương cuối cùng trên lá. Piko "SLURP", bông hoa gục xuống. Tên phim. Thung lũng khô: Lumo hăng hái vấp chân, Tavi đỡ. Nori: mầm cây sắp ngủ mãi. La bàn quay loạn về đỉnh đồi ("chính nó cũng không biết"). Piko rút từ túi ra chiếc thìa định đào giếng. Tavi: "Ta gom hơi nước, làm lạnh, nó sẽ rơi thành mưa!" |
-| 2 | Chế máy | Gadget Action | 0:50–2:10 | Montage nhanh lắp Rain-O-Matic trên đỉnh đồi: Lumo kéo ròng rọc làm khung nghiêng, Nori chỉ điểm cân bằng; Piko nuốt nhầm hộp ốc. Túi ra vịt cao su ("để dành"). Túi ra bánh răng vàng vừa khít lõi, la bàn rung nhẹ khi lại gần. Tavi chỉ núm NHẸ và nút đỏ MAX POWER. Cả nhóm hô: "Không chạm nút đỏ!" |
-| 3 | Cơn mưa đầu tiên | Gadget Action → Comedy Twist | 2:10–3:00 | Đám mây bé che vừa đầu Lumo, giọt nước trúng mũi: "NƯỚC!". Mưa lất phất xuống vườn mầm, Piko biến thành cái bát hứng nước. Lumo thấy rìa vườn còn khô, nhìn nút đỏ, với tay "thêm chút nữa thôi" đúng lúc Piko nảy tới: cả hai đè trúng MAX POWER |
-| 4 | Mưa vượt kiểm soát | Comedy Twist | 3:00–4:15 | Mây phồng như bột bánh, bánh răng lạ quay điên, núm kẹt ở MAX. Lumo và Piko bám núm bị quay vòng ("tụi mình thành máy giặt!"). Nước dâng, sinh vật nhỏ chạy lên chỗ cao. Lumo: "Mưa này do tụi mình. Tụi mình sẽ sửa!" Story Lens hiện một hình con thuyền, cổng truyện mở, nước chảy xuyên qua |
-| 5 | Con thuyền Noah | Comedy Twist | 4:15–5:30 | Lộ ra con thuyền gỗ khổng lồ giữa biển nước (khoảnh khắc "wow"). Noah bình thản, thuyền đã sẵn từ trước. Lumo xin lỗi. Nori rọi đường sáng cho một đôi thú qua cầu ván trơn. Noah dặn Lumo một câu: làm từng việc một. La bàn chỉ về phía máy, về bánh răng lạ: "Nó không biết đó là gì, nhưng biết nó kỳ lạ!" Noah đưa cuộn dây, nhóm quay về |
-| 6 | Sửa máy | Science Moment | 5:30–6:30 | Kế hoạch duy nhất: chặn bánh răng lạ rồi rút ra. Piko lấy vịt cao su chèn vào tấm chặn ngoài, vịt kêu "quạc" mỗi lần máy rung. Lumo buộc dây, đếm chậm "một… hai… ba" rút bánh răng ra. Tavi vặn về NHẸ, tắt máy. Nắng lên, Tavi chỉ hình vẽ: mây là hơi nước gặp lạnh, nắng làm nước bay hơi lại |
-| 7 | Kết + twist | Resolution | 6:30–7:15 | Cầu vồng, thung lũng xanh lại, qua cổng đang khép thấy con thuyền trôi êm. Lumo: một câu xin lỗi ngắn. Tavi gắn nắp che lên nút MAX POWER. Năng lượng sót lại tạo đám mây bé chỉ mưa trên đầu Piko. Piko rút từ túi ra cái ô, ô bật ngược hứng đầy nước, Piko uống: "Mưa riêng!" HẾT |
+| 1 | Hook + vấn đề | Hook, Discovery | 0:00–0:50 | Giọt sương cuối cùng trên lá. Piko "SLURP" (trước 0:10), bông hoa gục xuống. Tên phim (khoảng 0:15). Thung lũng khô, vài sinh vật nhỏ ủ rũ dưới lá khô. Nori: mầm cây sắp héo khô hết. Lumo: "Đi tìm nước cho vườn!", lao đi, vấp chân, Tavi đỡ. La bàn rung, quay loạn rồi chỉ vào túi của Piko. Piko rút ra… chiếc thìa, định đào giếng. Kim la bàn vẫn chỉ vào túi. Lumo nhìn thìa, nhìn la bàn, nghiêng đầu: "Thìa thôi mà?" Tavi: "Gom hơi nước, làm lạnh, sẽ có mưa! Lên đỉnh đồi, trên đó lạnh hơn!" |
+| 2 | Chế máy | Gadget Action | 0:50–2:10 | Montage nhanh lắp Rain-O-Matic trên đỉnh đồi. Tavi rút dụng cụ, linh kiện từ Inventor Pack, một con ốc bắn ra. Nori xếp ốc gọn theo cỡ; Piko ngồi đè lên hộp ốc, ốc dính ngoài khắp thân thạch, Tavi gỡ từng con. Máy thiếu đúng một bánh răng: túi Piko ra con vịt cao su ngậm bánh răng vàng. Tavi mừng rỡ mở cửa nhỏ trên vòm kính (vòm còn đặt dưới đất), lắp bánh răng vừa khít lõi, đóng cửa. Piko ôm vịt: "Để dành!" La bàn rung trong túi Lumo, Lumo không để ý. Lumo kéo ròng rọc đưa vòm lên nóc, kéo vội nên vòm nghiêng; Nori nhìn qua Story Lens thấy hình cái cân, chỉ điểm cân bằng; Tavi dời cái móc ròng rọc tới đúng điểm đó, vòm lên thẳng. Từ đỉnh đồi thấy Wonder Hub dưới chân đồi, cổng truyện bên trong đang khép, le lói sáng. Tavi chỉ núm NHẸ, nút đỏ MAX POWER, cần gạt TẮT. Cả nhóm hô: "Không chạm nút đỏ!" |
+| 3 | Cơn mưa đầu tiên | Gadget Action → Comedy Twist | 2:10–3:00 | Tavi vặn núm NHẸ. Đám mây bé che vừa đầu Lumo, giọt nước trúng mũi: "NƯỚC!". Mưa lất phất xuống vườn mầm, Piko hoá cái bát hứng nước. Nori bay dọc vườn, bắt đầu giảng: "Mưa nhẹ thì đất thấm từ từ…" Lumo thấy rìa vườn còn khô, vội vươn tay về nút đỏ ("thêm chút nữa thôi!"), sực nhớ câu hô, khựng lại, tay còn lơ lửng trước nút. Nút lấp lánh, Piko bị hút mắt. Lumo vừa định rụt tay thì Piko đáp lên lưng, ấn tay Lumo xuống nút: MAX POWER, cắt ngang lời Nori. Tavi hô "Không chạm nút đỏ!" muộn một nhịp |
+| 4 | Mưa vượt kiểm soát | Comedy Twist | 3:00–4:15 | Mây phồng như bột bánh. Bánh răng lạ quay điên, vòm kính phủ sương giá, phả hơi lạnh; dây ròng rọc đóng băng, gãy "RẮC"; kim đồng hồ vọt hết vạch rồi đóng băng. Núm tự giật về MAX. Luồng mây phụt từ vòi máy cuốn Lumo và Piko xoay vòng trên nền đồi ướt. Lumo: "Tụi mình thành chong chóng!", Piko cười khoái chí. Tavi gạt TẮT: không ăn. Lumo phồng má thổi phù cho mây bay đi, mây dạt ra rồi vòi máy lại phụt mây mới. Vườn mầm vừa được tưới giờ ngập nước. Nori lùa các sinh vật nhỏ lên đỉnh đồi, chúng đội lá làm ô. Lumo chỉ vào mình rồi chỉ nút đỏ: "Tụi mình sẽ sửa!" Kim la bàn chỉ thẳng lên vòm kính, Lumo: "Cái bánh răng! Lạ lắm!" Bánh răng bắn tia sáng vàng xuống Wonder Hub, cổng truyện bật mở. Một luồng mây hất văng Piko, Piko hoà vào dòng nước, nảy theo dòng trôi qua cổng ("Wheee!"). Lumo lao theo đầu tiên trên lối khô dọc bờ, cả nhóm theo sau |
+| 5 | Con thuyền Noah | Comedy Twist | 4:15–5:30 | Qua cổng là một mỏm đồi khô có cây giữa biển nước lặng mênh mông, mưa bụi lấp lánh trong tia nắng xuyên mây. Con thuyền gỗ khổng lồ đã nổi sẵn, neo sát mỏm (khoảnh khắc "wow"). Piko nảy từ mặt nước lên ôm đầu Lumo. Dòng nước của thung lũng đổ qua cổng chỉ bé như vòi tưới so với biển, rơi đúng lên cầu ván có nẹp ngang bắc từ mỏm lên mạn thuyền, làm ván trơn. Trên boong, thú vẫy gọi; đôi voi con trên mỏm muốn lên chơi cùng. Mục tiêu duy nhất: đưa đôi voi qua cầu ván lên thuyền. Lumo nhìn dòng nước của nhóm đổ lên ván, cụp tai, rồi lao lên ván, trượt ngược xuống, ván rung lắc, Lumo đáp lên Piko như đáp xuống phao ("BOING!"). Từ boong thuyền, bóng Noah ngược sáng bình thản dặn một câu: làm từng việc một. Bàn tay Noah thả xuống một sợi dây. Tavi giữ đầu ván cho hết lắc. Nori bay sát ván, vệt sáng thay chân để lại một chấm sáng trên từng nẹp. Lumo đặt chân lên từng chấm sáng, dắt đôi voi bằng sợi dây; đôi voi bắt chước đúng nhịp Lumo (bước, khựng, bước). Đôi voi lên thuyền, bàn tay Noah ra hiệu cho Lumo giữ cuộn dây. Piko bám vào cuộn dây, được Lumo kéo theo về cổng |
+| 6 | Sửa máy | Science Moment | 5:30–6:30 | Mưa vẫn trút, vòm kính phủ sương giá. Nori nhìn qua Story Lens thấy hình bông tuyết cạnh đám mây: "Hơi nước mà gặp lạnh thì…" Tavi ngắt lời: "…thành mây! Bánh răng làm lạnh quá. Dừng nó!" Lumo nhìn đám mây vừa thổi, gật gù. Tavi xếp ba con ốc to thành hàng trên hông máy: "Chặn. Rút. Tắt." Xong bước nào gạt một con vào hộp ốc. Chặn: Tavi chỉ vào kẽ bánh răng rồi chỉ con vịt; Piko giật mình bóp vịt kêu "quạc", ôm chặt vịt, ngập ngừng một nhịp, rồi nảy lên mở cửa nhỏ, thả vịt từ bên ngoài vào kẽ bánh răng; bánh răng khựng lại, đứng yên, vịt kêu "quạc" mỗi lần máy rung. Rút: bánh răng lạnh buốt, Tavi tháo cái móc ròng rọc gắn vào đầu dây của Noah; Nori mang đầu dây bay lên, rọi sáng trong mây tối, móc vào bánh răng đã đứng yên; Lumo đứng dưới đất, dây ngang ngực, đếm chậm "một… hai… ba", lùi từng bước như kéo co, rút bánh răng ra; con vịt bật ra theo, rơi vào tay Piko: "quạc!" Tia sáng vàng tắt, dưới chân đồi cổng truyện bắt đầu khép, hình con thuyền trôi êm mờ dần trong cổng. Tắt: Tavi vặn núm về NHẸ, gạt TẮT. Mây rơi nốt mấy giọt cuối rồi mỏng dần dưới nắng. Tavi thả bánh răng từ cái móc vào hộp ốc, đóng nắp; la bàn thôi quay loạn, kim nằm yên chỉ về hộp ốc |
+| 7 | Kết + twist | Resolution | 6:30–7:15 | Cầu vồng, bông hoa ở đầu phim ngóc dậy, thung lũng xanh lại, sinh vật nhỏ chạy ra té nước ở vũng nước cạnh máy. Lumo chỉ vào nút đỏ rồi chỉ Inventor Pack. Tavi lắp nắp che: lò xo, khoá, đèn báo, to quá cỡ cho một cái nút; Lumo nhún vai. Piko định chạm vào nắp, lần này chính Lumo hô trước: "Không chạm nút đỏ!", cả nhóm hô theo. Piko xịu mặt, ngồi phịch giữa vũng nước cạnh máy. Nắng làm vũng nước bốc hơi; camera lia theo làn hơi từ chỗ Piko ngồi bay lên cao (máy đứng yên), gặp lạnh trên đỉnh đồi, gom thành đám mây bé ngay phía trên Piko. Nori nói một câu: nước bay lên, gặp lạnh lại thành mây. Mưa lách tách, Piko rút từ túi ra cái ô, ô bật ngược hứng đầy nước, Piko uống: "Mưa riêng!" HẾT |
 
 ## Sản xuất
 
-- **Bối cảnh:** Thung lũng Mây (khô / ướt, dùng chung một bối cảnh đổi material), đỉnh đồi đặt máy, thế giới truyện (biển nước + con thuyền), cổng truyện.
-- **Nhân vật phụ:** Noah, một đôi thú, vài sinh vật nhỏ của thung lũng.
-- **Asset riêng:** máy Rain-O-Matic 3000 (núm NHẸ, nút MAX POWER, nắp che, bánh răng vàng tháo rời; prompt trong `02_ASSET_LIBRARY/MESHY.md`), vịt cao su, thìa, ô, con thuyền, mây bé.
+- **Bối cảnh:** Thung lũng Mây (khô / ướt, dùng chung một bối cảnh đổi material), đỉnh đồi đặt máy, Wonder Hub dưới chân đồi nhìn từ xa và cổng truyện, thế giới truyện (mỏm đồi khô có cây, biển nước lặng, con thuyền, cầu ván; mây của truyện khác màu mây của máy, có tia nắng xuyên qua).
+- **Nhân vật phụ:** Noah (chỉ cần dáng ngược sáng và bàn tay, không cần rig mặt), đôi voi con, vài sinh vật nhỏ của thung lũng (có mặt từ Cảnh 1).
+- **Asset riêng:** máy Rain-O-Matic 3000 (núm NHẸ, đồng hồ, nút MAX POWER, cần gạt TẮT, vòi phụt mây, nắp che nút, vòm kính có cửa nhỏ và trạng thái phủ sương giá, bánh răng vàng tháo rời; prompt trong `02_ASSET_LIBRARY/MESHY.md`), ròng rọc có móc (dây đóng băng, gãy), vịt cao su, thìa, ô, hộp ốc, cuộn dây của Noah, con thuyền, cầu ván có nẹp ngang, mây bé.
 
 ## Kiểm tra trước khi khóa kịch bản
 
-- [ ] Nút đỏ và câu hô xuất hiện trước tai nạn. Tai nạn đến từ hành động nhìn thấy rõ của Lumo và Piko.
+- [ ] Nút đỏ và câu hô xuất hiện trước tai nạn. Tai nạn đến từ hành động nhìn thấy rõ của Lumo và Piko, và đọc ra là vô ý: Lumo khựng tay lại, Piko đè xuống.
 - [ ] Tavi lắp máy bằng tay qua montage, Inventor Pack không tạo máy tức thì.
-- [ ] La bàn chỉ cảm nhận điều kỳ lạ, Story Lens chỉ cho một hình gợi ý, túi của Piko vẫn ngẫu nhiên. Vịt dùng như miếng chèn, không phải phép màu.
-- [ ] Bánh răng lạ được gài ở Cảnh 2, trước khi là nguyên nhân.
-- [ ] Mưa lớn và nước dâng kỳ ảo, không có thương vong, không làm trẻ sợ.
-- [ ] Noah được thể hiện tôn trọng, thuyền có từ trước, nhóm không gây ra trận lụt trong truyện.
+- [ ] La bàn chỉ cảm nhận điều kỳ lạ, Story Lens chỉ cho một hình gợi ý, túi của Piko vẫn ngẫu nhiên. Vịt dùng như miếng chèn, không phải phép màu. Cổng mở do bánh răng, không do Story Lens.
+- [ ] Bánh răng lạ được gài ở Cảnh 1–2, trước khi là nguyên nhân.
+- [ ] Mưa lớn và nước dâng kỳ ảo, không có thương vong, không làm trẻ sợ. Sinh vật nhỏ được cho thấy an toàn.
+- [ ] Noah được thể hiện tôn trọng, thuyền và biển nước có từ trước, nhóm không gây ra trận lụt trong truyện. Noah chỉ xuất hiện từ xa, ngược sáng, hoặc qua bàn tay và giọng nói.
 - [ ] Bài học thể hiện bằng hành động, chỉ nói thành lời một câu.
 - [ ] Đạt các nguyên tắc nhịp trong `03_CONTENT/README.md`.

@@ -42,7 +42,7 @@ Nội dung hấp dẫn và nhịp nhanh quan trọng hơn con số. Tỉ lệ d�
 4. Mọi thứ dùng để giải quyết phải được **gài trước**.
 5. Lời giải là **một kế hoạch rõ** mà trẻ đoán theo được (đếm, làm theo bước), mỗi bảo bối góp phần theo đúng giới hạn của nó.
 6. **Bài học thể hiện bằng hành động**, chỉ nói thành lời một câu ngắn.
-7. Nguy hiểm thì kỳ ảo, có cứu giúp kịp thời, không làm trẻ sợ.
+7. Nguy hiểm thì kỳ ảo, có cứu giúp kịp thời, không làm trẻ sợ. Không có hành vi nguy hiểm ngoài đời mà trẻ dễ bắt chước (bỏ đồ vật nhỏ vào miệng, thò tay vào máy đang chạy…).
 
 **Luật đạo cụ:** nhìn là nhận ra, công dụng rõ, **có giới hạn** (quan trọng nhất), hiệu ứng dễ nhớ, sinh ra được nhiều tình huống. Đạo cụ không được giải quyết mọi việc ngay lập tức.
 

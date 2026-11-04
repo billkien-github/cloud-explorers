@@ -21,8 +21,9 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 - Shot dựng thử `04_PRODUCTION/EP001_Great_Rain_Experiment/sh030`: Lumo vấp vết nứt (7 giây, animation hoàn toàn bằng code, chưa có tiếng).
 - Clip thử `04_PRODUCTION/TEST_Lumo_Dance/sh010`: Lumo nhảy kiểu "Baby Shark" 16 giây, có hát (mở miệng theo nốt), chớp mắt, nhạc nền tự sáng tác (`build_audio.py`).
 - Previz thử `04_PRODUCTION/TEST_Previz_Corridor/sh010`: người hộp đi dọc hành lang gạch 30 giây, một cú máy không cắt (đổi cỡ cảnh, tiêu cự, nhấn ở hai lần dừng), làm video dẫn cho Seedance (quy trình đề xuất, chưa sinh thử: `04_PRODUCTION/SEEDANCE.md`).
+- Review bằng agent: gõ `/review EP001` trong Claude Code, ba reviewer (câu chuyện, nhân vật, khán giả trẻ) soi beat sheet hoặc kịch bản rồi gộp kết quả trong chat (`.claude/skills/review/SKILL.md`). Chưa review được storyboard, shot, video.
 - Chưa có: kịch bản, model của Tavi, Nori, Piko và đạo cụ.
-- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`). Song song: soạn prompt Seedance cho previz hành lang và sinh thử lần đầu; hoàn thiện face rig Lumo (lông mày, đồng tử, hình miệng), xương vạt áo choàng để áo bay khi chạy.
+- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`), xong chạy `/review EP001`. Song song: soạn prompt Seedance cho previz hành lang và sinh thử lần đầu; hoàn thiện face rig Lumo (lông mày, đồng tử, hình miệng), xương vạt áo choàng để áo bay khi chạy.
 
 ## Tài liệu
 
@@ -36,6 +37,7 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 | [`02_ASSET_LIBRARY/Third_Party/README.md`](02_ASSET_LIBRARY/Third_Party/README.md) | Nguồn asset bên ngoài, giấy phép |
 | [`04_PRODUCTION/SEEDANCE.md`](04_PRODUCTION/SEEDANCE.md) | Dựng shot bằng previz Blender + Seedance, prompt theo giây |
 | [`pipeline/README.md`](pipeline/README.md) | Code dùng chung, cách render, Blender MCP |
+| [`.claude/skills/review/SKILL.md`](.claude/skills/review/SKILL.md) | Skill `/review`: chạy ba reviewer trong `.claude/agents/`, mức độ lỗi, định dạng kết quả |
 | [`CLAUDE.md`](CLAUDE.md) | Dặn dò cho agent: file nào sở hữu chủ đề nào, việc review và dọn tài liệu sau mỗi lần làm |
 
 ## Cấu trúc thư mục
@@ -49,7 +51,8 @@ studio/
 ├── 05_POST_PRODUCTION/      Editing/, Sound/, Dubbing/
 ├── 06_PUBLISHING/           Thumbnails/, Metadata/ (tiêu đề, mô tả, CREDITS.md), Final_Videos/
 ├── 07_ANALYTICS/            Monthly_Report/, Annual_Report/
-└── pipeline/                Code dùng chung
+├── pipeline/                Code dùng chung
+└── .claude/                 agents/ (các reviewer), skills/review/ (skill /review)
 ```
 
 ## Quy ước
