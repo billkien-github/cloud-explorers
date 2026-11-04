@@ -48,14 +48,13 @@ Nội dung hấp dẫn và nhịp nhanh quan trọng hơn con số. Tỉ lệ d�
 
 ## Viết một tập
 
-| Bước | File trong `Scripts/` | Nội dung |
+| Bước | File | Nội dung |
 |---|---|---|
-| 1. Beat sheet | `EPxxx_<tên>.md` | Logline (1–2 câu) + bảng nhịp theo khung tập, có thời gian |
-| 2. Kịch bản | `EPxxx_<tên>.fountain` | Kịch bản đầy đủ, bắt đầu từ [`Scripts/template.fountain`](Scripts/template.fountain) |
-| 3. Storyboard | `Storyboards/EPxxx/` | Khung hình từng cảnh |
-| 4. Animatic | `Animatics/EPxxx/` | Storyboard có thời gian và tiếng tạm. Độ dài thật của tập đo ở bước này |
+| 1. Beat sheet | `Scripts/EPxxx_<tên>.md` | Logline (1–2 câu) + bảng nhịp theo khung tập, có thời gian |
+| 2. Kịch bản | `Scripts/EPxxx_<tên>.fountain` | Kịch bản đầy đủ, bắt đầu từ [`Scripts/template.fountain`](Scripts/template.fountain) |
+| 3. Previz 2D | `Previz_2D/EPxxx_<Tên>/canhNN/` | Mỗi cảnh một previz cutout 2D có CC, chuyển động kỹ ([`PREVIZ_2D.md`](PREVIZ_2D.md)). Độ dài thật của tập đo ở bước này |
 
-Chỉ dựng hàng loạt shot ở `04_PRODUCTION/` khi animatic đã chốt. Trước đó chỉ dựng thử vài shot để kiểm tra pipeline; số shot sẽ đánh lại theo storyboard.
+Mỗi bước xong thì chạy `/review` trước khi chốt (`.claude/skills/review/SKILL.md`). Chỉ dựng hàng loạt shot ở `04_PRODUCTION/` (previz khối rồi Seedance, `04_PRODUCTION/SEEDANCE.md`) khi previz 2D của cảnh đã chốt. Trước đó chỉ dựng thử vài shot để kiểm tra pipeline; số shot sẽ đánh lại theo previz 2D.
 
 **Kịch bản viết bằng [Fountain](https://fountain.io):** format kịch bản chuẩn (screenplay) dạng chữ thường. Xem thay đổi được trong git, xuất PDF đúng format bằng Highland, Fade In hoặc extension "Better Fountain" của VS Code.
 
@@ -77,5 +76,4 @@ Chỉ dựng hàng loạt shot ở `04_PRODUCTION/` khi animatic đã chốt. Tr
 | Thư mục | Nội dung |
 |---|---|
 | `Scripts/` | Beat sheet (`.md`) và kịch bản (`.fountain`) từng tập, template |
-| `Storyboards/` | Storyboard từng tập |
-| `Animatics/` | Animatic từng tập |
+| `Previz_2D/` | Previz 2D từng cảnh: `timing.py`, script dựng, render có CC (`PREVIZ_2D.md`) |

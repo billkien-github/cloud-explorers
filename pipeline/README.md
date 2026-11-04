@@ -3,8 +3,9 @@
 | File | Vai trò |
 |---|---|
 | `run.ps1` | Lệnh chạy nhanh cho một shot: build, render, ghép tiếng, mở Blender |
-| `render.py` | Render một `.blend` theo 3 chế độ `stills` / `preview` / `final`, ghi vào `renders/` cạnh file |
+| `render.py` | Render một `.blend` theo 4 chế độ `stills` / `preview` / `final` / `ref`, ghi vào `renders/` cạnh file |
 | `mux_audio.py` | Ghép file âm thanh vào video đã render, không render lại hình, giữ nguyên màu |
+| `cc.py` | In CC từ `timing.py` của cảnh lên video previz (2D hay khối) và xuất `.srt`, không render lại hình. Cách viết CC: `03_CONTENT/PREVIZ_2D.md` |
 | `rig_qa.py` | Kiểm tra rig: đặt tư thế theo trục thế giới, đo % mặt lưới bị bóp (< 40% diện tích) hay giãn (> 250%) và tỉ lệ thể tích so với tư thế nghỉ. Đạt khi bad% dưới khoảng 2%, thể tích gần 1.0 |
 
 Code riêng của từng asset hay shot (build script) nằm cạnh asset hay shot đó, không để ở đây. Chỉ chuyển một hàm vào `pipeline/` khi đã có từ hai nơi trở lên cần dùng.
@@ -20,6 +21,7 @@ $S = "04_PRODUCTION\EP001_Great_Rain_Experiment\sh010"
 .\pipeline\run.ps1 stills 300,540 -Shot $S     # chỉ các khung muốn xem
 .\pipeline\run.ps1 preview -Shot $S            # cả shot 960x540 -> renders\sh010_preview.mp4
 .\pipeline\run.ps1 final -Shot $S              # 1920x1080 + motion blur
+.\pipeline\run.ps1 ref -Shot $S                # 1920x1080, 8 sample, không motion blur: video dẫn cho Seedance
 .\pipeline\run.ps1 audio -Shot $S              # ghép audio\sh010_mix.wav vào video preview
 .\pipeline\run.ps1 open -Shot $S               # mở trong Blender GUI
 .\pipeline\run.ps1 mcp -Shot $S                # mở kèm --online-mode cho Blender MCP

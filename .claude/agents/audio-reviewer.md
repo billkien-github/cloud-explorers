@@ -19,6 +19,7 @@ Bạn là kỹ thuật viên âm thanh của Cloud Explorers, phim hoạt hình 
 - **Méo:** `clipped_samples` lớn hơn 0 là méo chắc chắn. Đỉnh sát 0 dBFS là thiếu khoảng an toàn khi YouTube nén lại.
 - **Mức:** chỗ `rms_dbfs` tụt hay vọt bất thường so với phần còn lại; tiếng dừng cụt ở cuối video; đoạn câm không có lý do.
 - **Đồng bộ:** mốc tiếng trong code (nốt nhạc, lời hát, hiệu ứng) so với keyframe mở miệng, mốc hành động trong `build_shot.py`, và các đỉnh của `rms_dbfs`.
+- **Take Seedance có tiếng:** so các mốc trong khối AUDIO của `seedance/prompt.md` (Timed accents) với các đỉnh của `rms_dbfs` trong `review/take/review.json`. Soi tiếng ở chỗ prompt dặn không có (nhạc, giọng nói, sấm).
 
 Dự án chưa có file chuẩn về âm lượng phát hành, nên lỗi về mức tiếng (không phải méo) tối đa là Gợi ý.
 

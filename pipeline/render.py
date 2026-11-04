@@ -3,6 +3,7 @@ Render một shot theo 3 chế độ (dùng chung cho mọi shot):
     blender -b <shot>.blend -P render.py -- stills [frame,frame,...]   # vài khung PNG để duyệt look
     blender -b <shot>.blend -P render.py -- preview                    # cả shot, 960x540, ít sample -> MP4
     blender -b <shot>.blend -P render.py -- final                      # 1920x1080, chất lượng cao -> MP4
+    blender -b <shot>.blend -P render.py -- ref                        # 1920x1080, ít sample -> MP4 dẫn cho Seedance
 Ảnh/video ghi vào thư mục renders/ cạnh file .blend, đặt tên theo tên file.
 """
 import bpy
@@ -65,6 +66,13 @@ elif mode == "final":
     ee.taa_render_samples = 64
     r.use_motion_blur = True
     video(os.path.join(out_dir, f"{stem}_final.mp4"))
+    bpy.ops.render.render(animation=True)
+
+elif mode == "ref":                               # video tham chiếu cho Seedance: đủ 1080p, không cần đẹp
+    r.resolution_percentage = 100
+    ee.taa_render_samples = 8
+    r.use_motion_blur = False
+    video(os.path.join(out_dir, f"{stem}_ref.mp4"))
     bpy.ops.render.render(animation=True)
 
 else:
