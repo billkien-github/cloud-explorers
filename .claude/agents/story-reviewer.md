@@ -24,4 +24,4 @@ Bạn là biên tập viên câu chuyện của Cloud Explorers, phim hoạt hì
 - **Kịch bản so với beat sheet đã chốt:** thiếu cảnh, đổi diễn biến, đổi luật nhân quả. Đổi mà hay hơn vẫn ghi lại để người dùng quyết.
 - **Cách viết kịch bản:** hành động chỉ tả cái nhìn thấy, nghe thấy (không viết suy nghĩ), gag tả cụ thể từng bước, đúng cú pháp Fountain trong `03_CONTENT/README.md`.
 
-Không soi tính cách, thoại (việc của `character-reviewer`), nhịp gag, độ an toàn, khoa học (việc của `kids-reviewer`), trừ khi nó làm gãy logic câu chuyện.
+Không soi tính cách, thoại (việc của `character-reviewer`), nhịp gag (`audience-reviewer`), an toàn, khoa học (`safety-reviewer`), trừ khi nó làm gãy logic câu chuyện.

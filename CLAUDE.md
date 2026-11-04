@@ -19,7 +19,7 @@ Dặn dò cho agent làm việc trong repo **Cloud Explorers** (phim hoạt hìn
 | Asset bên thứ ba, giấy phép | `02_ASSET_LIBRARY/Third_Party/README.md` |
 | Previz Blender + Seedance, quy ước khối previz, prompt theo giây | `04_PRODUCTION/SEEDANCE.md` |
 | Code dùng chung, render, Blender MCP, lưu ý kỹ thuật Blender | `pipeline/README.md` |
-| Review beat sheet, kịch bản bằng agent: cách chạy, mức độ lỗi, định dạng kết quả | `.claude/skills/review/SKILL.md`; việc riêng của từng reviewer trong `.claude/agents/<tên>-reviewer.md` |
+| Review bằng agent (beat sheet, kịch bản, shot): nhóm reviewer theo đầu vào, cách chạy, mức độ lỗi, định dạng kết quả | `.claude/skills/review/SKILL.md`; việc riêng của từng reviewer trong `.claude/agents/<tên>-reviewer.md` |
 | Cách giữ tài liệu, việc của agent sau mỗi lần làm | `CLAUDE.md` (file này) |
 
 - Thông tin chỉ ghi ở file sở hữu. File khác cần nhắc tới thì trỏ đường dẫn, **không chép lại** (chép lại là nguồn gốc của mâu thuẫn).
