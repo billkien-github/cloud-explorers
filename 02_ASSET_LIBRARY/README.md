@@ -8,12 +8,12 @@
 ## Quy ước cho mỗi asset
 
 ```
-Characters/Lumo/
+Characters/<Tên>/
 ├── concept/          Ảnh 2D: ảnh hero, turnaround, ảnh A-pose đưa vào Meshy
-├── source/           File gốc tải từ Meshy, mỗi lần tải một thư mục lumo_meshy_vNN/. Không sửa, chỉ thêm bản mới
-├── build_lumo.py     Script: import source, thêm xương, face rig, material -> lumo_rig.blend
-├── lumo_rig.blend    File đã rig, do script tạo ra (dùng trong shot)
-├── qa_lumo.py        Script kiểm tra rig (dùng pipeline/rig_qa.py)
+├── source/           File gốc tải từ Meshy, mỗi lần tải một thư mục <tên>_meshy_vNN/. Không sửa, chỉ thêm bản mới
+├── build_<tên>.py    Script: import source, thêm xương, face rig, material -> <tên>_rig.blend
+├── <tên>_rig.blend   File đã rig, do script tạo ra (dùng trong shot)
+├── qa_<tên>.py       Script kiểm tra rig (dùng pipeline/rig_qa.py)
 └── qa/               Bảng ảnh tư thế, số liệu độ méo
 ```
 

@@ -2,7 +2,7 @@
 
 Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng khối, chuyển động, cú máy, nhịp thời gian, tất cả dựng bằng `build_shot.py`. Seedance lo phần **hình**: lấy video previz làm khung (video-to-video), cùng ảnh nhân vật, bối cảnh và prompt viết theo từng giây, rồi vẽ lại thành clip hoàn chỉnh. Camera và timing chốt trong Blender trước khi tốn credit.
 
-Đây là quy trình **đề xuất**, chưa sinh thử lần nào. Previz đầu tiên: `04_PRODUCTION/TEST_Previz_Corridor/sh010` (30 giây, một cú máy).
+Đây là quy trình **đề xuất**, chưa sinh thử lần nào.
 
 ## Seedance ở đâu, giới hạn gì (tra ngày 03/11/2026)
 
@@ -36,13 +36,13 @@ sh010/
 
 ## Previz
 
-- **Mốc thời gian khai báo thành hằng số ở đầu `build_shot.py`** (như `PAUSES`, `HEAD_KEYS`, `CAM_KEYS` của hành lang), mỗi khoá máy có chú thích cỡ cảnh và ý đồ. Prompt lấy số từ đây, không đo lại bằng mắt.
-- **Nhân vật dạng khối đúng chiều cao và tỉ lệ trong `01_BRAND/Character_Bible/README.md`.** Khối sai tỉ lệ thì Seedance kéo nhân vật theo: người hộp hành lang đang là tỉ lệ người lớn, chưa dùng cho Lumo được.
+- **Mốc thời gian khai báo thành hằng số ở đầu `build_shot.py`**, mỗi khoá máy có chú thích cỡ cảnh và ý đồ. Prompt lấy số từ đây, không đo lại bằng mắt.
+- **Nhân vật dạng khối đúng chiều cao và tỉ lệ trong `01_BRAND/Character_Bible/README.md`.** Khối sai tỉ lệ thì Seedance kéo nhân vật theo.
 - **Màu khối** để Seedance biết ai là ai, quay hướng nào (bảng màu ghi vào prompt):
-  - Một nhân vật: đỏ = mặt trước, đen = lưng, xanh lá = hai bên và đỉnh (như hành lang).
+  - Một nhân vật: đỏ = mặt trước, đen = lưng, xanh lá = hai bên và đỉnh.
   - Từ hai nhân vật: mỗi nhân vật một màu cố định (Lumo cam, Tavi xanh lá, Nori tím nhạt, Piko xanh ngọc), mặt trước đầu có ô trắng báo hướng nhìn. Bối cảnh, đạo cụ để xám để không lẫn màu nhân vật. **Cần thử.**
 - **Bối cảnh:** chỉ cần đúng khối, kích thước, vật cản và đạo cụ chính. Hình thật do ảnh tham chiếu và prompt quyết định.
-- **Tự kiểm tra trong script** như hành lang: máy không ra ngoài bối cảnh, đầu nhân vật luôn trong khung.
+- **Tự kiểm tra trong script:** máy không ra ngoài bối cảnh, đầu nhân vật luôn trong khung.
 - Previz không có mặt: biểu cảm, mắt, miệng, tai, đuôi chỉ có trong prompt.
 
 ## Ảnh tham chiếu
@@ -132,7 +132,7 @@ Ghi kết quả từng take (đạt, lỗi gì) vào cuối `seedance/prompt.md`
 
 ## Chưa chốt
 
-- **Ảnh tham chiếu Lumo**, mỗi bản lệch một kiểu: `lumo_hero.png` (đủ áo choàng dài và túi, nhưng nền cảnh phức tạp), `lumo_apose_meshy.png` (nền trơn, nhưng không áo choàng, không túi), hay ảnh render từ `lumo_rig.blend` (nền trơn, áo choàng ngắn tới hông như model 3D).
+- **Ảnh tham chiếu Lumo**, mỗi bản lệch một kiểu: `lumo_hero.png` (đủ áo choàng dài và túi, nhưng nền cảnh phức tạp), hay `lumo_apose_meshy.png` (nền trơn, nhưng không áo choàng, không túi).
 - **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`.
 - Có cho Seedance sinh tiếng động không, hay làm hết tiếng ở hậu kỳ.
 - Take lưu vào git (qua LFS) hết, hay chỉ take được chọn.

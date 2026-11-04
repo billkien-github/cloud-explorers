@@ -10,8 +10,7 @@ __pycache__/
 **/renders/
 # Bản lưu từng giai đoạn do build script tạo
 **/backups/
-06_PUBLISHING/Final_Videos/*
-!06_PUBLISHING/Final_Videos/.gitkeep
+06_PUBLISHING/Final_Videos/
 # Hệ điều hành
 Thumbs.db
 desktop.ini

@@ -44,7 +44,7 @@ Làm trước khi báo xong việc, không cần người dùng nhắc:
 4. **Dọn file:**
    - Xoá file tạm, shot thử, script thử, `__pycache__`, output test.
    - Code không còn ai dùng thì xoá (lấy lại từ git khi cần). `pipeline/` chỉ chứa code có từ hai nơi trở lên dùng; code riêng nằm cạnh asset hay shot của nó.
-   - File nằm sai chỗ so với cấu trúc trong `README.md` thì chuyển hoặc xoá. `.gitkeep` chỉ để trong thư mục trống thuộc cấu trúc; thư mục đã có file thì bỏ `.gitkeep`.
+   - File nằm sai chỗ so với cấu trúc trong `README.md` thì chuyển hoặc xoá. Không dùng `.gitkeep`: thư mục trống không cần có trên git.
    - Tài liệu nào rỗng ý, trùng ý hoặc quá dài so với giá trị thì gộp, rút gọn hoặc xoá.
 5. **Kiểm tra code đã sửa** còn chạy (ít nhất kiểm tra cú pháp; script render thì chạy thử trên dữ liệu nhỏ rồi xoá dữ liệu thử).
 6. **Báo lại** cho người dùng những gì đã cập nhật, đã xoá, và chỗ nào còn chưa chắc.

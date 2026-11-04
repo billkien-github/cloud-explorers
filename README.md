@@ -17,13 +17,9 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 ## Trạng thái
 
 - Có: concept 4 nhân vật, 4 bảo bối, ảnh thế giới; ảnh đầu vào Meshy cho cả 8 asset (Lumo đã đạt cả A-pose và T-pose; Tavi, Nori, Piko cần sửa ảnh bằng GPT trước, prompt trong `02_ASSET_LIBRARY/MESHY.md`); beat sheet tập 01 đã chốt (khoảng 7 phút); code dùng chung trong `pipeline/`.
-- Lumo: `02_ASSET_LIBRARY/Characters/Lumo/lumo_rig.blend` dựng từ bản Meshy v01 bằng `build_lumo.py`: thêm xương đuôi, tai, IK chân và tay (IK tay mặc định tắt), texture 2K; mặc áo choàng ngắn, đeo túi và dây chéo; mặt bản đầu: chớp mắt, mở miệng (thanh trượt `blink_L`, `blink_R`, `mouth_open`); qua kiểm tra `qa_lumo.py` (bad% ≤ 2.4%). Chưa có: lông mày, đồng tử, hình miệng khác; áo choàng và túi chưa có chuyển động riêng.
-- Shot dựng thử `04_PRODUCTION/EP001_Great_Rain_Experiment/sh030`: Lumo vấp vết nứt (7 giây, animation hoàn toàn bằng code, chưa có tiếng).
-- Clip thử `04_PRODUCTION/TEST_Lumo_Dance/sh010`: Lumo nhảy kiểu "Baby Shark" 16 giây, có hát (mở miệng theo nốt), chớp mắt, nhạc nền tự sáng tác (`build_audio.py`).
-- Previz thử `04_PRODUCTION/TEST_Previz_Corridor/sh010`: người hộp đi dọc hành lang gạch 30 giây, một cú máy không cắt (đổi cỡ cảnh, tiêu cự, nhấn ở hai lần dừng), làm video dẫn cho Seedance (quy trình đề xuất, chưa sinh thử: `04_PRODUCTION/SEEDANCE.md`).
 - Review bằng agent (`.claude/skills/review/SKILL.md`): `/review EP001` cho beat sheet, kịch bản (4 reviewer); `/review <thư mục shot>` cho shot đã render (5 reviewer, khung hình và số đo trích bằng Blender). Kết quả gộp trong chat. Chưa review được storyboard, animatic, bản phim hoàn chỉnh.
-- Chưa có: kịch bản, model của Tavi, Nori, Piko và đạo cụ.
-- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`), xong chạy `/review EP001`. Song song: soạn prompt Seedance cho previz hành lang và sinh thử lần đầu; hoàn thiện face rig Lumo (lông mày, đồng tử, hình miệng), xương vạt áo choàng để áo bay khi chạy.
+- Chưa có: kịch bản, model 3D của cả bốn nhân vật và đạo cụ.
+- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`), xong chạy `/review EP001`.
 
 ## Tài liệu
 

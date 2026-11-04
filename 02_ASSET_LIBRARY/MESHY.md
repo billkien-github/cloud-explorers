@@ -69,8 +69,8 @@ Mọi nhân vật:
 | Tavi | `tavi_apose.png` | ❌ | Bỏ ba lô, túi đeo, ống, cuộn giấy, đuôi; úp bàn tay. Mũ, kính, gile ôm sát giữ lại |
 | Nori | `nori_ref.png` | ❌ | Bỏ 4 cánh, 2 râu, 2 mẩu chân |
 | Piko | `piko_ref.png` | ❌ | Khép miệng (miệng há tạo hốc lưới, biểu cảm do face rig làm) |
-| Túi của Lumo | `lumo_bag_ref.png` | ✅ đã sinh (`source/lumo_bag_meshy_v01`) | Chỉ dùng thân túi; dây đeo dựng lại bằng code |
-| Áo choàng của Lumo | `lumo_cape_ref.png` | ✅ đã sinh (`source/lumo_cape_meshy_v01`) | Quad 30k; khớp vào người bằng code |
+| Túi của Lumo | `lumo_bag_ref.png` | ✅ | Chỉ dùng thân túi; dây đeo dựng lại bằng code |
+| Áo choàng của Lumo | `lumo_cape_ref.png` | ✅ | Quad 30k; khớp vào người bằng code |
 | Wonder Compass | `wonder_compass_ref.png` | ✅ | Kim la bàn phải quay được: làm kim riêng trong Blender, mặt kính làm bằng shader |
 | Inventor Pack | `inventor_pack_ref.png` | ✅ | Ống tinh thể phát sáng làm bằng shader |
 | Story Lens | `story_lens_ref.png` | ✅ | Hình trong mặt kính thay theo từng manh mối: làm bằng shader, không để Meshy vẽ cố định |
@@ -180,7 +180,7 @@ Cute cartoon rain-making machine, chunky rounded body made of riveted pastel met
 
 ## Sau khi tải về
 
-- FBX của Meshy có armature scale 0.01 và xoay 90°: chuẩn hoá về tỉ lệ 1 trước khi thêm xương (làm mẫu: `Characters/Lumo/build_lumo.py`).
+- FBX của Meshy có armature scale 0.01 và xoay 90°: chuẩn hoá về tỉ lệ 1 trước khi thêm xương.
 - Scale theo chiều cao trong Character Bible (Lumo 1.00 · Tavi 0.85 · Nori 0.70 · Piko 0.80).
 - Rig Meshy là khung Mixamo **24 xương, không có xương ngón tay** (bàn tay cử động một khối), tên xương kiểu `mixamorig:Head`. Xương thêm vào (tai, đuôi, ngón nếu cần) và bộ phận mặt gắn vào các xương này.
 - Kiểm tra rig bằng `pipeline/rig_qa.py` trên các tư thế khó (giơ tay, bật nhảy, ngoái đầu, cúi). Đạt khi bad% dưới khoảng 2% và thể tích gần 1.0.
@@ -188,7 +188,7 @@ Cute cartoon rain-making machine, chunky rounded body made of riveted pastel met
 
 ## Gắn đồ rời (áo choàng, túi của Lumo; ba lô của Tavi)
 
-Làm sau khi rig thân đã đạt kiểm tra. Lumo đã làm xong trong `Characters/Lumo/build_lumo.py` (bước 4), dùng làm mẫu cho Tavi.
+Làm sau khi rig thân đã đạt kiểm tra.
 
 | | Áo choàng | Túi đeo chéo / ba lô |
 |---|---|---|
@@ -197,7 +197,7 @@ Làm sau khi rig thân đã đạt kiểm tra. Lumo đã làm xong trong `Charac
 | Đi theo người | Chép trọng số da từ thân (Data Transfer), chỉ giữ ảnh hưởng của hông, lưng, ngực, cổ, vai; cánh tay 20%, đùi 30%; đầu, tai, đuôi, cẳng tay, cẳng chân không kéo áo | Dây: như áo choàng |
 
 - **Áo choàng của Lumo ngắn tới hông**, không dài tới gối như concept: đuôi mọc ở độ cao 0.2–0.3 m và chân bước sẽ xuyên áo dài. Muốn áo dài phải khoét lỗ đuôi và thêm va chạm với chân.
-- **Kiểm tra:** `qa_lumo.py` đếm số đỉnh áo, dây lún vào người ở từng tư thế. Giơ tay và chạy lún nhiều nhất (khoảng 5% đỉnh áo, chủ yếu mặt trong, không thấy khi nhìn ngoài).
+- **Kiểm tra:** đếm số đỉnh áo, dây lún vào người ở từng tư thế. Giơ tay và chạy lún nhiều nhất (khoảng 5% đỉnh áo, chủ yếu mặt trong, không thấy khi nhìn ngoài).
 - **Chưa có:** xương cho vạt áo để áo bay khi chạy, túi lắc theo bước. Mô phỏng vải (Cloth) chỉ dùng cho vài cận cảnh cần "wow" (áo quật trong bão): chậm, phải tính lại từng shot, dễ xuyên người.
 
 ## Nguồn (tra ngày 01/11/2026)
