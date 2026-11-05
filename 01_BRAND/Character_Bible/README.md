@@ -33,6 +33,8 @@ Mã màu lấy mẫu trực tiếp từ ảnh concept (vùng được chiếu s�
 | Story Lens | Nori | Cho manh mối, gợi ý | Vẫn phải tự suy luận, giải mã |
 | Pocket of Wonders | Piko | Lấy ra những vật phẩm bất ngờ | Không kiểm soát được thứ mình lấy ra |
 
+**Chờ chốt:** Piko mang Pocket of Wonders ở đâu (Piko không có đồ đeo, concept là một túi rút dây rời), để túi theo Piko liền mạch cả khi Piko trôi dưới nước. Không để túi trong thân vì dễ đọc ra là bỏ đồ vào miệng. Cần chốt trước khi dựng previz 2D tập 01.
+
 Concept: `02_ASSET_LIBRARY/Props/<Tên>/concept/`.
 
 ## Làm 3D

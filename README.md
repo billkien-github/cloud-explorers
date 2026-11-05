@@ -20,8 +20,9 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 - Previz thử `04_PRODUCTION/TEST_First_Rain/sh010`: Cảnh 3 tập 01 (mây bé, Piko hoá cái bát, đè nút MAX POWER) rút gọn 27 giây, 7 shot cắt trong một previz, đủ 4 nhân vật dạng khối. Đã có prompt theo giây, danh sách file tải lên (`seedance/prompt.md`) và take 1 (`seedance/sh010_take01.mp4`), chưa soát.
 - Quy trình: kịch bản → previz 2D từng cảnh có CC (`03_CONTENT/PREVIZ_2D.md`) → previz khối có CC → Seedance (`04_PRODUCTION/SEEDANCE.md`). Đã có công cụ in CC (`pipeline/cc.py`) và bộ nhân vật cutout 2D, thử ở `03_CONTENT/Previz_2D/TEST_Cutout/canh01` (11 giây, Lumo vội với tay, khựng lại, bị Piko đè xuống nút); chưa dựng previz 2D cảnh thật nào.
 - Review bằng agent (`.claude/skills/review/SKILL.md`): `/review EP001` cho beat sheet, kịch bản; `/review <thư mục cảnh>` cho previz 2D; `/review <thư mục shot>` cho previz khối; `/review <shot>/seedance/prompt.md` trước khi sinh; `/review <file take>` cho take. Kết quả gộp trong chat. Chưa review được cả tập đã ghép.
-- Chưa có: kịch bản, model 3D của cả bốn nhân vật và đạo cụ.
-- **Bước tiếp theo:** viết kịch bản tập 01 bằng Fountain (`03_CONTENT/Scripts/template.fountain`), xong chạy `/review EP001`, rồi dựng previz 2D từng cảnh (bộ cutout lấy từ `TEST_Cutout`, chuyển sang `pipeline/`). Song song: soát take 1 của `TEST_First_Rain` bằng `/review` và ghi kết quả vào `seedance/prompt.md`; làm ảnh concept máy Rain-O-Matic.
+- Kịch bản tập 01 đã chốt (`03_CONTENT/Scripts/EP001_great_rain_experiment.fountain`), 7 cảnh, qua ba lượt `/review`.
+- Chưa có: model 3D của cả bốn nhân vật và đạo cụ.
+- **Bước tiếp theo:** dựng previz 2D từng cảnh của tập 01, bắt đầu từ Cảnh 1 (bộ cutout lấy từ `TEST_Cutout`, chuyển sang `pipeline/`), mỗi cảnh xong thì `/review`. Song song: soát take 1 của `TEST_First_Rain` bằng `/review` và ghi kết quả vào `seedance/prompt.md`; làm ảnh concept máy Rain-O-Matic.
 
 ## Tài liệu
 
@@ -31,6 +32,7 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 | [`03_CONTENT/README.md`](03_CONTENT/README.md) | Hướng nội dung: công thức, 5 series, khung tập 6–8 phút, nhịp cho trẻ em, luật đạo cụ, cách viết kịch bản |
 | [`03_CONTENT/PREVIZ_2D.md`](03_CONTENT/PREVIZ_2D.md) | Previz 2D cutout từng cảnh, file mốc thời gian `timing.py` của cảnh, CC |
 | [`03_CONTENT/Scripts/EP001_great_rain_experiment.md`](03_CONTENT/Scripts/EP001_great_rain_experiment.md) | Beat sheet tập 01 |
+| [`03_CONTENT/Scripts/EP001_great_rain_experiment.fountain`](03_CONTENT/Scripts/EP001_great_rain_experiment.fountain) | Kịch bản tập 01 |
 | [`02_ASSET_LIBRARY/README.md`](02_ASSET_LIBRARY/README.md) | Quy ước thư mục asset |
 | [`02_ASSET_LIBRARY/MESHY.md`](02_ASSET_LIBRARY/MESHY.md) | Làm nhân vật, đạo cụ bằng Meshy + Blender, prompt |
 | [`02_ASSET_LIBRARY/Third_Party/README.md`](02_ASSET_LIBRARY/Third_Party/README.md) | Nguồn asset bên ngoài, giấy phép |
