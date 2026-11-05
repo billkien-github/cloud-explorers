@@ -15,7 +15,7 @@ Nguồn chuẩn cho mọi thông tin về nhân vật. Concept: [`cloud_explorer
 | Tính cách | Tò mò, năng động, luôn khởi xướng phiêu lưu | Thiên tài sáng chế, thích lắp ráp, thử nghiệm, nhiều ý tưởng "điên rồ" | Điềm đạm, tinh tế, giàu kiến thức, đưa ra manh mối và góc nhìn mới | Tinh nghịch, háu ăn, đáng yêu, cực kỳ khó đoán |
 | Chất hài | Hấp tấp, làm trước nghe sau | Giải pháp phức tạp cho việc đơn giản | Giải thích dài, bị ngắt lời | Chạm lung tung, dễ phân tâm vì đồ lấp lánh, hay gây bất ngờ "ngoài kịch bản" |
 | Ngoại hình | Cáo, tai rất to (trong hồng), chỏm lông trắng trên đầu, mắt nâu to, bụng và mõm màu kem, đuôi bông | Bò sát nhỏ, bụng kem, **gai tinh thể** dọc lưng và đuôi, mắt xanh lá | Khối tròn phát sáng, đầu liền thân, **4 cánh trong suốt**, 2 râu đầu ngôi sao vàng, tay nhỏ, vệt sáng thay chân | Khối thạch trong suốt, 2 sừng xanh đậm, tay nhỏ, giọt nước bắn quanh người |
-| Đồ đeo | Áo choàng đỏ viền hoa văn mây vàng, khuy tròn vàng, túi da đeo chéo có hình mây | Mũ phi công da + kính bảo hộ, áo gile kem nhiều túi, thắt lưng, đeo Inventor Pack sau lưng | — | — |
+| Đồ đeo | Áo choàng đỏ viền hoa văn mây vàng, khuy tròn vàng, túi da đeo chéo có hình mây | Mũ phi công da + kính bảo hộ, áo gile kem nhiều túi, thắt lưng, đeo Inventor Pack sau lưng | — | Pocket of Wonders: túi nhỏ cỡ nắm tay, dây vàng buộc vào gốc sừng trái, túi treo cạnh má, ngang tầm tay |
 | Dáng | Đứng, đi 2 chân | Đứng, đi 2 chân, chân ngắn, có đuôi | **Bay, không chân** | **Không chân**, nảy và trườn trên đất |
 | Chiều cao | 1.00 (chuẩn) | 0.85 | 0.70 | 0.80 |
 | Màu tham chiếu | Lông cam `#FD8A2B`, kem `#FEECCF`, áo choàng `#FC6640` | Da `#7EA258`, bụng `#ECBA7B`, tinh thể `#14F5F4` | Thân `#A787F6`, cánh `#D3ABFC`, sao `#FEF7A0` | Thân `#3BDCFD` → `#0988D1`, lưỡi `#D23C55` |
@@ -33,8 +33,6 @@ Mã màu lấy mẫu trực tiếp từ ảnh concept (vùng được chiếu s�
 | Story Lens | Nori | Cho manh mối, gợi ý | Vẫn phải tự suy luận, giải mã |
 | Pocket of Wonders | Piko | Lấy ra những vật phẩm bất ngờ | Không kiểm soát được thứ mình lấy ra |
 
-**Chờ chốt:** Piko mang Pocket of Wonders ở đâu (Piko không có đồ đeo, concept là một túi rút dây rời), để túi theo Piko liền mạch cả khi Piko trôi dưới nước. Không để túi trong thân vì dễ đọc ra là bỏ đồ vào miệng. Cần chốt trước khi dựng previz 2D tập 01.
-
 Concept: `02_ASSET_LIBRARY/Props/<Tên>/concept/`.
 
 ## Làm 3D
@@ -42,7 +40,7 @@ Concept: `02_ASSET_LIBRARY/Props/<Tên>/concept/`.
 | Nhân vật | Cách làm |
 |---|---|
 | Lumo, Tavi | Meshy sinh thân và rig Humanoid (dùng được thư viện animation). Đồ rời (áo choàng, túi), đuôi, xương tai, gai, mặt làm trong Blender. Áo choàng của Lumo bản 3D ngắn tới hông (concept dài tới gối) để đuôi và chân không xuyên áo |
-| Nori, Piko | Giữ đúng concept: **không chân**. Meshy chỉ sinh hình thân. Rig bằng code trong Blender: thân co giãn bằng shape keys, tay nhỏ, cánh, râu, sừng, mặt |
+| Nori, Piko | Giữ đúng concept: **không chân**. Meshy chỉ sinh hình thân. Rig bằng code trong Blender: thân co giãn bằng shape keys, tay nhỏ, cánh, râu, sừng, mặt. Túi của Piko là đồ rời, treo vào sừng trái bằng dây làm trong Blender, đung đưa theo cú nảy |
 
 Chi tiết: `02_ASSET_LIBRARY/MESHY.md`.
 
