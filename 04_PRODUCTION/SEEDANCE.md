@@ -2,7 +2,7 @@
 
 Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng khối, chuyển động, cú máy, nhịp thời gian, tất cả dựng bằng `build_shot.py`. Seedance lo phần **hình**: lấy video previz làm khung (video-to-video), cùng ảnh nhân vật, bối cảnh và prompt viết theo từng giây, rồi vẽ lại thành clip hoàn chỉnh. Camera và timing chốt trong Blender trước khi tốn credit.
 
-Đây là quy trình **đề xuất**, đang thử: mới có take 1 của `EP001_Great_Rain_Experiment/sh020` (đã soát, chưa dùng được).
+Đây là quy trình **đề xuất**, đang thử, chưa có take nào dùng được.
 
 ## Seedance ở đâu, giới hạn gì (tra ngày 06/11/2026)
 
@@ -42,11 +42,11 @@ sh010/
 - **Nhân vật dạng khối đúng chiều cao và tỉ lệ trong `01_BRAND/Character_Bible/README.md`.** Khối sai tỉ lệ thì Seedance kéo nhân vật theo.
 - **Màu khối** để Seedance biết ai là ai, quay hướng nào (bảng màu ghi vào prompt):
   - Một nhân vật: đỏ = mặt trước, đen = lưng, xanh lá = hai bên và đỉnh.
-  - Từ hai nhân vật: mỗi nhân vật một màu cố định (Lumo cam, Tavi xanh lá, Nori tím nhạt, Piko xanh ngọc), mặt trước đầu có ô trắng báo hướng nhìn. Bối cảnh, đạo cụ để xám để không lẫn màu nhân vật. Đang dùng ở Cảnh 1 tập 01.
+  - Từ hai nhân vật: mỗi nhân vật một màu cố định (Lumo cam, Tavi xanh lá, Nori tím nhạt, Piko xanh ngọc), mặt trước đầu có ô trắng báo hướng nhìn. Bối cảnh, đạo cụ để xám để không lẫn màu nhân vật.
 - **Khối 4 nhân vật**, máy quay, tự kiểm khung và cài đặt render ở `pipeline/blocks.py`.
-- **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. ModelArk nhận số nguyên giây, nên `SECONDS` làm tròn lên số nguyên và `SEGMENT` ghi độ dài đoạn trong cảnh: máy quay chỉ dựng các cú trong `SEGMENT`, phần dư giữ cú máy cuối, lúc dựng `pipeline/edit.py` cắt bỏ; `check_prompt.py` đọc cả hai. Đang dùng cho Cảnh 1 tập 01: `EP001_Great_Rain_Experiment/sh010` (0–28.8 s, S1–S6) và `sh020` (28.8–55 s, S7–S14).
+- **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. ModelArk nhận số nguyên giây, nên `SECONDS` làm tròn lên số nguyên và `SEGMENT` ghi độ dài đoạn trong cảnh: máy quay chỉ dựng các cú trong `SEGMENT`, phần dư giữ cú máy cuối, lúc dựng `pipeline/edit.py` cắt bỏ; `check_prompt.py` đọc cả hai.
 - **Vật hiện ra, biến mất** bằng key scale 0 và 1 cách nhau ít nhất một khung; hai key gần hơn một khung rơi vào cùng khung và vật lộ dần từ key trước đó.
-- **Vật cầm tay:** khối tay bọc lấy đầu cán như nắm tay, vật hơi chếch khỏi trục tay; đặt vật ở bên hông hay cạnh đầu, không chĩa vào mặt. Que nối thẳng từ một quả cầu tay sát mặt thì Seedance vẽ tay thành bong bóng có que xuyên qua và đưa vật vào miệng (take 1 của `EP001_Great_Rain_Experiment/sh020`). Vật nhỏ làm to hơn cỡ thật một chút cho đọc được.
+- **Vật cầm tay:** khối tay bọc lấy đầu cán như nắm tay, vật hơi chếch khỏi trục tay; đặt vật ở bên hông hay cạnh đầu, không chĩa vào mặt. Que nối thẳng từ một quả cầu tay sát mặt thì Seedance vẽ tay thành bong bóng có que xuyên qua và đưa vật vào miệng (take thử Cảnh 1 tập 01). Vật nhỏ làm to hơn cỡ thật một chút cho đọc được.
 - **Bối cảnh:** chỉ cần đúng khối, kích thước, vật cản và đạo cụ chính. Hình thật do ảnh tham chiếu và prompt quyết định.
 - **Bố trí để thấy mặt:** nhân vật nhìn thẳng vào vật chính (máy, cửa) thì máy quay phía trước chỉ thấy lưng. Đặt chỗ tương tác ở hông vật để nhân vật đứng nghiêng về phía máy quay; tránh để hai, ba nhân vật thẳng hàng với máy quay (che nhau).
 - **Nhiều shot trong một previz:** mỗi shot một camera, cắt bằng timeline marker gắn camera; danh sách `SHOTS` ở đầu script ghi giây bắt đầu, kết thúc.
@@ -130,7 +130,7 @@ Quy tắc viết:
 - **Lời thoại:** ghi khoảng giây nhân vật nói theo kịch bản ("3.0–4.5s Lumo talks, mouth moving, no voice"), giọng lồng ở hậu kỳ. Câu nói không được tạo thêm cảnh: máy vẫn theo previz.
 - **Thời lượng mỗi lần sinh:** Seedance 2.5 sinh trọn một đoạn tới 30 giây. Đoạn dài hơn, hoặc nơi chỉ cho 15 giây (Seedance 2.0), thì cắt previz ở chỗ cắt cảnh hoặc chỗ nhân vật dừng, mỗi đoạn một prompt, mốc thời gian tính lại từ 0.
 - Ảnh đạo cụ vẽ thêm đồ (ảnh Pocket of Wonders có túi mở, tràn đồ): ghi trong ACTIVE REFERENCES chỉ lấy gì, không lấy gì.
-- Những chỗ Seedance hay làm sai (rút từ take 1 của `EP001_Great_Rain_Experiment/sh020`), nên ghi sẵn trong prompt:
+- Những chỗ Seedance hay làm sai (rút từ take thử Cảnh 1 tập 01), nên ghi sẵn trong prompt:
   - Nhân vật chỉ lấp ló ở mép khung trong previz dễ bị bỏ, có khi biến mất giữa cú máy: ghi rõ ai ở mép nào, thêm luật "stay visible at that edge, partly cut".
   - Chữ gọi cỡ cảnh ("medium two-shot") làm Seedance kéo chặt khung: ghi thêm "exactly as framed in @Video1, never tighter, never wider".
   - Bố cục của ảnh bối cảnh có thể đè lên previz (cành khô dời chỗ, che mặt nhân vật): ghi vật nào đứng đúng chỗ `@Video1` đặt, không vật gì đi ngang trước mặt nhân vật.
@@ -194,7 +194,7 @@ Ghi kết quả từng take (đạt, lỗi gì) vào cuối `seedance/prompt.md`
 
 ## Chưa chốt
 
-- **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`. Đang thử bằng hai đoạn dưới 30 giây của Cảnh 1 tập 01 (`EP001_Great_Rain_Experiment/sh010`, `sh020`; cả hai đã có prompt, `sh020` có take 1).
+- **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`.
 - Có cho Seedance sinh tiếng động không, hay làm hết tiếng ở hậu kỳ.
 - Take lưu vào git (qua LFS) hết, hay chỉ take được chọn.
 
