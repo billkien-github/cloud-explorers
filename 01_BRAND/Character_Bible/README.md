@@ -28,9 +28,9 @@ Mã màu lấy mẫu trực tiếp từ ảnh concept (vùng được chiếu s�
 
 **Nhân vật nền: sinh vật nhỏ của Thung lũng Mây** (có mặt từ Cảnh 1 tập 01). Thân tròn hình hạt đậu màu be hồng nhạt, bụng sáng hơn, mắt chấm, tay chân ngắn, không sừng, không cánh, không đuôi; mỗi con đội một chiếc lá khô làm mũ; cao khoảng 1/6 Lumo. Đứng nền, không tranh khung với bốn nhân vật chính. Concept 4 tư thế (ủ rũ, thở dài, chạy che lá to, té nước): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`.
 
-**Nhân vật nền: chú chim nhỏ** (EP000A). Lông nâu, má hồng, chỏm đuôi cong, cỡ bằng nắm tay Lumo. Không nói, chỉ kêu "CHÍP"; cười bằng cách lấy cánh vỗ bụng. Màu tránh tím, vàng sao của Nori và xanh thạch của Piko. Chưa có concept.
+**Nhân vật nền: chú chim nhỏ** (EP000A). Lông nâu hạt dẻ, bụng kem, má hồng, chỏm lông trên đầu, chỏm đuôi cuộn tròn, cỡ bằng nắm tay Lumo. Không nói, chỉ kêu "CHÍP"; cười bằng cách lấy cánh vỗ bụng. Màu tránh tím, vàng sao của Nori và xanh thạch của Piko. Ảnh xoay: `02_ASSET_LIBRARY/Characters/Little_Bird/concept/little_bird_turnaround.png`.
 
-**Nhân vật nền: bướm phát sáng** (EP000A). Bướm nhỏ cỡ một ngón tay Lumo, cánh hồng đào nhạt phát sáng mềm. Màu tránh tím, vàng sao của Nori, vàng của Wonder Compass và xanh ngọc tín hiệu của hòn đảo Wonder Hub, để không lẫn với Nori và với ánh sáng dẫn truyện. Chưa có concept.
+**Nhân vật nền: bướm phát sáng** (EP000A). Bướm nhỏ cỡ một ngón tay Lumo, cánh hồng đào nhạt phát sáng mềm. Màu tránh tím, vàng sao của Nori, vàng của Wonder Compass và xanh ngọc tín hiệu của hòn đảo Wonder Hub, để không lẫn với Nori và với ánh sáng dẫn truyện. Concept ba tư thế (xoè cánh, bay, đậu): `02_ASSET_LIBRARY/Characters/Glow_Butterflies/concept/glow_butterflies_ref.png`.
 
 **Cặp quan hệ tạo chuyện:** Lumo ↔ Tavi (vội vàng vs cẩn thận) · Tavi ↔ Nori (máy móc vs nguồn gốc) · Nori ↔ Piko (trật tự vs hỗn loạn) · **Lumo ↔ Piko** (cặp gây hài nhiều nhất).
 

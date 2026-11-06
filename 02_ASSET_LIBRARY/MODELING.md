@@ -45,6 +45,26 @@ Làm trước khi có quy tắc trên, nên đạo cụ có đủ ảnh nhiều 
 
 Không sinh ảnh riêng: mây bé (hiệu ứng dựng trong Blender), chiếc lá khô (theo `Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`). Bối cảnh thế giới truyện và Wonder Hub: ảnh bối cảnh, prompt theo `04_PRODUCTION/SEEDANCE.md`, chưa sinh.
 
+### Tập 000A
+
+Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000A_mysterious_compass.md`, mục "Sản xuất", đã soát với kịch bản. Sinh theo thứ tự bảng, vì ảnh sau đính kèm ảnh trước. Prompt: nhân vật phụ, đạo cụ ở mục "Nhân vật phụ tập 000A", "Đạo cụ tập 000A" dưới đây; bối cảnh ở `04_PRODUCTION/SEEDANCE.md`, mục "Prompt sinh ảnh tham chiếu bằng ChatGPT".
+
+| Asset | Thư mục | Ảnh | Có |
+|---|---|---|---|
+| Chú chim nhỏ | `Characters/Little_Bird/` | `little_bird_ref.png`, `little_bird_ref_back.png`, ghép `little_bird_turnaround.png` | ✅ |
+| Bướm phát sáng | `Characters/Glow_Butterflies/` | `glow_butterflies_ref.png` (thiết kế, ba tư thế) | ✅ |
+| Bản đồ giấy | `Props/Paper_Map/` | `paper_map_ref.png` | ✅ |
+| Rừng Mây | `Environments/Cloud_Forest/` | `cloud_forest_hero.png` | ✅ |
+| Phế tích cổ | `Environments/Ancient_Ruins/` | `ancient_ruins_hero.png` | ✅ |
+| Vòm đá | `Environments/Ancient_Ruins/` | `stone_vault_hero.png` | ✅ |
+| Cầu ván cổ qua khe núi | `Environments/Ancient_Ruins/` | `vine_bridge_hero.png` | ✅ |
+| Đỉnh đồi lúc hoàng hôn | `Environments/Sunset_Hill/` | `sunset_hill_hero.png` | ✅ |
+| Hòn đảo có Wonder Hub, nhìn từ xa | `Environments/Wonder_Hub/` | `wonder_hub_island_hero.png` | ✅ |
+| Bệ đá có ngôi sao và bản đồ khắc | `Props/Star_Plinth/` | `star_plinth_ref.png` | ✅ |
+| Bãi phế liệu | `Environments/Junkyard/` | `junkyard_hero.png` | ✅ |
+
+Không sinh ảnh riêng: Lumo, Wonder Compass, Inventor Pack (đã có `lumo_turnaround.png`, `wonder_compass_ref.png`, `inventor_pack_ref.png`); hộp kim loại, bụi gai, sườn dốc lá khô, phiến đá, phù điêu mây (có trong ảnh bối cảnh); cầu sập, phù điêu ánh lên, cửa thấp mở, đài thiên văn lóe xanh ngọc (trạng thái, tả bằng chữ trong prompt Seedance, hình theo previz); hòn sỏi, quả gai, chiếc lá, đống lá (vật nhỏ tả bằng chữ). `wonder_hub_island_hero.png` chốt dáng ngoài của Wonder Hub: ảnh Wonder Hub của tập 01 và các tập sau đính kèm ảnh này.
+
 ## Bộ ảnh dựng model
 
 Chỉ làm cho asset sắp dựng model trong Blender. Mỗi ảnh một góc nhìn, nền trơn. Ảnh nhìn sau đi cặp với ảnh nhìn trước cùng tên, thêm hậu tố `_back`. Mỗi nhân vật có:
@@ -530,6 +550,55 @@ The attached sheet shows the four main characters of a soft stylized 3D animated
 - Cute, round and simple, so they never compete with the main characters.
 - Soft pastel colors that are not orange, green, lavender or aqua; happy expressions with closed-mouth smiles.
 A design sheet: each animal in a three-quarter view, waving. Plain flat light-gray background, soft even lighting. No text, no labels, no logos, no watermark.
+```
+
+### Đạo cụ tập 000A
+
+- Mỗi món một chat, lưu ảnh vào `concept/` của thư mục ghi ở bảng "Tập 000A".
+- Bản đồ giấy làm đầu tiên; bệ đá làm sau ảnh cầu ván và ảnh hòn đảo (`04_PRODUCTION/SEEDANCE.md`), vì bệ đá đính kèm cả ba.
+
+**Bản đồ giấy** (Cảnh 1, 4, 5: Lumo cầm ngược, xoay qua xoay lại; Cảnh 4 đặt cạnh bản đồ khắc trên bệ đá). Đính kèm `cloud_explorers_character_sheet.png`, lưu `paper_map_ref.png`. Ảnh vẽ bản đồ đúng chiều; cầm ngược là xoay nửa vòng.
+```
+The attached sheet shows the style of a soft stylized 3D animated film for young children; use it for style and scale only. Design Lumo the fox's homemade treasure map. ONE image: the map lying flat, seen straight from above, orthographic, no perspective, the right way up, isolated.
+- A sheet of warm cream parchment with soft worn edges and two faint fold lines (it folds into a small shoulder bag). About as wide as Lumo's head.
+- Drawn by hand in brown ink with a few soft colors, simple and readable from far away: five or six small floating islands with tiny round trees, wavy cloud lines between them, a dotted path hopping from island to island.
+- One big chunky red arrow in the middle pointing straight DOWN, and right under its tip a small treasure chest, clearly upright: flat bottom, rounded lid on top, gold lock. When the map is turned around, the chest and the arrow must look obviously upside down.
+- The right edge of the map is empty cloud sea: wavy cloud lines only, no island there.
+- No text, no letters, no numbers, no compass rose, no X mark.
+- Square 1:1, centered with some margin. Plain flat light-gray background, soft even lighting, no shadow.
+```
+
+**Bệ đá có ngôi sao và bản đồ khắc** (Cảnh 4: Lumo ấn ngôi sao, phiến đá trượt mở, lộ bản đồ khắc ngang ngực Lumo; đài thiên văn khắc lóe xanh ngọc). Đính kèm theo thứ tự `Environments/Ancient_Ruins/concept/vine_bridge_hero.png`, `Props/Paper_Map/concept/paper_map_ref.png`, `Environments/Wonder_Hub/concept/wonder_hub_island_hero.png`; lưu `star_plinth_ref.png`. Ảnh ở trạng thái đã mở; lúc ngôi sao chưa ấn tả bằng chữ trong prompt Seedance.
+```
+Image 1 shows an old stone plinth on the far side of a vine bridge, Image 2 is Lumo's paper map, Image 3 is a far island with a domed observatory; all from a soft stylized 3D animated film for young children. Create ONE image of the plinth from Image 1 as a separate object, in a three-quarter view from slightly above, isolated, no characters.
+- The same weathered stone and moss as in Image 1. A sturdy square plinth whose flat top is at the chest height of Lumo the fox.
+- On the top: the raised eight-pointed star from Image 1 in the compass-rose style (four long points alternating with four short points, NOT eight equal points), pressed down level with the surface; next to it a stone slab has slid aside, revealing a carved stone map set into the top.
+- The carved map shows the same islands in the same places as Image 2, carved in low relief: islands with tiny round trees and wavy cloud lines; no dotted path, no arrow, no treasure chest. At its right edge, where Image 2 has only empty cloud sea, one extra small island carries a tiny domed observatory with the silhouette of Image 3.
+- No text, no letters, no numbers, no religious symbols.
+- Square 1:1, centered with some margin. Plain flat light-gray background, soft even lighting, no ground shadow.
+```
+
+### Nhân vật phụ tập 000A
+
+**Chú chim nhỏ** (nhân vật nền có diễn, Cảnh 1, 4, 5: đậu cành, nghiêng đầu, lấy cánh vỗ bụng cười "CHÍP CHÍP CHÍP", nhảy từng bậc theo sau Lumo, đậu mép bệ đá, gật gù, bay đi; thiết kế: Character Bible, "Nhân vật nền: chú chim nhỏ"). Đính kèm `cloud_explorers_character_sheet.png`, lưu `little_bird_ref.png`, rồi `little_bird_ref_back.png`; ghép `little_bird_turnaround.png` bằng `pipeline/turnaround.py`.
+```
+The attached sheet shows the four main characters of a soft stylized 3D animated film for young children; use it for style and scale only. Design a tiny forest bird, a background character who watches Lumo the fox, laughs at him by patting its round belly with one wing, hops along behind him and nods.
+- Tiny and round: about the size of Lumo's fist. A plump round body, a big round head, a short pointed beak, big shiny dark eyes, short legs with small feet, short rounded wings, a small tuft of feathers on top of the head, and one curly tuft of tail feathers curling up.
+- Soft warm brown feathers, a lighter cream-beige belly and two rosy pink cheek spots. No purple, no lavender, no yellow, no aqua or turquoise, no orange.
+- Cheerful, cheeky expression, beak closed.
+ONE image: full body in a three-quarter view facing the viewer's left, standing on its feet, wings folded at its sides. Centered with some margin, square 1:1. Plain flat light-gray background, soft even lighting, no ground shadow. No text, no logos, no watermark.
+```
+```
+Now the same bird seen from directly behind, as one separate image: same pose, same size and position in the frame, same canvas. The brown back of the head and body, the folded wings and the curly tail tuft are clear; no belly or cheeks visible. Match the exact colors of the front image: the same warm chestnut brown on the head, back and tail, the same darker brown wings with cream-beige feather tips, not more orange or more saturated. Plain flat light-gray background, soft even lighting, no ground shadow, no text.
+```
+
+**Bướm phát sáng** (nhân vật nền Cảnh 1: bay qua các tán cây; một con đậu trên phiến đá trước phế tích, dẫn mắt tới ánh vàng; thiết kế: Character Bible, "Nhân vật nền: bướm phát sáng"). Đính kèm `cloud_explorers_character_sheet.png`, lưu `glow_butterflies_ref.png`.
+```
+The attached sheet shows the four main characters of a soft stylized 3D animated film for young children; use it for style and scale only. Design a tiny glowing butterfly for a magical cloud forest, a background creature that drifts between the trees and leads the eye.
+- Tiny: about the size of one of Lumo the fox's fingers. A small soft round body, two short curled antennae, rounded wings.
+- The wings are pale peach-pink and glow softly from within, with a gentle halo of light. No purple, no lavender, no yellow or gold, no aqua or turquoise.
+- Simple and cute, never creepy.
+A design sheet with the same butterfly in three poses: 1) wings fully open, seen from above; 2) flying, seen from the side; 3) resting with wings folded up, seen from the side. Plain flat light-gray background, soft even lighting. No text, no labels, no logos, no watermark.
 ```
 
 ## Dựng trong Blender
