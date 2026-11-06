@@ -166,7 +166,7 @@ for k in ("Video", "Image"):
         say("Chặn", f"Số @{k} không liền từ 1: {nums}")
 for k, n in sorted(used - defined):
     say("Chặn", f"@{k} {n} được nhắc trong prompt nhưng chưa khai trong ACTIVE REFERENCES")
-upload = shot / "renders" / "seedance_upload"
+upload = shot / "renders" / "seedance_upload"  # chỉ có khi sinh tay trên console; sinh qua API thì không cần
 if upload.is_dir():
     files = {(("Video" if p.name.startswith("video") else "Image"), int(mm.group(1))): p.name
              for p in upload.iterdir() if (mm := re.match(r"(?:video|image)(\d+)_", p.name))}
@@ -178,8 +178,6 @@ if upload.is_dir():
     ptxt = upload / "prompt.txt"
     if ptxt.exists() and ptxt.read_text(encoding="utf-8").strip() != prompt.strip():
         say("Chặn", "renders/seedance_upload/prompt.txt khác khối prompt trong prompt.md: chạy lại pipeline/seedance_upload.py trước khi sinh")
-else:
-    say("Nên sửa", "Chưa có renders/seedance_upload/: tạo bằng pipeline/seedance_upload.py")
 for k, n, up, src_path in re.findall(r"\|\s*`@(Video|Image) ?(\d+)`\s*\|\s*`([^`]+)`\s*\|\s*`([^`]+)`", md):
     if not ((shot / src_path).exists() or (root / src_path).exists()):
         say("Nên sửa", f"Nguồn của @{k} {n} không tồn tại: {src_path}")

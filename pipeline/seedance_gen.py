@@ -1,0 +1,446 @@
+"""
+Sinh clip Seedance của một shot qua API BytePlus ModelArk: đọc prompt và ảnh, chọn model, gửi, chờ, tải take về, ghi chi phí.
+    python pipeline/seedance_gen.py <thư mục shot> --dry-run   # chọn model, kiểm giới hạn, ước tính chi phí; không gửi
+    python pipeline/seedance_gen.py <thư mục shot>             # gửi thật, chờ xong thì tải về seedance/<shot>_takeNN.mp4
+    python pipeline/seedance_gen.py <thư mục shot> --resume    # chờ tiếp task đã gửi mà chưa tải về (hết giờ chờ, mất mạng)
+Tuỳ chọn: --model auto|2.5|2.0|2.0-fast|2.0-mini (mặc định auto), --resolution 480p|720p|1080p (mặc định 720p),
+--no-audio (mặc định có tiếng), --duration <giây> (mặc định SECONDS của build_shot.py), --wait <phút> (mặc định 60).
+
+- Đầu vào: bảng số tham chiếu và khối ```text của seedance/prompt.md, đọc bằng load() của pipeline/seedance_upload.py.
+  @Video, @Image gửi theo đúng số; ratio 16:9, watermark tắt.
+- Chọn model (--model auto): shot có tối đa ANH_IT ảnh tham chiếu thì Seedance 2.0, đoạn dài tối đa 15 giây; nhiều ảnh
+  hơn thì 2.5, đoạn cắt dài 30 giây. Đoạn vượt giới hạn của model (2.0 dài hơn 15 giây) thì script dừng, không gửi.
+- Ảnh gửi dạng base64. Video tham chiếu API chỉ nhận URL: script tải video lên bucket TOS của tài khoản BytePlus, đưa
+  link ký sẵn có hạn, task kết thúc thì xoá file trên TOS.
+- Biến môi trường (người dùng tự đặt, không ghi vào repo): ARK_API_KEY; có video tham chiếu thì thêm TOS_ACCESS_KEY,
+  TOS_SECRET_KEY, TOS_BUCKET (bucket ở vùng ap-southeast-1; vùng khác thì đặt thêm TOS_REGION).
+- Task kết thúc (xong hay lỗi) thì ghi một dòng vào 04_PRODUCTION/seedance_log.csv. API chỉ trả số token
+  (usage.completion_tokens), không trả tiền: chi phí = token x đơn giá trong MODELS. Task đang chờ ghi ở
+  renders/seedance_pending.json của shot.
+Chỉ dùng thư viện chuẩn của Python. Quy trình: 04_PRODUCTION/SEEDANCE.md.
+"""
+import argparse
+import ast
+import base64
+import csv
+import datetime
+import hashlib
+import hmac
+import json
+import os
+import pathlib
+import re
+import struct
+import sys
+import time
+import urllib.error
+import urllib.request
+from urllib.parse import quote
+
+sys.dont_write_bytecode = True  # không để __pycache__ trong pipeline/
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from seedance_upload import load  # noqa: E402
+
+API = "https://ark.ap-southeast.bytepluses.com/api/v3/contents/generations/tasks"
+ANH_IT = 9  # luật của dự án: shot có tối đa ngần này ảnh tham chiếu thì --model auto chọn Seedance 2.0 (rẻ hơn 2.5)
+
+# Tra trang "Create a video generation task" và "Pricing" của ModelArk ngày 06/11/2026; đổi model hay giá thì sửa ở đây.
+# anh, video: số tham chiếu tối đa; video_s: tổng giây video tham chiếu tối đa (mỗi video từ 2 giây); ra: giây ra (min, max);
+# gia: USD / 1 triệu token, online inference, (không có video vào, có video vào), theo độ phân giải.
+MODELS = {
+    "2.5": dict(id="dreamina-seedance-2-5-260628", anh=30, video=10, video_s=30, ra=(4, 30),
+                gia={"480p": (10.7, 6.4), "720p": (10.7, 6.4), "1080p": (11.7, 7.0)}),
+    "2.0": dict(id="dreamina-seedance-2-0-260128", anh=9, video=3, video_s=15, ra=(4, 15),
+                gia={"480p": (7.0, 4.3), "720p": (7.0, 4.3), "1080p": (7.7, 4.7)}),
+    "2.0-fast": dict(id="dreamina-seedance-2-0-fast-260128", anh=9, video=3, video_s=15, ra=(4, 15),
+                     gia={"480p": (5.6, 3.3), "720p": (5.6, 3.3)}),
+    "2.0-mini": dict(id="dreamina-seedance-2-0-mini-260615", anh=9, video=3, video_s=15, ra=(4, 15),
+                     gia={"480p": (3.5, 2.1), "720p": (3.5, 2.1)}),
+}
+KHUNG = {"480p": (864, 496), "720p": (1280, 720), "1080p": (1920, 1080)}  # 16:9; riêng 2.5 ở 480p là 854x480
+FPS = 24
+MIME = {".png": "png", ".jpg": "jpeg", ".jpeg": "jpeg", ".webp": "webp"}
+XONG = ("succeeded", "failed", "expired", "cancelled")
+LOG_COT = ["time", "shot", "take", "model", "task_id", "status", "resolution", "ratio", "duration_s", "images", "videos",
+           "video_in_s", "audio", "tokens", "usd_per_m_tokens", "cost_usd", "est_cost_usd", "error"]
+
+
+class LoiAPI(Exception):
+    def __init__(self, code, text):
+        try:
+            err = json.loads(text).get("error") or {}
+            text = f"{err.get('code', '')}: {err.get('message', text)}"
+        except (ValueError, AttributeError):
+            pass
+        super().__init__(f"HTTP {code} {text}")
+
+
+# ---------- đọc file
+
+def giay_shot(shot):
+    """SECONDS ở cấp module của build_shot.py (dạng `SECONDS = 29` hoặc `FPS, SECONDS = 24, 29`), không có thì None."""
+    f = shot / "build_shot.py"
+    if not f.is_file():
+        return None
+    for node in ast.parse(f.read_text(encoding="utf-8")).body:
+        if not (isinstance(node, ast.Assign) and len(node.targets) == 1):
+            continue
+        t, v = node.targets[0], node.value
+        pairs = [(t, v)] if isinstance(t, ast.Name) else (
+            zip(t.elts, v.elts) if isinstance(t, ast.Tuple) and isinstance(v, ast.Tuple) else [])
+        for tt, vv in pairs:
+            if isinstance(tt, ast.Name) and tt.id == "SECONDS" and isinstance(vv, ast.Constant):
+                return vv.value
+    return None
+
+
+def mp4_giay(path):
+    """Thời lượng (giây) của file mp4/mov, đọc từ hộp mvhd trong moov, không cần ffprobe."""
+    end = path.stat().st_size
+    with open(path, "rb") as f:
+        pos = 0
+        while pos + 8 <= end:
+            f.seek(pos)
+            size, typ = struct.unpack(">I4s", f.read(8))
+            hdr = 8
+            if size == 1:
+                size, hdr = struct.unpack(">Q", f.read(8))[0], 16
+            elif size == 0:
+                size = end - pos
+            if typ == b"moov":
+                data = f.read(size - hdr)
+                i = data.find(b"mvhd")
+                if i < 0:
+                    break
+                if data[i + 4] == 1:  # version 1: thời điểm 64 bit
+                    scale, dur = struct.unpack(">IQ", data[i + 24:i + 36])
+                else:
+                    scale, dur = struct.unpack(">II", data[i + 16:i + 24])
+                return dur / scale
+            if size < hdr:
+                break
+            pos += size
+    sys.exit(f"Không đọc được thời lượng của {path}")
+
+
+def anh(path, loi):
+    """Đọc ảnh tham chiếu, kiểm giới hạn của API, trả data URL base64."""
+    b = path.read_bytes()
+    fmt = MIME.get(path.suffix.lower())
+    if fmt is None:
+        loi.append(f"{path.name}: chỉ gửi png, jpg, webp")
+        return ""
+    if len(b) >= 30e6:
+        loi.append(f"{path.name}: {len(b) / 1e6:.1f} MB, API nhận ảnh dưới 30 MB")
+    if b[:8] == b"\x89PNG\r\n\x1a\n":
+        w, h = struct.unpack(">II", b[16:24])
+        if not (300 <= w <= 6000 and 300 <= h <= 6000 and 0.4 <= w / h <= 2.5):
+            loi.append(f"{path.name}: {w}x{h}, API cần cạnh 300–6000 px, tỉ lệ rộng/cao 0.4–2.5")
+    return f"data:image/{fmt};base64," + base64.b64encode(b).decode("ascii")
+
+
+# ---------- mạng
+
+def goi(method, url, body=None, headers=None, timeout=120):
+    req = urllib.request.Request(url, data=body, method=method, headers=headers or {})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.read()
+    except urllib.error.HTTPError as e:
+        raise LoiAPI(e.code, e.read().decode("utf-8", "replace")) from None
+
+
+def ark(method, path="", payload=None):
+    h = {"Authorization": f"Bearer {os.environ['ARK_API_KEY']}", "Content-Type": "application/json"}
+    data = json.dumps(payload).encode("utf-8") if payload is not None else None
+    return json.loads(goi(method, API + path, data, h))
+
+
+def tos_url(method, key, expires):
+    """Link ký sẵn của TOS (thuật toán TOS4-HMAC-SHA256, giống SDK ve-tos-python-sdk): ai có link thì làm được đúng
+    một việc (method) với đúng một file trong `expires` giây."""
+    ak, sk, bucket = (os.environ[k] for k in ("TOS_ACCESS_KEY", "TOS_SECRET_KEY", "TOS_BUCKET"))
+    region = os.environ.get("TOS_REGION", "ap-southeast-1")
+    host = f"{bucket}.tos-{region}.bytepluses.com"
+    now = datetime.datetime.now(datetime.timezone.utc)
+    date, ts = now.strftime("%Y%m%d"), now.strftime("%Y%m%dT%H%M%SZ")
+    scope = f"{date}/{region}/tos/request"
+    q = {"X-Tos-Algorithm": "TOS4-HMAC-SHA256", "X-Tos-Credential": f"{ak}/{scope}", "X-Tos-Date": ts,
+         "X-Tos-Expires": str(expires), "X-Tos-SignedHeaders": "host"}
+    cq = "&".join(f"{quote(k, safe='-_.~')}={quote(v, safe='-_.~')}" for k, v in sorted(q.items()))
+    path = "/" + quote(key, safe="/~")
+    canon = "\n".join([method, path, cq, f"host:{host}\n", "host", "UNSIGNED-PAYLOAD"])
+    sts = "\n".join(["TOS4-HMAC-SHA256", ts, scope, hashlib.sha256(canon.encode("utf-8")).hexdigest()])
+    k = sk.encode("utf-8")
+    for part in (date, region, "tos", "request"):
+        k = hmac.new(k, part.encode("utf-8"), hashlib.sha256).digest()
+    sig = hmac.new(k, sts.encode("utf-8"), hashlib.sha256).hexdigest()
+    return f"https://{host}{path}?{cq}&X-Tos-Signature={sig}"
+
+
+def xoa_tos(keys):
+    for key in keys:
+        try:
+            goi("DELETE", tos_url("DELETE", key, 600))
+        except (LoiAPI, OSError, KeyError) as e:
+            print(f"  Chưa xoá được {key} trên TOS ({e!r}); xoá tay trong console nếu cần")
+
+
+# ---------- sổ task đang chờ, take, log
+
+def doc_cho(shot):
+    f = shot / "renders" / "seedance_pending.json"
+    return json.loads(f.read_text(encoding="utf-8")) if f.is_file() else []
+
+
+def ghi_cho(shot, entries):
+    f = shot / "renders" / "seedance_pending.json"
+    if entries:
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(json.dumps(entries, ensure_ascii=False, indent=2), encoding="utf-8")
+    elif f.exists():
+        f.unlink()
+
+
+def take_moi(shot):
+    d = shot / "seedance"
+    d.mkdir(exist_ok=True)
+    nums = [int(m.group(1)) for p in d.glob(f"{shot.name}_take*.mp4")
+            if (m := re.search(r"_take(\d+)\.mp4$", p.name))]
+    return d / f"{shot.name}_take{max(nums, default=0) + 1:02d}.mp4"
+
+
+def ghi_log(root, row):
+    f = root / "04_PRODUCTION" / "seedance_log.csv"
+    moi = not f.exists()
+    with open(f, "a", newline="", encoding="utf-8") as fh:
+        w = csv.DictWriter(fh, LOG_COT)
+        if moi:
+            w.writeheader()
+        w.writerow(row)
+
+
+def bay_gio():
+    return datetime.datetime.now().astimezone().isoformat(timespec="seconds")
+
+
+def dong_log(e, **kw):
+    """Một dòng log từ thông tin task đã ghi lúc gửi (e), cộng các cột kết quả trong kw."""
+    m = MODELS[e["model"]]
+    row = dict(time=bay_gio(), shot=e["shot"], take="", model=m["id"], task_id=e.get("task_id", ""), status="",
+               resolution=e["resolution"], ratio="16:9", duration_s=e["duration"], images=e["images"],
+               videos=e["videos"], video_in_s=e["video_in_s"], audio=e["audio"], tokens=0,
+               usd_per_m_tokens=m["gia"][e["resolution"]][1 if e["videos"] else 0], cost_usd=0,
+               est_cost_usd=e["est_usd"], error="")
+    row.update(kw)
+    return row
+
+
+# ---------- chuẩn bị, gửi, chờ
+
+def chuan_bi(shot, a):
+    """Đọc prompt.md, chọn model, kiểm mọi giới hạn. Trả thông tin để gửi; có lỗi thì in ra và thoát mã 1."""
+    root, prompt, refs = load(shot)
+    loi, canh_bao = [], []
+    videos = sorted((r for r in refs if r[0] == "Video"), key=lambda r: r[1])
+    images = sorted((r for r in refs if r[0] == "Image"), key=lambda r: r[1])
+    for group, kind in ((videos, "Video"), (images, "Image")):
+        if [r[1] for r in group] != list(range(1, len(group) + 1)):
+            loi.append(f"Số @{kind} trong bảng phải liền nhau từ 1 (đang có {[r[1] for r in group]})")
+    loi += [f"Thiếu nguồn của @{k}{n}: {src}" for k, n, _, src, path in refs if path is None]
+    dung = {(k, int(n)) for k, n in re.findall(r"@(Video|Image) ?(\d+)", prompt)}
+    co = {(r[0], r[1]) for r in refs}
+    loi += [f"Prompt gọi @{k}{n} nhưng bảng không có" for k, n in sorted(dung - co)]
+    canh_bao += [f"Bảng có @{k}{n} nhưng prompt không gọi tới" for k, n in sorted(co - dung)]
+    words = len(prompt.split())
+    if words > 1000:
+        canh_bao.append(f"Prompt dài {words} từ; BytePlus khuyên tối đa 1.000 từ tiếng Anh, dài hơn model dễ bỏ chi tiết")
+
+    video_giay = [mp4_giay(r[4]) if r[4] else 0.0 for r in videos]
+    vin = sum(video_giay)
+    duration = a.duration or giay_shot(shot)
+    if duration is None:
+        sys.exit("Không thấy SECONDS trong build_shot.py; truyền --duration <giây>")
+    canh_bao += [f"Video tham chiếu dài {s:.1f} s, khác thời lượng sinh {duration} s"
+                 for s in video_giay if s and abs(s - duration) > 0.5]
+
+    goi_y = []
+    if a.model == "auto":
+        key = "2.0" if len(images) <= ANH_IT else "2.5"
+        ly_do = f"{len(images)} ảnh tham chiếu ({'tối đa' if key == '2.0' else 'quá'} {ANH_IT})"
+    else:
+        key, ly_do = a.model, "chọn bằng --model"
+    m = MODELS[key]
+    if key == "2.5" and duration < m["ra"][1]:
+        goi_y.append(f"Đoạn sinh bằng 2.5 cắt dài {m['ra'][1]} giây, sinh trọn một lần (đoạn này {duration} s); "
+                     "bỏ qua nếu là đoạn cuối của cảnh")
+    if len(images) > m["anh"] or len(videos) > m["video"]:
+        loi.append(f"Seedance {key} nhận tối đa {m['anh']} ảnh và {m['video']} video tham chiếu "
+                   f"(đang có {len(images)} ảnh, {len(videos)} video)")
+    if key != "2.5" and not refs:
+        loi.append(f"Seedance {key} cần ít nhất một ảnh hay video tham chiếu")
+    if any(0 < s < 2 for s in video_giay):
+        loi.append("Mỗi video tham chiếu phải dài ít nhất 2 giây")
+    if not m["ra"][0] <= duration <= m["ra"][1] or vin > m["video_s"]:
+        msg = (f"Seedance {key} sinh {m['ra'][0]}–{m['ra'][1]} giây và nhận video tham chiếu tổng tối đa "
+               f"{m['video_s']} giây (đoạn này: sinh {duration} s, video tham chiếu {vin:.1f} s).")
+        if key == "2.0" and a.model == "auto":
+            msg += (f" Đoạn tối đa {ANH_IT} ảnh dùng 2.0 nên cắt thành các đoạn tối đa 15 giây, mỗi đoạn một prompt"
+                    " (04_PRODUCTION/SEEDANCE.md, mục Sinh qua API); cần sinh nguyên đoạn thì chạy --model 2.5.")
+        loi.append(msg)
+    if a.resolution not in m["gia"]:
+        loi.append(f"Seedance {key} không có {a.resolution} (có {', '.join(m['gia'])})")
+
+    data_urls = [anh(r[4], loi) if r[4] else "" for r in images]
+    body_mb = (sum(len(u) for u in data_urls) + len(prompt)) / 1e6
+    if body_mb > 60:
+        loi.append(f"Ảnh base64 + prompt nặng {body_mb:.0f} MB, API nhận request tối đa 64 MB: bớt ảnh hoặc nén ảnh")
+
+    w, h = (854, 480) if key == "2.5" and a.resolution == "480p" else KHUNG[a.resolution]
+    est_tokens = (vin + duration) * w * h * FPS / 1024
+    gia = m["gia"].get(a.resolution, (0, 0))[1 if videos else 0]
+    est = est_tokens * gia / 1e6
+
+    print(f"Shot: {shot.relative_to(root).as_posix()}")
+    print(f"Model: Seedance {key} ({m['id']}) — {ly_do}")
+    print(f"Sinh {duration} s · {a.resolution} · 16:9 · {'không tiếng' if a.no_audio else 'có tiếng'} · watermark tắt")
+    for (kind, n, name, src, _), s in zip(videos, video_giay):
+        print(f"  @{kind}{n}  {src}  ({s:.1f} s)")
+    for kind, n, name, src, _ in images:
+        print(f"  @{kind}{n}  {src}")
+    print(f"Prompt: {words} từ")
+    print(f"Ước tính: ({vin:.1f} s video vào + {duration} s ra) x {w}x{h} x {FPS} fps / 1024 = {est_tokens:,.0f} token")
+    print(f"          {est_tokens:,.0f} token x ${gia} / 1 triệu token = ${est:.2f} (số thật lấy từ usage.completion_tokens)")
+    for c in goi_y:
+        print(f"[Gợi ý] {c}")
+    for c in canh_bao:
+        print(f"[Cảnh báo] {c}")
+    for x in loi:
+        print(f"[Lỗi] {x}")
+    if loi:
+        sys.exit(1)
+    return dict(root=root, prompt=prompt, key=key, duration=duration, videos=videos, images=images,
+                data_urls=data_urls, vin=vin, est=est)
+
+
+def gui(shot, a, p):
+    """Tải video lên TOS, tạo task, ghi sổ chờ. Trả mục sổ chờ của task."""
+    root, key = p["root"], p["key"]
+    e = dict(shot=shot.relative_to(root).as_posix(), model=key, resolution=a.resolution, duration=p["duration"],
+             images=len(p["images"]), videos=len(p["videos"]), video_in_s=round(p["vin"], 2),
+             audio=not a.no_audio, est_usd=round(p["est"], 3), tos_keys=[])
+    content = [{"type": "text", "text": p["prompt"]}]
+    stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    for kind, n, name, src, path in p["videos"]:
+        obj = f"seedance/{shot.name}/{stamp}_{name}"
+        print(f"Tải @Video{n} lên TOS ({path.stat().st_size / 1e6:.1f} MB)…")
+        goi("PUT", tos_url("PUT", obj, 3600), path.read_bytes(), {"Content-Type": "video/mp4"}, timeout=900)
+        e["tos_keys"].append(obj)
+        # link đọc sống bằng hạn mặc định của task (48 giờ), phòng task phải xếp hàng lâu
+        content.append({"type": "video_url", "video_url": {"url": tos_url("GET", obj, 172800)}, "role": "reference_video"})
+    for url in p["data_urls"]:
+        content.append({"type": "image_url", "image_url": {"url": url}, "role": "reference_image"})
+    body = {"model": MODELS[key]["id"], "content": content, "ratio": "16:9", "resolution": a.resolution,
+            "duration": p["duration"], "watermark": False, "generate_audio": not a.no_audio}
+    if key == "2.5":
+        body["omni_reference_task_type"] = "reference"  # sinh mới theo tham chiếu, không phải sửa hay nối video
+    try:
+        task = ark("POST", "", body)
+    except (LoiAPI, OSError) as x:
+        xoa_tos(e["tos_keys"])
+        ghi_log(root, dong_log(e, status="rejected", error=str(x)))
+        sys.exit(f"ModelArk từ chối task: {x}")
+    e.update(task_id=task["id"], submitted=bay_gio())
+    ghi_cho(shot, doc_cho(shot) + [e])
+    print(f"Đã gửi: task {task['id']}")
+    return e
+
+
+def ket_thuc(shot, root, e, t):
+    """Task đã kết thúc: tải take, ghi log, xoá file TOS, bỏ khỏi sổ chờ."""
+    st, take = t["status"], ""
+    if st == "succeeded":
+        out = take_moi(shot)
+        tmp = out.with_suffix(".part")
+        with urllib.request.urlopen(t["content"]["video_url"], timeout=600) as r, open(tmp, "wb") as f:
+            while chunk := r.read(1 << 20):
+                f.write(chunk)
+        tmp.replace(out)
+        take = out.name
+    tokens = (t.get("usage") or {}).get("completion_tokens", 0)
+    err = t.get("error") or {}
+    row = dong_log(e, take=take, status=st, tokens=tokens,
+                   error=f"{err.get('code', '')}: {err.get('message', '')}" if err else "")
+    row["cost_usd"] = round(tokens * row["usd_per_m_tokens"] / 1e6, 3) if st == "succeeded" else 0  # lỗi thì không tính tiền
+    ghi_log(root, row)
+    xoa_tos(e["tos_keys"])
+    ghi_cho(shot, [x for x in doc_cho(shot) if x["task_id"] != e["task_id"]])
+    if take:
+        print(f"Xong: seedance/{take} · {tokens:,} token · ${row['cost_usd']:.2f} (ước tính ${e['est_usd']:.2f})")
+    else:
+        print(f"Task {e['task_id']} {st}: {row['error']}")
+
+
+def cho(shot, root, entries, wait_min):
+    """Hỏi trạng thái 15 giây một lần tới khi mọi task kết thúc hoặc hết giờ chờ (thoát mã 2, task vẫn chạy trên server)."""
+    han, con, cu = time.time() + wait_min * 60, list(entries), {}
+    loi = False
+    while con:
+        for e in list(con):
+            try:
+                t = ark("GET", "/" + e["task_id"])
+            except (LoiAPI, OSError) as x:
+                print(f"  Lỗi khi hỏi trạng thái {e['task_id']}: {x}; thử lại sau")
+                continue
+            if t["status"] != cu.get(e["task_id"]):
+                cu[e["task_id"]] = t["status"]
+                print(f"{datetime.datetime.now():%H:%M:%S}  {e['task_id']}: {t['status']}")
+            if t["status"] in XONG:
+                try:
+                    ket_thuc(shot, root, e, t)
+                except OSError as x:  # tải take lỗi: giữ trong sổ chờ, link video sống 24 giờ
+                    print(f"  Chưa tải được take ({x}); chạy lại với --resume trong 24 giờ")
+                    loi = True
+                con.remove(e)
+                loi |= t["status"] != "succeeded"
+        if con:
+            if time.time() > han:
+                sys.exit(f"Hết {wait_min:g} phút chờ, {len(con)} task vẫn chạy trên server: chạy lại với --resume")
+            time.sleep(15)
+    return loi
+
+
+def main():
+    sys.stdout.reconfigure(encoding="utf-8")
+    ap = argparse.ArgumentParser(description="Sinh clip Seedance của một shot qua API BytePlus ModelArk")
+    ap.add_argument("shot")
+    ap.add_argument("--model", default="auto", choices=["auto", *MODELS])
+    ap.add_argument("--resolution", default="720p", choices=list(KHUNG))
+    ap.add_argument("--duration", type=int)
+    ap.add_argument("--no-audio", action="store_true")
+    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--wait", type=float, default=60, help="phút chờ tối đa")
+    a = ap.parse_args()
+    shot = pathlib.Path(a.shot).resolve()
+    root = next(p for p in [shot, *shot.parents] if (p / "CLAUDE.md").exists())
+
+    if a.resume:
+        entries = doc_cho(shot)
+        if not entries:
+            sys.exit("Shot này không có task nào đang chờ")
+    else:
+        p = chuan_bi(shot, a)
+        if a.dry_run:
+            return
+    thieu = [k for k in ("ARK_API_KEY",) + (("TOS_ACCESS_KEY", "TOS_SECRET_KEY", "TOS_BUCKET")
+                                             if not a.resume and p["videos"] else ()) if not os.environ.get(k)]
+    if thieu:
+        sys.exit(f"Chưa đặt biến môi trường: {', '.join(thieu)} (04_PRODUCTION/SEEDANCE.md, mục Sinh qua API)")
+    if not a.resume:
+        entries = [gui(shot, a, p)]
+    sys.exit(1 if cho(shot, root, entries, a.wait) else 0)
+
+
+if __name__ == "__main__":
+    main()

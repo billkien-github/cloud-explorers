@@ -4,36 +4,69 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 
 Đây là quy trình **đề xuất**, đang thử, chưa có take nào dùng được.
 
-## Seedance ở đâu, giới hạn gì (tra ngày 06/11/2026)
+## Seedance ở đâu, giới hạn gì (tra tài liệu chính thức của BytePlus ModelArk ngày 06/11/2026)
 
-- **Nơi chạy:** BytePlus ModelArk (console hoặc API), model **Seedance 2.5** (mã `dreamina-seedance-2-5-260628` theo tài liệu bên thứ ba, đối chiếu lại trong console). Mỗi lần sinh 4–30 giây, `duration` là số nguyên giây. Tham số: `ratio` 16:9; `resolution` 480p, 720p, 1080p (nguồn bên thứ ba ghi 1080p có giá từ tháng 10/2026; chưa có thì 720p); `watermark` tắt; `generate_audio` bật tắt tiếng động.
-- **Tham chiếu:** ảnh (role `reference_image`), video (`reference_video`), tiếng (`reference_audio`). Prompt gọi `@Image1`, `@Video1`, viết liền không cách, số theo thứ tự đưa vào. Qua API, video phải là URL (đặt file lên chỗ lưu trữ trước). Số tham chiếu tối đa và tổng thời lượng video tham chiếu (khoảng 30 giây) lấy từ nguồn bên thứ ba, chưa đối chiếu được trang chính thức.
-- Thông số trên thay đổi nhanh: kiểm tra lại trong console trước mỗi đợt sinh.
+- **Nơi chạy:** BytePlus ModelArk, sinh qua API bằng `pipeline/seedance_gen.py` (mục "Sinh qua API"). Clip 16:9, 720p, watermark tắt; `duration` là số nguyên giây; `generate_audio` bật tắt tiếng động.
+- **Hai dòng model**, chọn theo số ảnh tham chiếu (mục "Sinh qua API"):
+
+| | Seedance 2.5 | Seedance 2.0 |
+|---|---|---|
+| Mã model | `dreamina-seedance-2-5-260628` | `dreamina-seedance-2-0-260128`; bản rẻ hơn, chỉ tới 720p: `dreamina-seedance-2-0-fast-260128`, `dreamina-seedance-2-0-mini-260615` |
+| Giây sinh | 4–30 | 4–15 |
+| Ảnh tham chiếu | tối đa 30 | tối đa 9 |
+| Video tham chiếu | tối đa 10, tổng tối đa 30 giây | tối đa 3, tổng tối đa 15 giây |
+| Giá 480p, 720p khi có video vào (USD / 1 triệu token) | 6.40 | 4.30 |
+| Ví dụ: previz 15 giây vào, 15 giây ra, 720p | khoảng $4.15 | khoảng $2.79 |
+
+- **Tính tiền:** theo token, chỉ task thành công mới tính. Token ≈ (giây video vào + giây ra) × rộng × cao × 24 / 1024 (720p 16:9 là 1280×720). API chỉ trả số token (`usage.completion_tokens`), không trả tiền. Không có video vào thì đơn giá cao hơn (2.5: 10.70, 2.0: 7.00) nhưng không tính giây video vào; có video vào thì có mức token tối thiểu. Có hay không có tiếng giá như nhau.
+- **Tham chiếu:** ảnh (role `reference_image`), video (`reference_video`), tiếng (`reference_audio`). Prompt gọi `@Image1`, `@Video1`, viết liền không cách, số theo thứ tự đưa vào. Ảnh gửi được dạng base64: mỗi ảnh dưới 30 MB, cạnh 300–6000 px, tỉ lệ rộng/cao 0.4–2.5, cả request tối đa 64 MB. Video chỉ nhận URL công khai: mp4 hoặc mov, 24–60 fps, mỗi file tối đa 200 MB, mỗi video từ 2 giây.
+- Link video kết quả sống 24 giờ. Thông số và giá đổi nhanh: kiểm tra lại trước mỗi đợt sinh, đổi thì sửa `MODELS` trong `pipeline/seedance_gen.py`.
 
 ## Các bước
 
 | # | Bước | Ra cái gì |
 |---|---|---|
-| 1 | Chọn đoạn từ previz 2D đã chốt của cảnh (`03_CONTENT/PREVIZ_2D.md`): ai, ở đâu, làm gì, mấy giây, cú máy | Mô tả ngắn ở docstring `build_shot.py` |
+| 1 | Chọn đoạn từ previz 2D đã chốt của cảnh (`03_CONTENT/PREVIZ_2D.md`): ai, ở đâu, làm gì, mấy giây, cú máy. Độ dài đoạn theo model: tối đa 9 ảnh tham chiếu thì đoạn tối đa 15 giây (Seedance 2.0), nhiều hơn thì đoạn 30 giây (Seedance 2.5) | Mô tả ngắn ở docstring `build_shot.py` |
 | 2 | Dựng previz bằng `build_shot.py` (xem "Previz") | `sh010.blend`, `backups/` |
 | 3 | Duyệt previz: `run.ps1 stills`, `run.ps1 preview`, in CC bằng `pipeline/cc.py` (`03_CONTENT/PREVIZ_2D.md`, mục CC), rồi `/review <thư mục shot>` (hình có kể đúng kịch bản, nhịp, bố cục). **Chốt timing**: từ đây prompt bám theo từng con số | Bản previz đã chốt |
 | 4 | Render video tham chiếu: `run.ps1 ref` (1920x1080, 24 fps, MP4, ít sample cho nhanh, không in CC) | `renders/sh010_ref.mp4` |
 | 5 | Chọn ảnh tham chiếu (xem "Ảnh tham chiếu") | Danh sách `@Image` |
-| 6 | Soạn prompt theo giây (xem "Prompt theo giây"), kèm bảng số tham chiếu → file tải lên → nguồn. Tạo ngay thư mục tải lên riêng của shot: `python pipeline/seedance_upload.py <thư mục shot>` chép video previz, từng ảnh (tên theo số) và `prompt.txt`; sửa prompt hay đổi ảnh thì chạy lại. Trước khi sinh: `/review <thư mục shot>/seedance/prompt.md` | `seedance/prompt.md`, `renders/seedance_upload/` |
-| 7 | Sinh trên BytePlus ModelArk: 16:9, 1080p, `duration` bằng `SECONDS` của `build_shot.py`, watermark tắt | `seedance/sh010_take01.mp4` |
+| 6 | Soạn prompt theo giây (xem "Prompt theo giây"), kèm bảng số tham chiếu → file tải lên → nguồn. Trước khi sinh: `python pipeline/seedance_gen.py <thư mục shot> --dry-run` (model, giới hạn, chi phí ước tính) và `/review <thư mục shot>/seedance/prompt.md` | `seedance/prompt.md` |
+| 7 | Sinh qua API: `python pipeline/seedance_gen.py <thư mục shot>` (mục "Sinh qua API"): model theo số ảnh, 16:9, 720p, `duration` bằng `SECONDS` của `build_shot.py`, watermark tắt; tải take về và ghi chi phí | `seedance/sh010_take01.mp4`, một dòng trong `04_PRODUCTION/seedance_log.csv` |
 | 8 | Soát take theo bảng "Soát take": `/review <thư mục shot>/seedance/<take>.mp4`. Lỗi do prompt thì sửa prompt; lỗi do previz thì sửa `build_shot.py`, render lại, sửa mốc trong prompt | Take được chọn |
 | 9 | Dựng cảnh: ghi take được chọn của từng đoạn vào danh sách dựng `<tập>/canhNN_edit.py`, nối bằng `pipeline/edit.py` (cắt theo `SEGMENT`, CC theo `TIMING`) | `<tập>/renders/canhNN_edit_cc.mp4` + `.srt` |
-| 10 | Hậu kỳ: lồng tiếng, nhạc, tiếng động ở `05_POST_PRODUCTION/` | |
+| 10 | Hậu kỳ ở `05_POST_PRODUCTION/`: lồng tiếng, nhạc; tiếng động lấy từ take, thiếu hay lệch mốc thì bù | |
 
 Thư mục shot thêm `seedance/`:
 ```
 sh010/
 ├── build_shot.py, sh010.blend, backups/, renders/   (như cũ)
-├── renders/seedance_upload/  video1_previz.mp4, image1_<tên>.png…, prompt.txt: đúng thứ tự tải lên, do pipeline/seedance_upload.py tạo (không lên git)
+├── renders/seedance_pending.json  task đã gửi mà chưa tải take về, do pipeline/seedance_gen.py ghi (không lên git)
+├── renders/seedance_upload/  chỉ khi sinh tay trên console: video1_previz.mp4, image1_<tên>.png…, prompt.txt đúng thứ tự tải lên, do pipeline/seedance_upload.py tạo (không lên git)
 └── seedance/
     ├── prompt.md            prompt đã gửi (tiếng Anh) + file tham chiếu theo số @Image + ghi nhận từng take
     └── sh010_take01.mp4     clip Seedance trả về, giữ nguyên, không sửa
 ```
+
+## Sinh qua API
+
+Claude chạy `pipeline/seedance_gen.py`, không cần mở console: script đọc `seedance/prompt.md` (bảng số tham chiếu và khối prompt), chọn model, gửi ảnh và video, chờ, tải take về `seedance/<shot>_takeNN.mp4` (số take tự tăng) và ghi chi phí.
+
+```bash
+python pipeline/seedance_gen.py <thư mục shot> --dry-run   # in model, tham chiếu, chi phí ước tính, lỗi; không gửi
+python pipeline/seedance_gen.py <thư mục shot>             # gửi thật, chờ tới khi xong (vài phút tới vài chục phút)
+python pipeline/seedance_gen.py <thư mục shot> --resume    # chờ tiếp task đã gửi (hết giờ chờ, mất mạng lúc tải take)
+```
+
+Tuỳ chọn khác (`--model`, `--resolution`, `--no-audio`, `--duration`, `--wait`) ở docstring của script.
+
+- **Chọn model và độ dài đoạn:** đoạn có tối đa 9 ảnh tham chiếu (`ANH_IT` trong script) dùng Seedance 2.0, dài tối đa 15 giây; nhiều ảnh hơn thì dùng Seedance 2.5, cắt đoạn dài 30 giây và sinh trọn một lần (đoạn cuối của cảnh có thể ngắn hơn). Chia đoạn theo luật này ngay từ bước 1 (mục "Previz", ý "Một cảnh dài chia nhiều đoạn"; mỗi đoạn một prompt, mốc tính lại từ 0). Đoạn tối đa 9 ảnh mà dài hơn 15 giây thì script dừng, không gửi; cần sinh nguyên đoạn thì ép `--model 2.5`. Đoạn 2.5 ngắn hơn 30 giây thì dry-run in gợi ý.
+- **Chạy từ Claude:** chạy `--dry-run` trước và sửa hết lỗi, rồi chạy thật ở chế độ nền (một lần sinh lâu hơn giới hạn 2 phút của một lệnh). Mỗi lần chạy thật là một lần trả tiền.
+- **Biến môi trường**, người dùng tự đặt (`~/.zshrc` trên macOS, `setx` trên Windows), không ghi vào repo hay vào chat:
+  - `ARK_API_KEY`: API key của ModelArk.
+  - API chỉ nhận video tham chiếu qua URL, nên script tải video previz lên một bucket TOS (BytePlus Object Storage) cùng tài khoản, đưa ModelArk link ký sẵn có hạn, task xong thì xoá file. Cần `TOS_BUCKET` (bucket riêng tư ở vùng ap-southeast-1; vùng khác thì đặt thêm `TOS_REGION`), `TOS_ACCESS_KEY`, `TOS_SECRET_KEY` (access key IAM có quyền ghi và xoá trong bucket đó).
+- **Log chi phí:** mỗi task kết thúc thêm một dòng vào `04_PRODUCTION/seedance_log.csv` (lên git, đọc lại để làm báo cáo): thời gian, shot, take, model, mã task, trạng thái, độ phân giải, giây sinh, số ảnh và video, giây video vào, có tiếng không, token, đơn giá, `cost_usd`, ước tính, lỗi. `cost_usd` = token × đơn giá niêm yết lúc chạy, chưa trừ gói tiết kiệm hay resource pack; số tiền thật xem ở Billing của BytePlus. Task lỗi, bị chặn hay bị từ chối ghi `cost_usd` 0.
+- Sinh tay trên console vẫn được: `python pipeline/seedance_upload.py <thư mục shot>` chép video previz, từng ảnh (tên theo số) và `prompt.txt` vào `renders/seedance_upload/` đúng thứ tự tải lên.
 
 ## Previz
 
@@ -119,7 +152,7 @@ Viết tiếng Anh. Dựa theo bài mẫu của Higgsfield (nguồn cuối file)
    - hành động, mốc nhấn ghi tới 0.1 giây ("at 9.7s Lumo turns the head toward camera");
    - biểu cảm (mắt, miệng, tai, đuôi);
    - `END 3.5s:` trạng thái cuối khối (ai ở đâu, đang làm gì).
-8. **AUDIO:** không nhạc, không lời thoại (nhạc và lồng tiếng nhiều thứ tiếng làm ở hậu kỳ).
+8. **AUDIO:** tiếng động do Seedance sinh (`generate_audio` bật, mặc định của `seedance_gen.py`): tả tiếng động của đoạn và các mốc nhấn theo giây (Timed accents), trùng mốc hành động. Không nhạc, không lời thoại: nhạc và lồng tiếng nhiều thứ tiếng làm ở hậu kỳ.
 9. **HOLD:** nhắc lại các khoá quan trọng nhất ở cuối.
 
 Quy tắc viết:
@@ -128,7 +161,8 @@ Quy tắc viết:
 - Mỗi mốc chỉ một hành động chính. Không nhồi nhiều việc hơn số giây cho phép.
 - Chữ và video mâu thuẫn về chuyển động thì video thắng (ghi rõ trong prompt).
 - **Lời thoại:** ghi khoảng giây nhân vật nói theo kịch bản ("3.0–4.5s Lumo talks, mouth moving, no voice"), giọng lồng ở hậu kỳ. Câu nói không được tạo thêm cảnh: máy vẫn theo previz.
-- **Thời lượng mỗi lần sinh:** Seedance 2.5 sinh trọn một đoạn tới 30 giây. Đoạn dài hơn, hoặc nơi chỉ cho 15 giây (Seedance 2.0), thì cắt previz ở chỗ cắt cảnh hoặc chỗ nhân vật dừng, mỗi đoạn một prompt, mốc thời gian tính lại từ 0.
+- **Thời lượng mỗi lần sinh:** Seedance 2.0 sinh tối đa 15 giây, Seedance 2.5 tới 30 giây; đoạn cắt theo model (mục "Sinh qua API"). Đoạn dài hơn thì cắt previz ở chỗ cắt cảnh hoặc chỗ nhân vật dừng, mỗi đoạn một prompt, mốc thời gian tính lại từ 0.
+- **Độ dài prompt:** BytePlus khuyên tối đa 1.000 từ tiếng Anh, dài hơn thì model dễ bỏ chi tiết (`seedance_gen.py` cảnh báo). Prompt hai đoạn thử Cảnh 1 tập 01 dài 2.700–3.250 từ.
 - Ảnh đạo cụ vẽ thêm đồ (ảnh Pocket of Wonders có túi mở, tràn đồ): ghi trong ACTIVE REFERENCES chỉ lấy gì, không lấy gì.
 - Những chỗ Seedance hay làm sai (rút từ take thử Cảnh 1 tập 01), nên ghi sẵn trong prompt:
   - Nhân vật chỉ lấp ló ở mép khung trong previz dễ bị bỏ, có khi biến mất giữa cú máy: ghi rõ ai ở mép nào, thêm luật "stay visible at that edge, partly cut".
@@ -173,7 +207,7 @@ TIMELINE
 3.5–7.0s — ...
 
 AUDIO
-No music, no dialogue, no voice. <Sound effects: ... Timed accents: <t>s ..., <t>s ... | No sound at all.>
+No music, no dialogue, no voice. Sound effects: ... Timed accents: <t>s ..., <t>s ...
 
 HOLD
 @Video1 camera 1:1 for all <N> seconds. Exactly <K> characters. @Image1 identity constant. No text, no logos, no watermarks.
@@ -189,18 +223,18 @@ HOLD
 | Màu khối không lọt vào hình | Nhấn "do not take color from @Video1" |
 | Hành động, biểu cảm, khoảng nói đúng mốc giây | Tách khối TIMELINE nhỏ hơn, mỗi mốc một việc |
 | Không chữ, logo, cảnh đáng sợ | Thêm vào RULES |
+| Tiếng động đúng mốc nhấn; không nhạc, không giọng nói | Sửa Timed accents trong AUDIO cho trùng mốc hành động; nhấn "no music, no voice" ở AUDIO và HOLD. Lỗi nhỏ để hậu kỳ bù |
 
 Ghi kết quả từng take (đạt, lỗi gì) vào cuối `seedance/prompt.md`.
 
 ## Chưa chốt
 
 - **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`.
-- Có cho Seedance sinh tiếng động không, hay làm hết tiếng ở hậu kỳ.
 - Take lưu vào git (qua LFS) hết, hay chỉ take được chọn.
 
 ## Nguồn
 
-Tra ngày 06/11/2026 (BytePlus ModelArk): [BytePlus ModelArk: Dreamina Seedance](https://docs.byteplus.com/en/docs/ModelArk/2608626) · [DataCamp: Seedance 2.0 API guide](https://www.datacamp.com/tutorial/seedance-2-0-api-guide) · [BytePlus Seedance 2.5 API setup](https://seedance2-5.com/blog/byteplus-seedance-2-5-api) · [Fuser: Seedance 2.5 prompt guide](https://fuser.studio/articles/seedance-2-5-prompt-guide)
+Tra ngày 06/11/2026 (tài liệu chính thức của BytePlus): [ModelArk: Create a video generation task](https://docs.byteplus.com/en/docs/modelark/create-video-generation-task-api) · [ModelArk: Retrieve a video generation task](https://docs.byteplus.com/en/docs/modelark/get-video-generation-task-api) · [ModelArk: Pricing](https://docs.byteplus.com/en/docs/modelark/model-pricing) · [TOS: Including a signature in the URL](https://docs.byteplus.com/en/docs/tos/reference-including-a-signature-in-the-url) · [Fuser: Seedance 2.5 prompt guide](https://fuser.studio/articles/seedance-2-5-prompt-guide)
 
 Tra ngày 03/11/2026:
 
