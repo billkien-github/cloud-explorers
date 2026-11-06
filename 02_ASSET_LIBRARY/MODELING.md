@@ -134,7 +134,7 @@ Trong Blender, ảnh trước đặt làm ảnh nền (Reference) ở Front view
 - Ảnh nhìn ngang: ghi nhìn từ bên nào và quay về phía nào của người xem (`seen from its left side, facing the viewer's left`), phần chìa ra (tai, cánh) thấy mặt nào. GPT hay vẽ mặt đẹp dù sai góc nhìn (tai voi lộ mặt trong màu hồng). Vật có cơ cấu ở một bên (lò xo, bản lề của nắp che nút): nhìn ngang từ phía có cơ cấu cho khớp ảnh trước.
 - Tư thế tham chiếu bỏ đồ nhân vật cầm khi diễn (dây trong vòi voi con); diễn làm sau, ở previz hay rig.
 - GPT hay tự thêm màu, chi tiết không có trong prompt (màu tím trên Rain-O-Matic, cầu dốc ở mạn thuyền): soát với Character Bible và kịch bản, rồi ghi `no …` vào prompt.
-- Ghi "a clear gap between the arms and the body" thì GPT có thể vẽ tay rời hẳn khỏi thân (Piko). Ghi tay liền ở vai, chỉ hở giữa mặt dưới cánh tay và thân. Ảnh sửa từ ảnh khác thì GPT hay kéo tay về gần nằm ngang: ghi lại góc (`about 45 degrees below horizontal, an A-pose`). Đổi tư thế tay thì ghi vai giữ nguyên chỗ cũ, nếu không GPT dời vai lên cao (tay T-pose của Nori).
+- Ghi "a clear gap between the arms and the body" thì GPT có thể vẽ tay rời hẳn khỏi thân (Piko) hoặc đầu tay cắt phẳng, hở một khe với thân như tay búp bê (Nori). Ghi tay mọc liền ở vai (`the shoulder blends into the body, no gap and no flat cut`), chỉ hở giữa mặt dưới cánh tay và thân. Ảnh sửa từ ảnh khác thì GPT hay kéo tay về gần nằm ngang: ghi lại góc (`about 45 degrees below horizontal, an A-pose`). Đổi tư thế tay thì ghi vai giữ nguyên chỗ cũ, nếu không GPT dời vai lên cao (tay T-pose của Nori); ảnh sau thì ghi tay cùng độ cao với ảnh trước (`at exactly the same height on the body as in Image 2`), vì GPT hay đặt tay cao hơn (tay T-pose sau của Piko lệch khoảng nửa bề dày tay). Ảnh sửa từ ảnh khác thì vai có thể đổi kiểu (mọc mềm ở A-pose, nối phẳng ở T-pose): ghi `the shoulder blends smoothly into the body, no flat seam`.
 - Vật có chi tiết đối xứng (mũi sao tám cánh của Wonder Compass): GPT hay thêm chi tiết mới mà giữ nguyên phần đối xứng cũ. Ghi rõ các phần còn lại phải bằng nhau và vì sao (`not longer than the diagonal ones, it never looks like a fixed compass rose`).
 - ChatGPT đôi khi đưa hai bản và hỏi "Which image do you like more?": phải chọn một bản thì mới tải được. Nếu nút tải trong khung xem ảnh không ăn, tải bằng link tạo ngay trong trang (Claude làm được qua công cụ JavaScript của Claude in Chrome).
 
@@ -244,14 +244,14 @@ Edit this image of Nori, a small glowing light spirit from a soft stylized 3D an
 1. Remove all four wings completely.
 2. Remove both antennae and their stars completely.
 3. Remove the golden light trail under the body; the bottom of the body is smoothly round, no feet.
-4. The tiny arms are held straight out from the body, angled about 45 degrees down, with a clear gap between the arms and the body, palms facing down.
+4. The tiny arms grow smoothly out of the lower sides of the round body (the shoulder blends into the body, no gap and no flat cut), held straight out, angled about 45 degrees down, with a clear gap only between the underside of each arm and the body, palms facing down.
 5. Mouth closed with a gentle smile, eyes open looking straight at the camera.
 6. Orthographic front view, no perspective distortion, Nori centered with some margin. Portrait 2:3.
 7. Plain flat light-gray background, soft even lighting, no glow halo around the body, no ground shadow, no text.
 ```
 Đính kèm `nori_apose_body.png`, lưu `nori_tpose_body.png`:
 ```
-Use the attached approved image as the base and edit ONLY the tiny arms: rotate each arm at the shoulder up to point straight out horizontally, parallel to the ground. The shoulder stays exactly where it is now, low on the side of the round body: the arm pivots there and does not move higher up the body. Everything else stays identical: body, face, size and position in the frame. The arms keep the same size and shape. One separate image, plain flat light-gray background, no glow halo, no text.
+Use the attached approved image as the base and edit ONLY the tiny arms: rotate each arm at the shoulder up to point straight out horizontally, parallel to the ground. The shoulder stays exactly where it is now, low on the side of the round body: the arm pivots there and does not move higher up the body, and the shoulder blends smoothly into the body as in the attached image, no flat seam. Everything else stays identical: body, face, size and position in the frame. The arms keep the same size and shape. One separate image, plain flat light-gray background, no glow halo, no text.
 ```
 Đính kèm `nori_apose_body.png`, lưu `nori_apose_body_back.png`:
 ```
@@ -259,7 +259,7 @@ Create the BACK view of the attached approved front image as one separate image:
 ```
 Đính kèm theo thứ tự `nori_apose_body_back.png`, `nori_tpose_body.png`; lưu `nori_tpose_body_back.png`:
 ```
-Image 1 is the approved A-pose BACK view, Image 2 the approved T-pose FRONT view. Create the T-pose BACK view as one separate image: use Image 1 as the base and edit ONLY the tiny arms, rotating them up to point straight out horizontally exactly like the arms in Image 2 (seen from behind), from the same low shoulder spot on the side of the round body. Everything else stays identical to Image 1.
+Image 1 is the approved A-pose BACK view, Image 2 the approved T-pose FRONT view. Create the T-pose BACK view as one separate image: use Image 1 as the base and edit ONLY the tiny arms, rotating them up to point straight out horizontally exactly like the arms in Image 2 (seen from behind), from the same low shoulder spot on the side of the round body, at exactly the same height as in Image 2, the shoulder blending smoothly into the body with no flat seam. Everything else stays identical to Image 1.
 ```
 
 ### Nori: đủ đồ
@@ -305,7 +305,7 @@ Create the BACK view of the attached approved front image as one separate image:
 ```
 Đính kèm theo thứ tự `piko_apose_body_back.png`, `piko_tpose_body.png`; lưu `piko_tpose_body_back.png`:
 ```
-Image 1 is the approved A-pose BACK view, Image 2 the approved T-pose FRONT view. Create the T-pose BACK view as one separate image: use Image 1 as the base and edit ONLY the stubby arms, rotating them up to point straight out horizontally exactly like the arms in Image 2 (seen from behind), still joined to the body at the shoulder. Everything else stays identical to Image 1.
+Image 1 is the approved A-pose BACK view, Image 2 the approved T-pose FRONT view. Create the T-pose BACK view as one separate image: use Image 1 as the base and edit ONLY the stubby arms, rotating them up to point straight out horizontally exactly like the arms in Image 2 (seen from behind), at exactly the same height on the body as in Image 2, still joined to the body at the shoulder. Everything else stays identical to Image 1.
 ```
 
 ### Sinh vật nhỏ của thung lũng: thân
