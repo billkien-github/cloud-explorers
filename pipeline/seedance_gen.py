@@ -8,12 +8,15 @@ Tuỳ chọn: --model auto|2.5|2.0|2.0-fast|2.0-mini (mặc định auto), --res
 
 - Đầu vào: bảng số tham chiếu và khối ```text của seedance/prompt.md, đọc bằng load() của pipeline/seedance_upload.py.
   @Video, @Image gửi theo đúng số; ratio 16:9, watermark tắt.
-- Chọn model (--model auto): shot có tối đa ANH_IT ảnh tham chiếu thì Seedance 2.0, đoạn dài tối đa 15 giây; nhiều ảnh
-  hơn thì 2.5, đoạn cắt dài 30 giây. Đoạn vượt giới hạn của model (2.0 dài hơn 15 giây) thì script dừng, không gửi.
-- Ảnh gửi dạng base64. Video tham chiếu API chỉ nhận URL: script tải video lên bucket TOS của tài khoản BytePlus, đưa
-  link ký sẵn có hạn, task kết thúc thì xoá file trên TOS.
-- Biến môi trường (người dùng tự đặt, không ghi vào repo): ARK_API_KEY; có video tham chiếu thì thêm TOS_ACCESS_KEY,
-  TOS_SECRET_KEY, TOS_BUCKET (bucket ở vùng ap-southeast-1; vùng khác thì đặt thêm TOS_REGION).
+- Chọn model (--model auto): shot có tối đa ANH_IT ảnh tham chiếu thì dòng Seedance 2.0, đoạn dài tối đa 15 giây, bắt
+  đầu ở bậc rẻ nhất 2.0-mini (take chưa đạt về chất lượng hình thì --model 2.0-fast, rồi --model 2.0; dry-run in giá
+  từng bậc). Nhiều ảnh hơn thì script dừng, không gửi: phải hỏi người dùng gộp ảnh xuống ANH_IT hay dùng 2.5 (đoạn cắt
+  dài 30 giây); người dùng chọn 2.5 thì chạy với --model 2.5. Đoạn vượt giới hạn của model thì script dừng, không gửi.
+- Ảnh gửi dạng base64. Video tham chiếu API chỉ nhận URL: script tải video lên một bucket riêng tư chuẩn S3 (đang dùng
+  Cloudflare R2), đưa ModelArk link ký sẵn có hạn, task kết thúc thì xoá hẳn file.
+- Biến môi trường (người dùng tự đặt, không ghi vào repo): ARK_API_KEY; có video tham chiếu thì thêm S3_ENDPOINT
+  (<ACCOUNT_ID>.r2.cloudflarestorage.com), S3_BUCKET, S3_ACCESS_KEY và S3_SECRET_KEY (Access Key ID và Secret Access
+  Key của R2 API token); dịch vụ chuẩn S3 khác thì có thể cần thêm S3_REGION.
 - Task kết thúc (xong hay lỗi) thì ghi một dòng vào 04_PRODUCTION/seedance_log.csv. API chỉ trả số token
   (usage.completion_tokens), không trả tiền: chi phí = token x đơn giá trong MODELS. Task đang chờ ghi ở
   renders/seedance_pending.json của shot.
@@ -42,7 +45,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from seedance_upload import load  # noqa: E402
 
 API = "https://ark.ap-southeast.bytepluses.com/api/v3/contents/generations/tasks"
-ANH_IT = 9  # luật của dự án: shot có tối đa ngần này ảnh tham chiếu thì --model auto chọn Seedance 2.0 (rẻ hơn 2.5)
+ANH_IT = 9  # luật của dự án: shot có tối đa ngần này ảnh tham chiếu thì dùng dòng Seedance 2.0 (rẻ hơn 2.5)
+BAC_20 = ["2.0-mini", "2.0-fast", "2.0"]  # các bậc của dòng 2.0, rẻ tới đắt: --model auto chọn bậc đầu
 
 # Tra trang "Create a video generation task" và "Pricing" của ModelArk ngày 06/11/2026; đổi model hay giá thì sửa ở đây.
 # anh, video: số tham chiếu tối đa; video_s: tổng giây video tham chiếu tối đa (mỗi video từ 2 giây); ra: giây ra (min, max);
@@ -141,11 +145,13 @@ def anh(path, loi):
 
 # ---------- mạng
 
-def goi(method, url, body=None, headers=None, timeout=120):
+def goi(method, url, body=None, headers=None, timeout=120, header_tra=None):
+    """Gọi HTTP, trả nội dung; header_tra là tên một header muốn lấy thì trả (nội dung, giá trị header)."""
     req = urllib.request.Request(url, data=body, method=method, headers=headers or {})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            return r.read()
+            data = r.read()
+            return (data, r.headers.get(header_tra, "")) if header_tra else data
     except urllib.error.HTTPError as e:
         raise LoiAPI(e.code, e.read().decode("utf-8", "replace")) from None
 
@@ -156,34 +162,59 @@ def ark(method, path="", payload=None):
     return json.loads(goi(method, API + path, data, h))
 
 
-def tos_url(method, key, expires):
-    """Link ký sẵn của TOS (thuật toán TOS4-HMAC-SHA256, giống SDK ve-tos-python-sdk): ai có link thì làm được đúng
-    một việc (method) với đúng một file trong `expires` giây."""
-    ak, sk, bucket = (os.environ[k] for k in ("TOS_ACCESS_KEY", "TOS_SECRET_KEY", "TOS_BUCKET"))
-    region = os.environ.get("TOS_REGION", "ap-southeast-1")
-    host = f"{bucket}.tos-{region}.bytepluses.com"
-    now = datetime.datetime.now(datetime.timezone.utc)
+def ky_s3(method, host, path, region, ak, sk, expires, now, query=None, headers=None):
+    """Link ký sẵn chuẩn S3 (AWS Signature V4, ký qua query): ai có link thì làm được đúng một việc (method) với đúng
+    một file trong `expires` giây (tối đa 7 ngày). headers: header được ký kèm (vd Content-Type), lúc gọi phải gửi
+    đúng giá trị đó."""
     date, ts = now.strftime("%Y%m%d"), now.strftime("%Y%m%dT%H%M%SZ")
-    scope = f"{date}/{region}/tos/request"
-    q = {"X-Tos-Algorithm": "TOS4-HMAC-SHA256", "X-Tos-Credential": f"{ak}/{scope}", "X-Tos-Date": ts,
-         "X-Tos-Expires": str(expires), "X-Tos-SignedHeaders": "host"}
+    scope = f"{date}/{region}/s3/aws4_request"
+    h = {"host": host, **{k.lower(): v.strip() for k, v in (headers or {}).items()}}
+    signed = ";".join(sorted(h))
+    q = {"X-Amz-Algorithm": "AWS4-HMAC-SHA256", "X-Amz-Credential": f"{ak}/{scope}", "X-Amz-Date": ts,
+         "X-Amz-Expires": str(expires), "X-Amz-SignedHeaders": signed, **(query or {})}
     cq = "&".join(f"{quote(k, safe='-_.~')}={quote(v, safe='-_.~')}" for k, v in sorted(q.items()))
-    path = "/" + quote(key, safe="/~")
-    canon = "\n".join([method, path, cq, f"host:{host}\n", "host", "UNSIGNED-PAYLOAD"])
-    sts = "\n".join(["TOS4-HMAC-SHA256", ts, scope, hashlib.sha256(canon.encode("utf-8")).hexdigest()])
-    k = sk.encode("utf-8")
-    for part in (date, region, "tos", "request"):
+    path = quote(path, safe="/-_.~")
+    canon = "\n".join([method, path, cq, "".join(f"{k}:{h[k]}\n" for k in sorted(h)), signed, "UNSIGNED-PAYLOAD"])
+    sts = "\n".join(["AWS4-HMAC-SHA256", ts, scope, hashlib.sha256(canon.encode("utf-8")).hexdigest()])
+    k = ("AWS4" + sk).encode("utf-8")
+    for part in (date, region, "s3", "aws4_request"):
         k = hmac.new(k, part.encode("utf-8"), hashlib.sha256).digest()
     sig = hmac.new(k, sts.encode("utf-8"), hashlib.sha256).hexdigest()
-    return f"https://{host}{path}?{cq}&X-Tos-Signature={sig}"
+    return f"https://{host}{path}?{cq}&X-Amz-Signature={sig}"
 
 
-def xoa_tos(keys):
-    for key in keys:
+def s3_url(method, key, expires, query=None, headers=None):
+    """Link ký sẵn tới một file trong bucket S3_BUCKET, kiểu đường dẫn https://<S3_ENDPOINT>/<bucket>/<key>.
+    Cloudflare R2: endpoint <ACCOUNT_ID>.r2.cloudflarestorage.com, vùng auto. Dịch vụ chuẩn S3 khác: endpoint dạng
+    s3.<vùng>.<tên miền> thì vùng lấy từ endpoint, không thì đặt S3_REGION."""
+    ak, sk, bucket = (os.environ[k] for k in ("S3_ACCESS_KEY", "S3_SECRET_KEY", "S3_BUCKET"))
+    host = os.environ["S3_ENDPOINT"].removeprefix("https://").strip("/")
+    region = os.environ.get("S3_REGION") or (host.split(".")[1] if host.startswith("s3.") else "auto")
+    return ky_s3(method, host, f"/{bucket}/{key}", region, ak, sk, expires,
+                 datetime.datetime.now(datetime.timezone.utc), query, headers)
+
+
+def tai_len(path, key):
+    """Tải file lên bucket; trả version id nếu dịch vụ trả về (B2 cần nó để xoá hẳn)."""
+    h = {"Content-Type": "video/quicktime" if path.suffix.lower() == ".mov" else "video/mp4"}
+    _, version = goi("PUT", s3_url("PUT", key, 3600, headers=h), path.read_bytes(), h,
+                     timeout=900, header_tra="x-amz-version-id")
+    return version
+
+
+def xoa_s3(files):
+    """Xoá hẳn các file đã tải lên. Có version id thì xoá đúng version (B2: xoá không kèm version chỉ ẩn file); dịch vụ
+    trả version id mà không nhận xoá theo version (R2 báo 501 NotImplemented) thì xoá lại không kèm version."""
+    for f in files:
         try:
-            goi("DELETE", tos_url("DELETE", key, 600))
+            try:
+                goi("DELETE", s3_url("DELETE", f["key"], 600, {"versionId": f["version"]} if f["version"] else None))
+            except LoiAPI as e:
+                if not (f["version"] and "NotImplemented" in str(e)):
+                    raise
+                goi("DELETE", s3_url("DELETE", f["key"], 600))
         except (LoiAPI, OSError, KeyError) as e:
-            print(f"  Chưa xoá được {key} trên TOS ({e!r}); xoá tay trong console nếu cần")
+            print(f"  Chưa xoá được {f['key']} trên bucket ({e!r}); xoá tay trong trang quản lý bucket nếu cần")
 
 
 # ---------- sổ task đang chờ, take, log
@@ -214,7 +245,7 @@ def ghi_log(root, row):
     f = root / "04_PRODUCTION" / "seedance_log.csv"
     moi = not f.exists()
     with open(f, "a", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, LOG_COT)
+        w = csv.DictWriter(fh, LOG_COT, lineterminator="\n")  # xuống dòng LF, giống nhau trên macOS và Windows
         if moi:
             w.writeheader()
         w.writerow(row)
@@ -266,8 +297,10 @@ def chuan_bi(shot, a):
 
     goi_y = []
     if a.model == "auto":
-        key = "2.0" if len(images) <= ANH_IT else "2.5"
-        ly_do = f"{len(images)} ảnh tham chiếu ({'tối đa' if key == '2.0' else 'quá'} {ANH_IT})"
+        it_anh = len(images) <= ANH_IT
+        key = BAC_20[0] if it_anh else "2.5"
+        ly_do = (f"{len(images)} ảnh tham chiếu (tối đa {ANH_IT}): dòng 2.0, bậc đầu" if it_anh
+                 else f"{len(images)} ảnh tham chiếu (quá {ANH_IT})")
     else:
         key, ly_do = a.model, "chọn bằng --model"
     m = MODELS[key]
@@ -284,9 +317,10 @@ def chuan_bi(shot, a):
     if not m["ra"][0] <= duration <= m["ra"][1] or vin > m["video_s"]:
         msg = (f"Seedance {key} sinh {m['ra'][0]}–{m['ra'][1]} giây và nhận video tham chiếu tổng tối đa "
                f"{m['video_s']} giây (đoạn này: sinh {duration} s, video tham chiếu {vin:.1f} s).")
-        if key == "2.0" and a.model == "auto":
-            msg += (f" Đoạn tối đa {ANH_IT} ảnh dùng 2.0 nên cắt thành các đoạn tối đa 15 giây, mỗi đoạn một prompt"
-                    " (04_PRODUCTION/SEEDANCE.md, mục Sinh qua API); cần sinh nguyên đoạn thì chạy --model 2.5.")
+        if key in BAC_20 and a.model == "auto":
+            msg += (f" Đoạn tối đa {ANH_IT} ảnh dùng dòng 2.0 nên cắt thành các đoạn tối đa 15 giây, mỗi đoạn một prompt"
+                    " (04_PRODUCTION/SEEDANCE.md, mục Sinh qua API). Muốn sinh nguyên đoạn bằng 2.5 (đắt hơn) thì hỏi"
+                    " người dùng trước, đồng ý thì chạy --model 2.5.")
         loi.append(msg)
     if a.resolution not in m["gia"]:
         loi.append(f"Seedance {key} không có {a.resolution} (có {', '.join(m['gia'])})")
@@ -300,6 +334,19 @@ def chuan_bi(shot, a):
     est_tokens = (vin + duration) * w * h * FPS / 1024
     gia = m["gia"].get(a.resolution, (0, 0))[1 if videos else 0]
     est = est_tokens * gia / 1e6
+    if a.model == "auto" and not it_anh:  # quá ANH_IT ảnh: không tự dùng 2.5, người dùng quyết gộp ảnh hay không
+        k20 = next(k for k in BAC_20 if a.resolution in MODELS[k]["gia"])
+        w20, h20 = KHUNG[a.resolution]
+        tien20 = (vin + duration) * w20 * h20 * FPS / 1024 * MODELS[k20]["gia"][a.resolution][1 if videos else 0] / 1e6
+        loi.append(f"Shot có {len(images)} ảnh tham chiếu, quá {ANH_IT}: chưa gửi. Hỏi người dùng trước, kèm phân tích "
+                   f"ảnh nào bỏ hay gộp được (04_PRODUCTION/SEEDANCE.md, mục Gộp ảnh tham chiếu): gộp xuống {ANH_IT} ảnh "
+                   f"để dùng Seedance {k20} (khoảng ${tien20:.2f} cho cùng thời lượng, đoạn tối đa 15 giây), hay giữ nguyên "
+                   f"và dùng Seedance 2.5 (khoảng ${est:.2f}). Người dùng chọn giữ nguyên thì chạy lại với --model 2.5.")
+    tren = [k for k in BAC_20[BAC_20.index(key) + 1:] if a.resolution in MODELS[k]["gia"]] if key in BAC_20 else []
+    if tren and not loi:
+        goi_y.append("Take chưa đạt vì chất lượng hình (không phải lỗi prompt, previz) thì nâng bậc: " + ", ".join(
+            f"--model {k} (khoảng ${est_tokens * MODELS[k]['gia'][a.resolution][1 if videos else 0] / 1e6:.2f})"
+            for k in tren))
 
     print(f"Shot: {shot.relative_to(root).as_posix()}")
     print(f"Model: Seedance {key} ({m['id']}) — {ly_do}")
@@ -324,20 +371,23 @@ def chuan_bi(shot, a):
 
 
 def gui(shot, a, p):
-    """Tải video lên TOS, tạo task, ghi sổ chờ. Trả mục sổ chờ của task."""
+    """Tải video lên bucket, tạo task, ghi sổ chờ. Trả mục sổ chờ của task."""
     root, key = p["root"], p["key"]
     e = dict(shot=shot.relative_to(root).as_posix(), model=key, resolution=a.resolution, duration=p["duration"],
              images=len(p["images"]), videos=len(p["videos"]), video_in_s=round(p["vin"], 2),
-             audio=not a.no_audio, est_usd=round(p["est"], 3), tos_keys=[])
+             audio=not a.no_audio, est_usd=round(p["est"], 3), uploads=[])
     content = [{"type": "text", "text": p["prompt"]}]
     stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     for kind, n, name, src, path in p["videos"]:
         obj = f"seedance/{shot.name}/{stamp}_{name}"
-        print(f"Tải @Video{n} lên TOS ({path.stat().st_size / 1e6:.1f} MB)…")
-        goi("PUT", tos_url("PUT", obj, 3600), path.read_bytes(), {"Content-Type": "video/mp4"}, timeout=900)
-        e["tos_keys"].append(obj)
+        print(f"Tải @Video{n} lên bucket ({path.stat().st_size / 1e6:.1f} MB)…")
+        try:
+            e["uploads"].append(dict(key=obj, version=tai_len(path, obj)))
+        except (LoiAPI, OSError) as x:
+            xoa_s3(e["uploads"])
+            sys.exit(f"Không tải được @Video{n} lên bucket: {x}")
         # link đọc sống bằng hạn mặc định của task (48 giờ), phòng task phải xếp hàng lâu
-        content.append({"type": "video_url", "video_url": {"url": tos_url("GET", obj, 172800)}, "role": "reference_video"})
+        content.append({"type": "video_url", "video_url": {"url": s3_url("GET", obj, 172800)}, "role": "reference_video"})
     for url in p["data_urls"]:
         content.append({"type": "image_url", "image_url": {"url": url}, "role": "reference_image"})
     body = {"model": MODELS[key]["id"], "content": content, "ratio": "16:9", "resolution": a.resolution,
@@ -347,7 +397,7 @@ def gui(shot, a, p):
     try:
         task = ark("POST", "", body)
     except (LoiAPI, OSError) as x:
-        xoa_tos(e["tos_keys"])
+        xoa_s3(e["uploads"])
         ghi_log(root, dong_log(e, status="rejected", error=str(x)))
         sys.exit(f"ModelArk từ chối task: {x}")
     e.update(task_id=task["id"], submitted=bay_gio())
@@ -357,7 +407,7 @@ def gui(shot, a, p):
 
 
 def ket_thuc(shot, root, e, t):
-    """Task đã kết thúc: tải take, ghi log, xoá file TOS, bỏ khỏi sổ chờ."""
+    """Task đã kết thúc: tải take, ghi log, xoá video đã tải lên bucket, bỏ khỏi sổ chờ."""
     st, take = t["status"], ""
     if st == "succeeded":
         out = take_moi(shot)
@@ -373,7 +423,7 @@ def ket_thuc(shot, root, e, t):
                    error=f"{err.get('code', '')}: {err.get('message', '')}" if err else "")
     row["cost_usd"] = round(tokens * row["usd_per_m_tokens"] / 1e6, 3) if st == "succeeded" else 0  # lỗi thì không tính tiền
     ghi_log(root, row)
-    xoa_tos(e["tos_keys"])
+    xoa_s3(e["uploads"])
     ghi_cho(shot, [x for x in doc_cho(shot) if x["task_id"] != e["task_id"]])
     if take:
         print(f"Xong: seedance/{take} · {tokens:,} token · ${row['cost_usd']:.2f} (ước tính ${e['est_usd']:.2f})")
@@ -433,8 +483,9 @@ def main():
         p = chuan_bi(shot, a)
         if a.dry_run:
             return
-    thieu = [k for k in ("ARK_API_KEY",) + (("TOS_ACCESS_KEY", "TOS_SECRET_KEY", "TOS_BUCKET")
-                                             if not a.resume and p["videos"] else ()) if not os.environ.get(k)]
+    can_s3 = any(e.get("uploads") for e in entries) if a.resume else bool(p["videos"])
+    thieu = [k for k in ("ARK_API_KEY",) + (("S3_ENDPOINT", "S3_BUCKET", "S3_ACCESS_KEY", "S3_SECRET_KEY")
+                                             if can_s3 else ()) if not os.environ.get(k)]
     if thieu:
         sys.exit(f"Chưa đặt biến môi trường: {', '.join(thieu)} (04_PRODUCTION/SEEDANCE.md, mục Sinh qua API)")
     if not a.resume:

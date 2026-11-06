@@ -1,0 +1,2 @@
+time,shot,take,model,task_id,status,resolution,ratio,duration_s,images,videos,video_in_s,audio,tokens,usd_per_m_tokens,cost_usd,est_cost_usd,error
+2026-11-07T01:00:12+07:00,04_PRODUCTION/TEST_API/sh010,sh010_take01.mp4,dreamina-seedance-2-0-mini-260615,cgt-20261107015801-lbigl,succeeded,480p,16:9,4,2,1,4.01,True,80770,2.1,0.17,0.169,

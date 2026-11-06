@@ -7,16 +7,17 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 ## Seedance ở đâu, giới hạn gì (tra tài liệu chính thức của BytePlus ModelArk ngày 06/11/2026)
 
 - **Nơi chạy:** BytePlus ModelArk, sinh qua API bằng `pipeline/seedance_gen.py` (mục "Sinh qua API"). Clip 16:9, 720p, watermark tắt; `duration` là số nguyên giây; `generate_audio` bật tắt tiếng động.
-- **Hai dòng model**, chọn theo số ảnh tham chiếu (mục "Sinh qua API"):
+- **Hai dòng model**, chọn theo số ảnh tham chiếu; dòng 2.0 có ba bậc, dùng từ rẻ tới đắt (mục "Sinh qua API"):
 
-| | Seedance 2.5 | Seedance 2.0 |
-|---|---|---|
-| Mã model | `dreamina-seedance-2-5-260628` | `dreamina-seedance-2-0-260128`; bản rẻ hơn, chỉ tới 720p: `dreamina-seedance-2-0-fast-260128`, `dreamina-seedance-2-0-mini-260615` |
-| Giây sinh | 4–30 | 4–15 |
-| Ảnh tham chiếu | tối đa 30 | tối đa 9 |
-| Video tham chiếu | tối đa 10, tổng tối đa 30 giây | tối đa 3, tổng tối đa 15 giây |
-| Giá 480p, 720p khi có video vào (USD / 1 triệu token) | 6.40 | 4.30 |
-| Ví dụ: previz 15 giây vào, 15 giây ra, 720p | khoảng $4.15 | khoảng $2.79 |
+| | Seedance 2.5 | Seedance 2.0 mini | Seedance 2.0 fast | Seedance 2.0 |
+|---|---|---|---|---|
+| Mã model | `dreamina-seedance-2-5-260628` | `dreamina-seedance-2-0-mini-260615` | `dreamina-seedance-2-0-fast-260128` | `dreamina-seedance-2-0-260128` |
+| Giây sinh | 4–30 | 4–15 | 4–15 | 4–15 |
+| Ảnh tham chiếu | tối đa 30 | tối đa 9 | tối đa 9 | tối đa 9 |
+| Video tham chiếu | tối đa 10, tổng tối đa 30 giây | tối đa 3, tổng tối đa 15 giây | như mini | như mini |
+| Độ phân giải | 480p, 720p, 1080p | 480p, 720p | 480p, 720p | 480p, 720p, 1080p, 4k |
+| Giá 480p, 720p khi có video vào (USD / 1 triệu token) | 6.40 | 2.10 | 3.30 | 4.30 |
+| Ví dụ: previz 15 giây vào, 15 giây ra, 720p | khoảng $4.15 | khoảng $1.36 | khoảng $2.14 | khoảng $2.79 |
 
 - **Tính tiền:** theo token, chỉ task thành công mới tính. Token ≈ (giây video vào + giây ra) × rộng × cao × 24 / 1024 (720p 16:9 là 1280×720). API chỉ trả số token (`usage.completion_tokens`), không trả tiền. Không có video vào thì đơn giá cao hơn (2.5: 10.70, 2.0: 7.00) nhưng không tính giây video vào; có video vào thì có mức token tối thiểu. Có hay không có tiếng giá như nhau.
 - **Tham chiếu:** ảnh (role `reference_image`), video (`reference_video`), tiếng (`reference_audio`). Prompt gọi `@Image1`, `@Video1`, viết liền không cách, số theo thứ tự đưa vào. Ảnh gửi được dạng base64: mỗi ảnh dưới 30 MB, cạnh 300–6000 px, tỉ lệ rộng/cao 0.4–2.5, cả request tối đa 64 MB. Video chỉ nhận URL công khai: mp4 hoặc mov, 24–60 fps, mỗi file tối đa 200 MB, mỗi video từ 2 giây.
@@ -26,11 +27,11 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 
 | # | Bước | Ra cái gì |
 |---|---|---|
-| 1 | Chọn đoạn từ previz 2D đã chốt của cảnh (`03_CONTENT/PREVIZ_2D.md`): ai, ở đâu, làm gì, mấy giây, cú máy. Độ dài đoạn theo model: tối đa 9 ảnh tham chiếu thì đoạn tối đa 15 giây (Seedance 2.0), nhiều hơn thì đoạn 30 giây (Seedance 2.5) | Mô tả ngắn ở docstring `build_shot.py` |
+| 1 | Chọn đoạn từ previz 2D đã chốt của cảnh (`03_CONTENT/PREVIZ_2D.md`): ai, ở đâu, làm gì, mấy giây, cú máy. Liệt kê các thứ cần ảnh tham chiếu của đoạn; quá 9 ảnh thì phân tích và hỏi người dùng trước (mục "Gộp ảnh tham chiếu"). Độ dài đoạn theo model: tối đa 9 ảnh tham chiếu thì đoạn tối đa 15 giây (dòng Seedance 2.0), người dùng chọn giữ hơn 9 ảnh thì đoạn 30 giây (Seedance 2.5) | Mô tả ngắn ở docstring `build_shot.py` |
 | 2 | Dựng previz bằng `build_shot.py` (xem "Previz") | `sh010.blend`, `backups/` |
 | 3 | Duyệt previz: `run.ps1 stills`, `run.ps1 preview`, in CC bằng `pipeline/cc.py` (`03_CONTENT/PREVIZ_2D.md`, mục CC), rồi `/review <thư mục shot>` (hình có kể đúng kịch bản, nhịp, bố cục). **Chốt timing**: từ đây prompt bám theo từng con số | Bản previz đã chốt |
 | 4 | Render video tham chiếu: `run.ps1 ref` (1920x1080, 24 fps, MP4, ít sample cho nhanh, không in CC) | `renders/sh010_ref.mp4` |
-| 5 | Chọn ảnh tham chiếu (xem "Ảnh tham chiếu") | Danh sách `@Image` |
+| 5 | Chọn ảnh tham chiếu (xem "Ảnh tham chiếu"; quá 9 ảnh: "Gộp ảnh tham chiếu") | Danh sách `@Image`, tấm gộp nếu có |
 | 6 | Soạn prompt theo giây (xem "Prompt theo giây"), kèm bảng số tham chiếu → file tải lên → nguồn. Trước khi sinh: `python pipeline/seedance_gen.py <thư mục shot> --dry-run` (model, giới hạn, chi phí ước tính) và `/review <thư mục shot>/seedance/prompt.md` | `seedance/prompt.md` |
 | 7 | Sinh qua API: `python pipeline/seedance_gen.py <thư mục shot>` (mục "Sinh qua API"): model theo số ảnh, 16:9, 720p, `duration` bằng `SECONDS` của `build_shot.py`, watermark tắt; tải take về và ghi chi phí | `seedance/sh010_take01.mp4`, một dòng trong `04_PRODUCTION/seedance_log.csv` |
 | 8 | Soát take theo bảng "Soát take": `/review <thư mục shot>/seedance/<take>.mp4`. Lỗi do prompt thì sửa prompt; lỗi do previz thì sửa `build_shot.py`, render lại, sửa mốc trong prompt | Take được chọn |
@@ -60,11 +61,12 @@ python pipeline/seedance_gen.py <thư mục shot> --resume    # chờ tiếp tas
 
 Tuỳ chọn khác (`--model`, `--resolution`, `--no-audio`, `--duration`, `--wait`) ở docstring của script.
 
-- **Chọn model và độ dài đoạn:** đoạn có tối đa 9 ảnh tham chiếu (`ANH_IT` trong script) dùng Seedance 2.0, dài tối đa 15 giây; nhiều ảnh hơn thì dùng Seedance 2.5, cắt đoạn dài 30 giây và sinh trọn một lần (đoạn cuối của cảnh có thể ngắn hơn). Chia đoạn theo luật này ngay từ bước 1 (mục "Previz", ý "Một cảnh dài chia nhiều đoạn"; mỗi đoạn một prompt, mốc tính lại từ 0). Đoạn tối đa 9 ảnh mà dài hơn 15 giây thì script dừng, không gửi; cần sinh nguyên đoạn thì ép `--model 2.5`. Đoạn 2.5 ngắn hơn 30 giây thì dry-run in gợi ý.
+- **Chọn model và độ dài đoạn:** đoạn có tối đa 9 ảnh tham chiếu (`ANH_IT` trong script) dùng dòng Seedance 2.0, dài tối đa 15 giây, bắt đầu ở bản mini; take chưa đạt vì chất lượng hình (không phải lỗi prompt hay previz) thì sinh lại bằng `--model 2.0-fast`, vẫn chưa đạt thì `--model 2.0` (dry-run in giá từng bậc; bậc đã dùng xem ở cột `model` của log); nhiều ảnh hơn thì **không tự gửi**: script dừng, phải hỏi người dùng gộp ảnh xuống 9 hay giữ nguyên (mục "Gộp ảnh tham chiếu"). Người dùng chọn giữ nguyên thì dùng Seedance 2.5 (`--model 2.5`), cắt đoạn dài 30 giây và sinh trọn một lần (đoạn cuối của cảnh có thể ngắn hơn). Chia đoạn theo luật này ngay từ bước 1 (mục "Previz", ý "Một cảnh dài chia nhiều đoạn"; mỗi đoạn một prompt, mốc tính lại từ 0). Đoạn tối đa 9 ảnh mà dài hơn 15 giây thì script dừng, không gửi; muốn sinh nguyên đoạn bằng 2.5 (đắt hơn) cũng phải hỏi người dùng trước. Đoạn 2.5 ngắn hơn 30 giây thì dry-run in gợi ý.
 - **Chạy từ Claude:** chạy `--dry-run` trước và sửa hết lỗi, rồi chạy thật ở chế độ nền (một lần sinh lâu hơn giới hạn 2 phút của một lệnh). Mỗi lần chạy thật là một lần trả tiền.
 - **Biến môi trường**, người dùng tự đặt (`~/.zshrc` trên macOS, `setx` trên Windows), không ghi vào repo hay vào chat:
   - `ARK_API_KEY`: API key của ModelArk.
-  - API chỉ nhận video tham chiếu qua URL, nên script tải video previz lên một bucket TOS (BytePlus Object Storage) cùng tài khoản, đưa ModelArk link ký sẵn có hạn, task xong thì xoá file. Cần `TOS_BUCKET` (bucket riêng tư ở vùng ap-southeast-1; vùng khác thì đặt thêm `TOS_REGION`), `TOS_ACCESS_KEY`, `TOS_SECRET_KEY` (access key IAM có quyền ghi và xoá trong bucket đó).
+  - API chỉ nhận video tham chiếu qua URL, nên script tải video previz lên một bucket riêng tư trên **Cloudflare R2** (BytePlus TOS chỉ bán cho tài khoản doanh nghiệp), đưa ModelArk link ký sẵn có hạn, task xong thì xoá file. R2 miễn phí 10 GB lưu trữ và không tính tiền tải xuống; mỗi lần chỉ một file vài chục MB nằm trên bucket trong lúc sinh. Cần `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`. Script ký link theo chuẩn S3 nên đổi sang dịch vụ chuẩn S3 khác chỉ cần đổi bốn biến này, có khi thêm `S3_REGION`.
+  - Thiết lập R2 một lần: bật R2 trong trang Cloudflare (có thể phải thêm thẻ dù dùng gói miễn phí); tạo bucket (để mặc định, không bật truy cập công khai) → tên bucket là `S3_BUCKET`; trong Settings của bucket, Object Lifecycle Rules → Add rule cho tiền tố `seedance/`, xoá file sau 2 ngày, để file sót (máy tắt giữa chừng) tự dọn; ở trang R2, Manage API tokens → tạo token quyền Object Read & Write, chỉ cho bucket đó: Access Key ID → `S3_ACCESS_KEY`, Secret Access Key → `S3_SECRET_KEY` (chỉ hiện một lần), endpoint S3 dạng `https://<ACCOUNT_ID>.r2.cloudflarestorage.com` → `S3_ENDPOINT`.
 - **Log chi phí:** mỗi task kết thúc thêm một dòng vào `04_PRODUCTION/seedance_log.csv` (lên git, đọc lại để làm báo cáo): thời gian, shot, take, model, mã task, trạng thái, độ phân giải, giây sinh, số ảnh và video, giây video vào, có tiếng không, token, đơn giá, `cost_usd`, ước tính, lỗi. `cost_usd` = token × đơn giá niêm yết lúc chạy, chưa trừ gói tiết kiệm hay resource pack; số tiền thật xem ở Billing của BytePlus. Task lỗi, bị chặn hay bị từ chối ghi `cost_usd` 0.
 - Sinh tay trên console vẫn được: `python pipeline/seedance_upload.py <thư mục shot>` chép video previz, từng ảnh (tên theo số) và `prompt.txt` vào `renders/seedance_upload/` đúng thứ tự tải lên.
 
@@ -96,6 +98,23 @@ Tuỳ chọn khác (`--model`, `--resolution`, `--no-audio`, `--duration`, `--wa
 - Đạo cụ: `02_ASSET_LIBRARY/Props/<Tên>/concept/<tên>_ref.png` (nhìn 3/4, nền trơn). Đạo cụ tập 01 chưa có `_ref` thì dùng `_front.png` (vật dài: `_side.png`), hoặc ảnh trạng thái khi trạng thái đó lên hình (`_frost.png`). Nhân vật nền (sinh vật nhỏ của thung lũng): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`; ghi trong prompt tư thế nào dùng cho clip.
 - Chỉ đưa ảnh của thứ có trong shot. Số `@Image` theo thứ tự tải lên: mỗi số một ảnh, ghi bảng số → file trong `prompt.md` và soát lại trước khi sinh (bài mẫu của Higgsfield có chỗ hai ảnh cùng ghi `@Image 2`).
 - Bối cảnh, Piko đeo túi và sinh vật nhỏ sinh bằng ChatGPT theo các prompt dưới. Sinh lại thì đính kèm đúng ảnh ghi ở mỗi prompt, lưu đúng đường dẫn ghi kèm, soát theo Character Bible trước khi dùng.
+
+### Gộp ảnh tham chiếu
+
+Dòng Seedance 2.0 nhận tối đa 9 ảnh và rẻ hơn 2.5 nhiều, nên đoạn cần hơn 9 ảnh thì **không tự gửi bằng 2.5**, kể cả khi `seedance_gen.py` được gọi thẳng (script dừng ở `--model auto`). Làm theo thứ tự:
+
+1. **Phân tích:** liệt kê từng ảnh của đoạn, mỗi ảnh để làm gì, lên hình bao lâu, to hay nhỏ trong khung. Đề xuất cụ thể bỏ ảnh nào, gộp những ảnh nào thành tấm nào, để còn tối đa 9 ảnh.
+2. **Hỏi người dùng** trước khi làm gì tiếp, kèm: số ảnh hiện có, đề xuất ở bước 1, chi phí hai cách (dry-run in sẵn: gộp xuống 9 ảnh dùng dòng 2.0, giữ nguyên dùng 2.5), chỗ có thể kém đi nếu gộp (chi tiết nhỏ của món bị thu nhỏ). Người dùng quyết; không tự chọn thay.
+3. **Gộp:** người dùng đồng ý thì ghép theo đề xuất đã duyệt, sửa bảng số và ACTIVE REFERENCES, chạy lại dry-run. Người dùng chọn giữ nguyên thì chạy với `--model 2.5` và cắt đoạn 30 giây.
+
+Cái gì nên bỏ, nên gộp (đề xuất theo thứ tự này):
+- **Bỏ** ảnh của thứ chỉ thoáng qua, nhỏ, ở xa, hoặc prompt tả đủ (que khô, hòn đá, cỏ): chỉ giữ ảnh cho thứ người xem phải nhận ra.
+- **Gộp đạo cụ** cùng lên hình trong đoạn vào một tấm, mỗi món một ô; ưu tiên các món nhỏ, đơn giản.
+- **Gộp nhân vật nền**, sinh vật cùng loại, hoặc các trạng thái của cùng một vật (trước, sau khi biến đổi) vào một tấm.
+- **Dùng ảnh đã gộp sẵn** nếu có, ví dụ ảnh nhân vật đang đeo đồ thay cho hai ảnh nhân vật và đồ.
+- **Không gộp:** bốn nhân vật chính (mỗi người giữ ảnh xoay cố định cho mọi shot), ảnh bối cảnh, và món chính của đoạn nếu có cận cảnh (cần đủ chi tiết).
+
+Ghép tấm bằng `pipeline/turnaround.py` với `--hop` (cách chạy ở docstring): nền xám trơn, mỗi món một ô, tự xếp hàng cho tỉ lệ nằm trong giới hạn của API. Lưu tấm ở `seedance/` của shot, tên `sheet_<nội dung>.png` (ví dụ `sheet_compass_lens_rope.png`), ghi lệnh ghép dưới bảng số trong `prompt.md` để ghép lại được khi ảnh gốc đổi. Ghi trong ACTIVE REFERENCES: `@Image6 = prop sheet of separate objects, left to right: the Wonder Compass, the Story Lens, the coiled rope. Each object appears alone; layout, background and relative size not inherited.` Cỡ thật của từng món tả trong CHARACTERS hoặc TIMELINE.
 
 ### Prompt sinh ảnh tham chiếu bằng ChatGPT
 
@@ -234,7 +253,7 @@ Ghi kết quả từng take (đạt, lỗi gì) vào cuối `seedance/prompt.md`
 
 ## Nguồn
 
-Tra ngày 06/11/2026 (tài liệu chính thức của BytePlus): [ModelArk: Create a video generation task](https://docs.byteplus.com/en/docs/modelark/create-video-generation-task-api) · [ModelArk: Retrieve a video generation task](https://docs.byteplus.com/en/docs/modelark/get-video-generation-task-api) · [ModelArk: Pricing](https://docs.byteplus.com/en/docs/modelark/model-pricing) · [TOS: Including a signature in the URL](https://docs.byteplus.com/en/docs/tos/reference-including-a-signature-in-the-url) · [Fuser: Seedance 2.5 prompt guide](https://fuser.studio/articles/seedance-2-5-prompt-guide)
+Tra ngày 06/11/2026 (tài liệu chính thức của BytePlus): [ModelArk: Create a video generation task](https://docs.byteplus.com/en/docs/modelark/create-video-generation-task-api) · [ModelArk: Retrieve a video generation task](https://docs.byteplus.com/en/docs/modelark/get-video-generation-task-api) · [ModelArk: Pricing](https://docs.byteplus.com/en/docs/modelark/model-pricing) · [Cloudflare R2: Presigned URLs](https://developers.cloudflare.com/r2/api/s3/presigned-urls/) · [Cloudflare R2: Object lifecycles](https://developers.cloudflare.com/r2/buckets/object-lifecycles/) · [Fuser: Seedance 2.5 prompt guide](https://fuser.studio/articles/seedance-2-5-prompt-guide)
 
 Tra ngày 03/11/2026:
 
