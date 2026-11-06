@@ -27,7 +27,7 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 
 | # | Bước | Ra cái gì |
 |---|---|---|
-| 1 | Chọn đoạn từ previz 2D đã chốt của cảnh (`03_CONTENT/PREVIZ_2D.md`): ai, ở đâu, làm gì, mấy giây, cú máy. Liệt kê các thứ cần ảnh tham chiếu của đoạn; quá 9 ảnh thì phân tích và hỏi người dùng trước (mục "Gộp ảnh tham chiếu"). Độ dài đoạn theo model: tối đa 9 ảnh tham chiếu thì đoạn tối đa 15 giây (dòng Seedance 2.0), người dùng chọn giữ hơn 9 ảnh thì đoạn 30 giây (Seedance 2.5) | Mô tả ngắn ở docstring `build_shot.py` |
+| 1 | Chia cảnh (previz 2D đã chốt, `03_CONTENT/PREVIZ_2D.md`) thành các đoạn theo mục "Chia cảnh thành đoạn": chạy `pipeline/chia_doan.py`, chọn cách nối theo nhịp truyện. Mỗi đoạn: ai, ở đâu, làm gì, mấy giây, cú máy; liệt kê các thứ cần ảnh tham chiếu, quá 9 ảnh thì phân tích và hỏi người dùng trước (mục "Gộp ảnh tham chiếu") | Mô tả ngắn ở docstring `build_shot.py` |
 | 2 | Dựng previz bằng `build_shot.py` (xem "Previz") | `sh010.blend`, `backups/` |
 | 3 | Duyệt previz: `run.ps1 stills`, `run.ps1 preview`, in CC bằng `pipeline/cc.py` (`03_CONTENT/PREVIZ_2D.md`, mục CC), rồi `/review <thư mục shot>` (hình có kể đúng kịch bản, nhịp, bố cục). **Chốt timing**: từ đây prompt bám theo từng con số | Bản previz đã chốt |
 | 4 | Render video tham chiếu: `run.ps1 ref` (1920x1080, 24 fps, MP4, ít sample cho nhanh, không in CC) | `renders/sh010_ref.mp4` |
@@ -49,6 +49,21 @@ sh010/
     └── sh010_take01.mp4     clip Seedance trả về, giữ nguyên, không sửa
 ```
 
+## Chia cảnh thành đoạn
+
+Mỗi lần gọi API sinh một **đoạn**: nhiều cú máy liền nhau của một cảnh, như bài mẫu của Higgsfield (trong một lần sinh, nhân vật giữ đồng nhất qua các cú cắt). Chỗ nối hai đoạn là chỗ dễ lộ nhất, vì hai lần sinh khác nhau đôi chút về ánh sáng, màu, chi tiết nhân vật. Chia theo thứ tự:
+
+1. **Chỉ nối ở điểm cắt máy** giữa hai cú liền nhau trong `SHOTS` của `timing.py`: người xem đã chờ một cú cắt ở đó nên khác biệt nhỏ không lộ. Không bao giờ nối giữa một cú (giữa một chuyển động máy, một hành động liền). Cú nào một mình dài quá giới hạn thì thêm điểm cắt máy trong previz 2D (sửa `timing.py`, review lại), hay dùng 2.5 cho cảnh (đắt hơn, hỏi người dùng).
+2. **Độ dài theo model, tính cả đuôi:** dòng 2.0 tối đa 15 giây, 2.5 tối đa 30 giây. **Đuôi** ít nhất 0.5 giây: cú máy cuối giữ thêm sau `SEGMENT`, lúc dựng `pipeline/edit.py` cắt bỏ, để chỗ nối không rơi vào mấy khung cuối của take (hay chững, trôi). `SECONDS` = `SEGMENT` + đuôi, làm tròn lên số nguyên, ít nhất 4.
+3. **Ít đoạn nhất** (mỗi chỗ nối là một rủi ro, mỗi đoạn tốn thêm đuôi), không có đoạn vụn, các đoạn đều nhau. `python pipeline/chia_doan.py <timing.py> [--max 15|30]` tính mọi cách thoả luật 1–3, in vài cách tốt nhất với `OFFSET`, `SEGMENT`, `SECONDS` của từng đoạn và hai cú máy hai bên mỗi chỗ nối.
+4. **Chọn theo nhịp truyện** trong các cách script đưa ra, không lấy máy móc cách đầu: chỗ nối nên rơi vào chỗ chuyển ý, đổi địa điểm, đổi nhóm nhân vật, đổi cỡ cảnh mạnh (toàn sang cận), hoặc sau khi một câu thoại, một khoảnh khắc đã khép lại. Tránh nối giữa một cặp hành động – phản ứng (vấp và được kéo lại, hỏi và đáp, rút la bàn và kim quay), và giữa hai cú cùng góc máy, cùng cỡ cảnh (cắt nhảy, lệch lộ nhất). Chỗ nối làm mỗi đoạn ít nhân vật, ít đạo cụ hơn thì tốt hơn (đoạn dễ vào 9 ảnh). Ví dụ Cảnh 1 tập 01, giới hạn 30 giây: script xếp nối ở 26.4 s (đều hơn) trước 28.8 s, nhưng 28.8 s (hết cận la bàn, trước "Có gì lạ kìa!") mới là chỗ chuyển ý.
+5. **Giữ liền giữa các đoạn của một cảnh:**
+   - Cùng model, cùng bậc, cùng độ phân giải. Nâng bậc một đoạn (mini → fast → 2.0) thì xem chỗ nối với đoạn kề; lệch thì hỏi người dùng có sinh lại đoạn kề bằng bậc đó không.
+   - Cùng ảnh tham chiếu cho cùng một thứ; khối STYLE, CHARACTERS và câu tả địa điểm, giờ, ánh sáng chép nguyên giữa các prompt, chỉ bớt nhân vật không có mặt.
+   - Khối TIMELINE đầu của đoạn sau mở bằng đúng trạng thái `END` của đoạn trước: ai ở đâu, cầm gì, biểu cảm, đồ vật đã đổi (Piko đã ướt sau cú húp, cái thìa đã cong). Mốc trong prompt tính lại từ 0 của đoạn (mốc trong cảnh trừ `OFFSET`).
+   - Tiếng động của mỗi take dừng ở chỗ nối; tiếng nền của cả cảnh (gió, côn trùng) trải liền ở hậu kỳ.
+6. **Soát chỗ nối:** đủ take các đoạn thì dựng cả cảnh bằng `pipeline/edit.py`, xem từng chỗ nối (ánh sáng, màu, chi tiết nhân vật, vị trí, hướng nhìn); lệch thì sửa prompt đoạn lệch rồi sinh lại đoạn đó.
+
 ## Sinh qua API
 
 Claude chạy `pipeline/seedance_gen.py`, không cần mở console: script đọc `seedance/prompt.md` (bảng số tham chiếu và khối prompt), chọn model, gửi ảnh và video, chờ, tải take về `seedance/<shot>_takeNN.mp4` (số take tự tăng) và ghi chi phí.
@@ -61,7 +76,7 @@ python pipeline/seedance_gen.py <thư mục shot> --resume    # chờ tiếp tas
 
 Tuỳ chọn khác (`--model`, `--resolution`, `--no-audio`, `--duration`, `--wait`) ở docstring của script.
 
-- **Chọn model và độ dài đoạn:** đoạn có tối đa 9 ảnh tham chiếu (`ANH_IT` trong script) dùng dòng Seedance 2.0, dài tối đa 15 giây, bắt đầu ở bản mini; take chưa đạt vì chất lượng hình (không phải lỗi prompt hay previz) thì sinh lại bằng `--model 2.0-fast`, vẫn chưa đạt thì `--model 2.0` (dry-run in giá từng bậc; bậc đã dùng xem ở cột `model` của log); nhiều ảnh hơn thì **không tự gửi**: script dừng, phải hỏi người dùng gộp ảnh xuống 9 hay giữ nguyên (mục "Gộp ảnh tham chiếu"). Người dùng chọn giữ nguyên thì dùng Seedance 2.5 (`--model 2.5`), cắt đoạn dài 30 giây và sinh trọn một lần (đoạn cuối của cảnh có thể ngắn hơn). Chia đoạn theo luật này ngay từ bước 1 (mục "Previz", ý "Một cảnh dài chia nhiều đoạn"; mỗi đoạn một prompt, mốc tính lại từ 0). Đoạn tối đa 9 ảnh mà dài hơn 15 giây thì script dừng, không gửi; muốn sinh nguyên đoạn bằng 2.5 (đắt hơn) cũng phải hỏi người dùng trước. Đoạn 2.5 ngắn hơn 30 giây thì dry-run in gợi ý.
+- **Chọn model và độ dài đoạn:** đoạn có tối đa 9 ảnh tham chiếu (`ANH_IT` trong script) dùng dòng Seedance 2.0, dài tối đa 15 giây, bắt đầu ở bản mini; take chưa đạt vì chất lượng hình (không phải lỗi prompt hay previz) thì sinh lại bằng `--model 2.0-fast`, vẫn chưa đạt thì `--model 2.0` (dry-run in giá từng bậc; bậc đã dùng xem ở cột `model` của log); nhiều ảnh hơn thì **không tự gửi**: script dừng, phải hỏi người dùng gộp ảnh xuống 9 hay giữ nguyên (mục "Gộp ảnh tham chiếu"). Người dùng chọn giữ nguyên thì dùng Seedance 2.5 (`--model 2.5`), cắt đoạn dài 30 giây và sinh trọn một lần (đoạn cuối của cảnh có thể ngắn hơn). Chia đoạn theo luật này ngay từ bước 1 (mục "Chia cảnh thành đoạn"). Đoạn tối đa 9 ảnh mà dài hơn 15 giây thì script dừng, không gửi; muốn sinh nguyên đoạn bằng 2.5 (đắt hơn) cũng phải hỏi người dùng trước. Đoạn 2.5 ngắn hơn 30 giây thì dry-run in gợi ý.
 - **Chạy từ Claude:** chạy `--dry-run` trước và sửa hết lỗi, rồi chạy thật ở chế độ nền (một lần sinh lâu hơn giới hạn 2 phút của một lệnh). Mỗi lần chạy thật là một lần trả tiền.
 - **Biến môi trường**, người dùng tự đặt (`~/.zshrc` trên macOS, `setx` trên Windows), không ghi vào repo hay vào chat:
   - `ARK_API_KEY`: API key của ModelArk.
@@ -79,7 +94,7 @@ Tuỳ chọn khác (`--model`, `--resolution`, `--no-audio`, `--duration`, `--wa
   - Một nhân vật: đỏ = mặt trước, đen = lưng, xanh lá = hai bên và đỉnh.
   - Từ hai nhân vật: mỗi nhân vật một màu cố định (Lumo cam, Tavi xanh lá, Nori tím nhạt, Piko xanh ngọc), mặt trước đầu có ô trắng báo hướng nhìn. Bối cảnh, đạo cụ để xám để không lẫn màu nhân vật.
 - **Khối 4 nhân vật**, máy quay, tự kiểm khung và cài đặt render ở `pipeline/blocks.py`.
-- **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. ModelArk nhận số nguyên giây, nên `SECONDS` làm tròn lên số nguyên và `SEGMENT` ghi độ dài đoạn trong cảnh: máy quay chỉ dựng các cú trong `SEGMENT`, phần dư giữ cú máy cuối, lúc dựng `pipeline/edit.py` cắt bỏ; `check_prompt.py` đọc cả hai.
+- **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. Điểm nối và độ dài theo mục "Chia cảnh thành đoạn": `SEGMENT` ghi độ dài đoạn trong cảnh, `SECONDS` = `SEGMENT` + đuôi làm tròn lên: máy quay chỉ dựng các cú trong `SEGMENT`, phần dư giữ cú máy cuối, lúc dựng `pipeline/edit.py` cắt bỏ; `check_prompt.py` đọc cả hai.
 - **Vật hiện ra, biến mất** bằng key scale 0 và 1 cách nhau ít nhất một khung; hai key gần hơn một khung rơi vào cùng khung và vật lộ dần từ key trước đó.
 - **Vật cầm tay:** khối tay bọc lấy đầu cán như nắm tay, vật hơi chếch khỏi trục tay; đặt vật ở bên hông hay cạnh đầu, không chĩa vào mặt. Que nối thẳng từ một quả cầu tay sát mặt thì Seedance vẽ tay thành bong bóng có que xuyên qua và đưa vật vào miệng (take thử Cảnh 1 tập 01). Vật nhỏ làm to hơn cỡ thật một chút cho đọc được.
 - **Bối cảnh:** chỉ cần đúng khối, kích thước, vật cản và đạo cụ chính. Hình thật do ảnh tham chiếu và prompt quyết định.
@@ -256,7 +271,7 @@ Quy tắc viết:
 - Mỗi mốc chỉ một hành động chính. Không nhồi nhiều việc hơn số giây cho phép.
 - Chữ và video mâu thuẫn về chuyển động thì video thắng (ghi rõ trong prompt).
 - **Lời thoại:** ghi khoảng giây nhân vật nói theo kịch bản ("3.0–4.5s Lumo talks, mouth moving, no voice"), giọng lồng ở hậu kỳ. Câu nói không được tạo thêm cảnh: máy vẫn theo previz.
-- **Thời lượng mỗi lần sinh:** Seedance 2.0 sinh tối đa 15 giây, Seedance 2.5 tới 30 giây; đoạn cắt theo model (mục "Sinh qua API"). Đoạn dài hơn thì cắt previz ở chỗ cắt cảnh hoặc chỗ nhân vật dừng, mỗi đoạn một prompt, mốc thời gian tính lại từ 0.
+- **Thời lượng mỗi lần sinh, chỗ nối với đoạn trước và sau:** mục "Chia cảnh thành đoạn" (luật 2, 5).
 - **Độ dài prompt:** BytePlus khuyên tối đa 1.000 từ tiếng Anh, dài hơn thì model dễ bỏ chi tiết (`seedance_gen.py` cảnh báo). Prompt hai đoạn thử Cảnh 1 tập 01 dài 2.700–3.250 từ.
 - Ảnh đạo cụ vẽ thêm đồ (ảnh Pocket of Wonders có túi mở, tràn đồ): ghi trong ACTIVE REFERENCES chỉ lấy gì, không lấy gì.
 - Những chỗ Seedance hay làm sai (rút từ take thử Cảnh 1 tập 01), nên ghi sẵn trong prompt:
@@ -324,7 +339,6 @@ Ghi kết quả từng take (đạt, lỗi gì) vào cuối `seedance/prompt.md`
 
 ## Chưa chốt
 
-- **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`.
 - Take lưu vào git (qua LFS) hết, hay chỉ take được chọn.
 
 ## Nguồn

@@ -17,7 +17,7 @@ Dặn dò cho agent làm việc trong repo **Cloud Explorers** (phim hoạt hìn
 | Previz 2D cutout, file mốc thời gian của cảnh (`timing.py`), CC | `03_CONTENT/PREVIZ_2D.md` |
 | Quy ước thư mục asset | `02_ASSET_LIBRARY/README.md` |
 | Ảnh tham chiếu và model 3D: ảnh của từng tập cho Seedance, bộ ảnh dựng model, prompt ChatGPT và cách sinh ảnh, dựng và rig trong Blender | `02_ASSET_LIBRARY/MODELING.md` |
-| Previz Blender + Seedance, quy ước khối previz, chọn ảnh tham chiếu, thư mục tải lên, prompt theo giây | `04_PRODUCTION/SEEDANCE.md` |
+| Previz Blender + Seedance, quy ước khối previz, chia cảnh thành đoạn, chọn và gộp ảnh tham chiếu, sinh qua API, prompt theo giây | `04_PRODUCTION/SEEDANCE.md` |
 | Code dùng chung, render, Blender MCP, lưu ý kỹ thuật Blender | `pipeline/README.md` |
 | Review bằng agent (beat sheet, kịch bản, previz, prompt Seedance, take, shot): nhóm reviewer theo đầu vào, cách chạy, mức độ lỗi, định dạng kết quả | `.claude/skills/review/SKILL.md`; việc riêng của từng reviewer trong `.claude/agents/<tên>-reviewer.md` |
 | Cách giữ tài liệu, việc của agent sau mỗi lần làm | `CLAUDE.md` (file này) |
