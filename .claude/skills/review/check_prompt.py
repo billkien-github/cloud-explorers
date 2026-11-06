@@ -51,7 +51,8 @@ if isinstance(consts.get("TIMING"), str):
     spec = importlib.util.spec_from_file_location("timing", root / consts["TIMING"])
     tm = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(tm)
-    off, end = float(consts.get("OFFSET", 0.0)), float(consts.get("SECONDS", 1e9))
+    # SEGMENT: độ dài đoạn trong cảnh khi SECONDS được làm tròn lên số nguyên giây (phần dư chỉ giữ cú máy cuối)
+    off, end = float(consts.get("OFFSET", 0.0)), float(consts.get("SEGMENT", consts.get("SECONDS", 1e9)))
     for name, v in vars(tm).items():
         vals = v if isinstance(v, tuple) else (v,)
         if name.isupper() and name not in consts and name not in ("FPS", "SECONDS", "FRAMES", "SHOTS", "CC") \
@@ -66,10 +67,12 @@ cuts_code = [s[1] for s in shots[1:]]
 marks = {}
 for name, v in consts.items():
     vals = v if isinstance(v, tuple) else (v,)
-    if name not in ("FPS", "SECONDS", "FRAMES", "OFFSET") and vals and all(isinstance(x, float) for x in vals):
+    if name not in ("FPS", "SECONDS", "FRAMES", "OFFSET", "SEGMENT") and vals and all(isinstance(x, float) for x in vals):
         for x in vals:
             marks.setdefault(round(x, 2), name)
 allowed = set(marks) | {round(s[1], 2) for s in shots} | {round(s[2], 2) for s in shots} | {0.0}
+if seconds:
+    allowed.add(round(float(seconds), 2))  # hết video (khi SECONDS làm tròn lên, khối cuối kéo tới đây)
 in_code = {round(n.value, 2) for n in ast.walk(ast.parse(src)) if isinstance(n, ast.Constant) and isinstance(n.value, float)}
 
 # ---- prompt.md: khối ```text đầu tiên là prompt gửi đi
@@ -152,9 +155,10 @@ if unused:
     say("Gợi ý", f"Hằng số mốc chưa có trong prompt: {', '.join(unused)}")
 
 # ---- @Video, @Image: định nghĩa, dùng, file tải lên, file nguồn
-defined = {(k, int(n)) for k, n in re.findall(r"^@(Video|Image) (\d+) =", sec["ACTIVE REFERENCES"], re.M)}
-used = {(k, int(n)) for k, n in re.findall(r"@(Video|Image) (\d+)(?![–-]\d)", prompt)}
-for k, a, b in re.findall(r"@(Video|Image) (\d+)[–-](\d+)", prompt):
+# cú pháp theo nền tảng: Higgsfield "@Image 1", BytePlus ModelArk "@Image1"
+defined = {(k, int(n)) for k, n in re.findall(r"^@(Video|Image) ?(\d+) =", sec["ACTIVE REFERENCES"], re.M)}
+used = {(k, int(n)) for k, n in re.findall(r"@(Video|Image) ?(\d+)(?![–-]\d)", prompt)}
+for k, a, b in re.findall(r"@(Video|Image) ?(\d+)[–-](\d+)", prompt):
     used |= {(k, i) for i in range(int(a), int(b) + 1)}
 for k in ("Video", "Image"):
     nums = sorted(n for kk, n in defined if kk == k)
@@ -176,7 +180,7 @@ if upload.is_dir():
         say("Chặn", "renders/seedance_upload/prompt.txt khác khối prompt trong prompt.md: chép lại trước khi sinh")
 else:
     say("Nên sửa", "Chưa có renders/seedance_upload/ (gom file tải lên theo số tham chiếu)")
-for k, n, up, src_path in re.findall(r"\|\s*`@(Video|Image) (\d+)`\s*\|\s*`([^`]+)`\s*\|\s*`([^`]+)`", md):
+for k, n, up, src_path in re.findall(r"\|\s*`@(Video|Image) ?(\d+)`\s*\|\s*`([^`]+)`\s*\|\s*`([^`]+)`", md):
     if not ((shot / src_path).exists() or (root / src_path).exists()):
         say("Nên sửa", f"Nguồn của @{k} {n} không tồn tại: {src_path}")
 

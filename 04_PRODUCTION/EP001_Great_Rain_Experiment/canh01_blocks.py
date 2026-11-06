@@ -96,7 +96,10 @@ def at(t):
     bpy.context.scene.frame_set(fr(t))
 
 
-def build(timing, offset, seconds, out_blend):
+def build(timing, offset, seconds, out_blend, segment=None):
+    """seconds: độ dài video render (số nguyên giây Seedance nhận); segment: độ dài đoạn trong cảnh. Từ segment tới
+    seconds chỉ giữ cú máy cuối (diễn vẫn chạy tiếp), lúc dựng cắt bỏ."""
+    segment = seconds if segment is None else segment
     tm = load_timing(timing)
     start(tm.FPS, seconds, offset)
     T_END = tm.SECONDS
@@ -693,7 +696,7 @@ def build(timing, offset, seconds, out_blend):
         "S13": [(S["S13"][0], (1.95, -2.6, 0.72), (2.0, -0.1, 0.55), 38)],                  # Tavi "à!", giảng bằng tay
         "S14": [(S["S14"][0], (3.2, -5.4, 1.1), (4.6, 0.6, 1.15), 24)],                     # toàn: chỉ đỉnh đồi, cả nhóm ngước
     }
-    end_t = offset + seconds
+    end_t = offset + segment
     shots = [(n, a, b) for n, a, b in tm.SHOTS if a < end_t - 1e-6 and b > offset + 1e-6]
     cams = cameras(shots, {n: CAMS[n] for n, _, _ in shots})
     H, P = Vector((0, 0, 0.2)), Vector((0, 0, 0.4))

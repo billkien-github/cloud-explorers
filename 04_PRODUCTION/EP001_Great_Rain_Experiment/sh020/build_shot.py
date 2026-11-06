@@ -16,6 +16,7 @@ import canh01_blocks  # noqa: E402
 
 TIMING = "03_CONTENT/Previz_2D/EP001_Great_Rain_Experiment/canh01/timing.py"
 OFFSET = 28.8
-FPS, SECONDS = 24, 26.2
+FPS, SECONDS = 24, 27  # thời lượng sinh: Seedance trên BytePlus ModelArk nhận số nguyên giây
+SEGMENT = 26.2  # đoạn trong cảnh; 26.2–27 s chỉ giữ cú máy cuối, lúc dựng cắt bỏ
 
-canh01_blocks.build(TIMING, OFFSET, SECONDS, HERE / "sh020.blend")
+canh01_blocks.build(TIMING, OFFSET, SECONDS, HERE / "sh020.blend", SEGMENT)

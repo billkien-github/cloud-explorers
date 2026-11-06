@@ -24,7 +24,7 @@ Chính sách YouTube: nội dung cho trẻ phải khai báo **Made for Kids** (m
 - Review bằng agent (`.claude/skills/review/SKILL.md`): `/review EP001` cho beat sheet, kịch bản; `/review <thư mục cảnh>` cho previz 2D; `/review <thư mục shot>` cho previz khối; `/review <shot>/seedance/prompt.md` trước khi sinh; `/review <file take>` cho take. Kết quả gộp trong chat. Chưa review được cả tập đã ghép.
 - Kịch bản tập 01 đã chốt (`03_CONTENT/Scripts/EP001_great_rain_experiment.fountain`), 7 cảnh, qua ba lượt `/review`.
 - Chưa có: model 3D của cả bốn nhân vật và đạo cụ.
-- **Bước tiếp theo:** sinh take 2 của `sh020` và take 1 của `sh010` ở 1080p, soát bằng `/review`; `/review` previz khối hai đoạn Cảnh 1; review lại Cảnh 2 và Cảnh 1, chốt hai cảnh; dựng previz 2D Cảnh 3–7, mỗi cảnh xong thì `/review`. Cái máy Rain-O-Matic đang dựng trong `build_shot.py` của Cảnh 2: dựng Cảnh 3 thì chuyển nó sang `pipeline/` để dùng chung. Song song: soát take 1 của `TEST_First_Rain` bằng `/review` và ghi kết quả vào `seedance/prompt.md`; làm ảnh concept máy Rain-O-Matic.
+- **Bước tiếp theo:** sinh take 2 của `sh020` và take 1 của `sh010` trên BytePlus ModelArk (prompt đã theo cú pháp `@Image1`, video dài 29 s và 27 s, lúc dựng cắt về 28.8 s và 26.2 s), soát bằng `/review`; `/review` previz khối hai đoạn Cảnh 1; review lại Cảnh 2 và Cảnh 1, chốt hai cảnh; dựng previz 2D Cảnh 3–7, mỗi cảnh xong thì `/review`. Cái máy Rain-O-Matic đang dựng trong `build_shot.py` của Cảnh 2: dựng Cảnh 3 thì chuyển nó sang `pipeline/` để dùng chung. Song song: soát take 1 của `TEST_First_Rain` bằng `/review` và ghi kết quả vào `seedance/prompt.md`; làm ảnh concept máy Rain-O-Matic.
 
 ## Tài liệu
 
@@ -74,7 +74,7 @@ studio/
 | Python của Blender | `...\Blender 5.2\5.2\python\bin\python.exe`, có sẵn numpy |
 | Meshy (gói Pro) | Sinh hình, Remesh, rig Humanoid, thư viện animation |
 | Blender MCP | Cho Claude điều khiển Blender đang mở, xem `pipeline/README.md` |
-| Add-on Higgsfield 1.5.60 | Sinh 3D, ảnh, video, animation bằng AI ngay trong viewport (thanh prompt ở đáy 3D view, đăng nhập tài khoản Higgsfield, trừ credit). Cài vào repo `user_default` của Blender 5.2. Tài khoản này cũng dùng để chạy Seedance (`04_PRODUCTION/SEEDANCE.md`) |
+| Add-on Higgsfield 1.5.60 | Sinh 3D, ảnh, video, animation bằng AI ngay trong viewport (thanh prompt ở đáy 3D view, đăng nhập tài khoản Higgsfield, trừ credit). Cài vào repo `user_default` của Blender 5.2. Tài khoản này đã dùng cho các take Seedance thử đầu; nay Seedance chạy trên BytePlus ModelArk (`04_PRODUCTION/SEEDANCE.md`) |
 
 ## Git
 
