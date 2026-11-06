@@ -9,6 +9,7 @@
 | `blocks.py` | Bộ khối 3D cho previz khối dẫn Seedance: hình khối, vật liệu, bốn nhân vật dạng khối đúng tỉ lệ, keyframe theo giây của cảnh (đoạn cắt ra từ cảnh dài vẫn trùng khung), máy quay theo `SHOTS`, tự kiểm nhân vật trong khung, cài đặt render. Quy ước previz khối: `04_PRODUCTION/SEEDANCE.md` |
 | `edit.py` | Ghép nhiều video thành một theo danh sách dựng: cắt đầu đuôi, nối, co giãn video khác cỡ, thêm tiếng, in CC từ `timing.py` và xuất `.srt` (`--clean`: chỉ `.srt`, không in lên hình). Take trong thư mục shot tự cắt theo `SEGMENT`, lấy CC theo `TIMING`, `OFFSET` của `build_shot.py`; take chưa có thì thay bằng khung tối đúng độ dài. Cách dùng ở docstring |
 | `cc.py` | In CC từ `timing.py` của cảnh lên một video previz (2D hay khối) và xuất `.srt`, không render lại hình. Là `edit.py` với một video. Cách viết CC: `03_CONTENT/PREVIZ_2D.md` |
+| `turnaround.py` | Ghép ảnh nhìn trước và nhìn sau của một nhân vật thành ảnh xoay `<tên>_turnaround.png` làm tham chiếu Seedance: cân nền về cùng màu xám, co cho nhân vật cùng chiều cao, chân cùng một đường, mép ghép mờ dần. Cách chạy ở docstring |
 | `rig_qa.py` | Kiểm tra rig: đặt tư thế theo trục thế giới, đo % mặt lưới bị bóp (< 40% diện tích) hay giãn (> 250%) và tỉ lệ thể tích so với tư thế nghỉ. Đạt khi bad% dưới khoảng 2%, thể tích gần 1.0 |
 
 Code riêng của từng asset hay shot (build script) nằm cạnh asset hay shot đó, không để ở đây. Chỉ chuyển một hàm vào `pipeline/` khi đã có từ hai nơi trở lên cần dùng.

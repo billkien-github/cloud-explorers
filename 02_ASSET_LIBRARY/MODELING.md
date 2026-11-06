@@ -26,7 +26,7 @@ Ngoại lệ:
 | Lumo | ✅ · ✅ | ✅ · ✅ | ✅ · ✅ | áo choàng ✅ `lumo_cape_ref.png`, túi ✅ `lumo_bag_ref.png`, đuôi ✅ `lumo_tail_ref.png` |
 | Tavi | ✅ · ✅ | ✅ · ✅ | ✅ · ✅ | đuôi ✅ `tavi_tail_ref.png` |
 | Nori | ✅ · ✅ | ✅ · ✅ | ✅ · ✅ | cánh ✅ `nori_wing_ref.png` |
-| Piko | ✅ · ✅ | ✅ · ✅ | ✅ · ✅ `piko_pouch_ref.png` (nhìn 3/4), `piko_pouch_back_ref.png` | — |
+| Piko | ✅ · ✅ | ✅ · ✅ | ✅ · ✅ `piko_pouch_ref.png` (nhìn 3/4), `piko_pouch_ref_back.png` | — |
 | Sinh vật nhỏ (`Valley_Critters/`, tên file `valley_critter_…`) | ✅ · ✅ | ✅ · ✅ | — | lá đội đầu: theo `valley_critters_ref.png` ✅ |
 
 | Đạo cụ | Trước · sau |
@@ -46,7 +46,7 @@ Tập 01 (danh sách asset: beat sheet `03_CONTENT/Scripts/EP001_great_rain_expe
 | Móc ròng rọc | `Props/Pulley_Hook/` | `pulley_hook_front.png`, `pulley_hook_side.png` | ✅ |
 | Vịt cao su | `Props/Rubber_Duck/` | `rubber_duck_side.png`, `rubber_duck_front.png`, `rubber_duck_gear.png` | ✅ |
 | Thìa | `Props/Spoon/` | `spoon_top.png`, `spoon_side.png`, `spoon_bent.png` | ✅ |
-| Ô | `Props/Umbrella/` | `umbrella_open.png`, `umbrella_closed.png`, `umbrella_inverted.png` | ✅ |
+| Ô | `Props/Umbrella/` | `umbrella_side.png`, `umbrella_closed.png`, `umbrella_inverted.png` | ✅ |
 | Hộp ốc | `Props/Screw_Box/` | `screw_box_front.png`, `screw_box_open.png` | ✅ |
 | Cuộn dây của Noah | `Props/Noah_Rope/` | `noah_rope_ref.png` | ✅ |
 | Con thuyền | `Environments/Noah_Story/` | `noah_ark_side.png`, `noah_ark_front.png` | ✅ |
@@ -408,7 +408,7 @@ Now the same spoon seen straight from the side, orthographic, same scale, as one
 Now the same spoon after digging very hard ground, side view, same scale, as one separate image: the handle is bent into a U shape in the middle, and the bowl has a little dry dirt on it. Funny, not broken. Plain flat light-gray background, soft even lighting, no ground shadow, no text.
 ```
 
-**Ô** (Cảnh 7). Đính kèm `cloud_explorers_character_sheet.png`, lưu `umbrella_open.png`, `umbrella_closed.png`, `umbrella_inverted.png`.
+**Ô** (Cảnh 7). Đính kèm `cloud_explorers_character_sheet.png`, lưu `umbrella_side.png`, `umbrella_closed.png`, `umbrella_inverted.png`.
 ```
 The attached sheet shows the style of a soft stylized 3D animated film for young children; use it for style only. Design a small umbrella that Piko the jelly creature pulls out of a magic pouch. ONE image: the umbrella open, seen straight from the side, orthographic, no perspective, isolated.
 - A round canopy of eight panels in soft pastel pink with small white polka dots, rounded tips, a short wooden shaft and a curved wooden handle.

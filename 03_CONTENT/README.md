@@ -80,7 +80,9 @@ Nội dung hấp dẫn và nhịp nhanh quan trọng hơn con số. Tỉ lệ d�
 | 2. Kịch bản | `Scripts/EPxxx_<tên>.fountain` | Kịch bản đầy đủ, bắt đầu từ [`Scripts/template.fountain`](Scripts/template.fountain) |
 | 3. Previz 2D | `Previz_2D/EPxxx_<Tên>/canhNN/` | Mỗi cảnh một previz cutout 2D có CC, chuyển động kỹ ([`PREVIZ_2D.md`](PREVIZ_2D.md)). Độ dài thật của tập đo ở bước này |
 
-Mỗi bước xong thì chạy `/review` trước khi chốt (`.claude/skills/review/SKILL.md`). Chỉ dựng hàng loạt shot ở `04_PRODUCTION/` (previz khối rồi Seedance, `04_PRODUCTION/SEEDANCE.md`) khi previz 2D của cảnh đã chốt. Trước đó chỉ dựng thử vài shot để kiểm tra pipeline; số shot sẽ đánh lại theo previz 2D.
+Viết beat sheet trước kịch bản, kể cả khi kịch bản lấy từ nguồn ngoài (ChatGPT…): chuyển nội dung đó thành beat sheet trước, rồi mới viết Fountain. Tập đầu tiên dùng một bảo bối hay một cơ chế mới thì ghi cách nó hoạt động (báo hiệu, giới hạn) vào Character Bible trước khi viết kịch bản.
+
+Mỗi bước xong thì chạy `/review` trước khi chốt (`.claude/skills/review/SKILL.md`, gồm cả cách sửa và khi nào chạy lại). Chỉ dựng hàng loạt shot ở `04_PRODUCTION/` (previz khối rồi Seedance, `04_PRODUCTION/SEEDANCE.md`) khi previz 2D của cảnh đã chốt. Trước đó chỉ dựng thử vài shot để kiểm tra pipeline; số shot sẽ đánh lại theo previz 2D.
 
 **Kịch bản viết bằng [Fountain](https://fountain.io):** format kịch bản chuẩn (screenplay) dạng chữ thường. Xem thay đổi được trong git, xuất PDF đúng format bằng Highland, Fade In hoặc extension "Better Fountain" của VS Code.
 

@@ -21,7 +21,7 @@ Cả tập đã ghép chưa có quy trình review.
 
 ## Chạy
 
-1. **Chọn đầu vào** theo bảng trên. Không có đối số thì hỏi người dùng. Mã tập: `.fountain` nếu đã có, chưa có thì beat sheet.
+1. **Chọn đầu vào** theo bảng trên. Không có đối số thì hỏi người dùng. Mã tập: beat sheet cùng `.fountain` nếu đã có, chưa có `.fountain` thì chỉ beat sheet. Có `.fountain` mà chưa có beat sheet (có Luật nhân quả, Gài trước trả sau, checklist) thì dừng, đề nghị viết beat sheet trước: không có thước đo thì mỗi lượt reviewer tự đặt chuẩn, lỗi không bao giờ hết.
 2. **Chuẩn bị video** (Blender ở đường dẫn trong mục Công cụ của `README.md`):
    ```
    blender -b --factory-startup -P .claude/skills/review/extract_shot.py -- <video> <thư mục shot>/renders/review/<previz|take|shot>
@@ -38,9 +38,10 @@ Cả tập đã ghép chưa có quy trình review.
    - kịch bản của tập nếu có (`.fountain` nếu đã có, không thì beat sheet), lấy theo thư mục `EPxxx_*` của cảnh, shot hoặc đường dẫn ghi trong docstring `build_shot.py`;
    - `timing.py` của cảnh và file `.srt` của CC nếu có;
    - `seedance/prompt.md` nếu có, và kết quả `check_prompt.py` ở cổng prompt;
-   - ghi chú của người dùng nếu có.
+   - ghi chú của người dùng nếu có;
+   - lượt review lại: danh sách lỗi Chặn, Nên sửa của lượt trước (nguyên văn reviewer đã nêu), để kiểm đã sửa đúng chưa.
 
-   Không kèm nhận xét hay kết luận nào của phiên hiện tại, để reviewer đánh giá độc lập.
+   Không kèm nhận xét hay kết luận nào khác của phiên hiện tại, để reviewer đánh giá độc lập.
 4. **Kiểm bằng chứng:**
    - Câu trích: grep trong file được review. Không tìm thấy thì hạ xuống "Nghi ngờ" và ghi "trích không khớp", hoặc bỏ nếu lỗi chỉ dựa vào câu trích đó.
    - Khung hình: file có trong `renders/review/.../frames/`. Với lỗi Chặn, tự mở khung được dẫn để xem lại.
@@ -53,7 +54,20 @@ Cả tập đã ghép chưa có quy trình review.
    - Với kịch bản: **Checklist "Kiểm tra trước khi khóa kịch bản"** của beat sheet, từng mục Đạt / Chưa đạt / Không kiểm được.
    - Với take: một dòng tóm tắt cho mục Take ở cuối `seedance/prompt.md` (theo `SEEDANCE.md`). Chỉ ghi vào file khi người dùng đồng ý.
    - **Điểm mạnh:** tối đa ba ý.
-7. Không sửa file được review khi người dùng chưa đồng ý. Sửa xong thì chạy lại `/review`.
+7. Không sửa file được review khi người dùng chưa đồng ý.
+
+## Sửa và review lại
+
+Phần lớn lỗi của các lượt sau sinh ra từ chính lần sửa trước. Sửa theo thứ tự:
+
+1. **Sửa hết Chặn và Nên sửa. Gợi ý chỉ áp cái người dùng chọn.** Mỗi Gợi ý thêm một chi tiết mới, tức là thêm một chỗ có thể vênh với luật. Áp cả loạt Gợi ý cùng lúc sửa lỗi Chặn thì lượt sau gần như chắc chắn có lỗi mới.
+2. **Lỗi đòi thêm hay đổi một luật** (cách bảo bối báo hiệu, luật nhân quả, một mục checklist): ghi luật vào file sở hữu trước, rồi soát toàn bộ kịch bản theo luật đó, không chỉ dòng bị nêu.
+3. **Tự soát trước khi chạy lại:** đi qua từng gạch Luật nhân quả và từng mục checklist của beat sheet, đối chiếu mọi dòng đã đổi; sửa beat sheet cùng lúc với kịch bản để hai file khớp nhau.
+4. **Chạy lại khi nào:**
+   - Lượt vừa rồi còn Chặn, hoặc lần sửa thêm hay đổi luật: chạy lại `/review`, gửi kèm danh sách lỗi Chặn, Nên sửa của lượt trước (bước 3 ở mục Chạy).
+   - Chỉ còn Nên sửa và lần sửa không đổi luật: sửa, tự soát, rồi khoá; không cần chạy lại cả nhóm reviewer.
+   - Gợi ý mới ở lượt review lại không chặn khoá. Khoá khi không còn Chặn và Nên sửa.
+5. **Rút kinh nghiệm:** một đầu vào phải review từ lượt thứ ba trở lên thì tìm vì sao lỗi cứ xuất hiện (thiếu thước đo, lần sửa gây lỗi mới, reviewer thiếu căn cứ…) và cập nhật vào skill này, file vai reviewer hoặc file chuẩn. Không ghi file báo cáo.
 
 ## Kết quả của reviewer
 

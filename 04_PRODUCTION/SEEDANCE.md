@@ -57,6 +57,7 @@ sh010/
 ## Ảnh tham chiếu
 
 - Mỗi nhân vật **một ảnh cố định cho mọi shot** để giữ nhân vật đồng nhất: `02_ASSET_LIBRARY/Characters/<Tên>/concept/<tên>_hero.png`. Piko dùng `piko_pouch_ref.png` (đã đeo Pocket of Wonders đúng cách đeo). Lumo: chưa chốt, xem cuối file.
+  - Bốn nhân vật chính có thêm ảnh xoay `<tên>_turnaround.png`: ảnh đủ đồ nhìn trước bên trái, nhìn sau bên phải, nền trơn (Piko: `piko_pouch_ref.png` nhìn 3/4 và mặt sau). Mỗi nhân vật vẫn chiếm một suất `@Image` mà có cả mặt sau. Dùng thì ghi trong ACTIVE REFERENCES: `@Image1 = Lumo turnaround sheet: left front view, right back view of ONE character. Layout, background and pose not inherited.` Chưa thử trong take nào.
 - Bối cảnh: ảnh riêng của từng địa điểm, chưa có thì `01_BRAND/Brand_Guideline/world_key_art.png`. Đã có: Thung lũng Mây khô hạn (Cảnh 1 tập 01) `02_ASSET_LIBRARY/Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`.
 - Đạo cụ: `02_ASSET_LIBRARY/Props/<Tên>/concept/<tên>_ref.png` (nhìn 3/4, nền trơn). Nhân vật nền (sinh vật nhỏ của thung lũng): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`; ghi trong prompt tư thế nào dùng cho clip.
 - Chỉ đưa ảnh của thứ có trong shot. Số `@Image` theo thứ tự tải lên: mỗi số một ảnh, ghi bảng số → file trong `prompt.md` và soát lại trước khi sinh (bài mẫu của Higgsfield có chỗ hai ảnh cùng ghi `@Image 2`).
@@ -78,7 +79,7 @@ Create a NEW location in the same world: the Valley of Clouds during a long drou
 - No text, no logos, no watermark.
 ```
 
-**Piko đeo Pocket of Wonders.** Đính kèm theo thứ tự `02_ASSET_LIBRARY/Characters/Piko/concept/piko_apose_body.png`, `02_ASSET_LIBRARY/Props/Pocket_of_Wonders/concept/pocket_of_wonders_ref.png`. Lưu `02_ASSET_LIBRARY/Characters/Piko/concept/piko_pouch_ref.png`; ảnh nhìn sau `piko_pouch_back_ref.png`.
+**Piko đeo Pocket of Wonders.** Đính kèm theo thứ tự `02_ASSET_LIBRARY/Characters/Piko/concept/piko_apose_body.png`, `02_ASSET_LIBRARY/Props/Pocket_of_Wonders/concept/pocket_of_wonders_ref.png`. Lưu `02_ASSET_LIBRARY/Characters/Piko/concept/piko_pouch_ref.png`; ảnh nhìn sau `piko_pouch_ref_back.png`.
 ```
 Image 1 is Piko, a character of a soft stylized 3D animated film for young children. Image 2 is Piko's pouch. Draw Piko wearing the pouch. Keep Piko exactly as in Image 1: same translucent aqua jelly body, two dark-blue horns, eyes, mouth, tiny paws, proportions; no legs.
 
@@ -192,7 +193,7 @@ Ghi kết quả từng take (đạt, lỗi gì) vào cuối `seedance/prompt.md`
 
 ## Chưa chốt
 
-- **Ảnh tham chiếu Lumo:** giữ `lumo_hero.png` (đang dùng tạm trong prompt các shot; đủ áo choàng dài và túi, nhưng nền cảnh phức tạp, không thấy đuôi) hay đổi sang `lumo_outfit.png` (nền trơn, áo choàng dài tới gối, túi, đuôi; prompt trong `02_ASSET_LIBRARY/MODELING.md`).
+- **Ảnh tham chiếu nhân vật:** giữ `<tên>_hero.png` và `piko_pouch_ref.png` hay đổi sang ảnh xoay `<tên>_turnaround.png`. Ảnh hero của Lumo (đang dùng tạm trong prompt các shot) đủ áo choàng dài và túi, nhưng nền cảnh phức tạp, không thấy đuôi; ảnh xoay nền trơn, đủ đồ, thấy đuôi qua khe áo choàng ở mặt sau. Cách thử: một take đổi sang ảnh xoay, soát xem Seedance có vẽ hai bản của cùng một nhân vật không và mặt sau có đúng khi nhân vật quay lưng.
 - **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`. Đang thử bằng `TEST_First_Rain/sh010` và hai đoạn dưới 30 giây của Cảnh 1 tập 01 (`EP001_Great_Rain_Experiment/sh010`, `sh020`; cả hai đã có prompt, `sh020` có take 1).
 - Có cho Seedance sinh tiếng động không, hay làm hết tiếng ở hậu kỳ.
 - Take lưu vào git (qua LFS) hết, hay chỉ take được chọn.
