@@ -1,6 +1,6 @@
 # Previz 2D và CC
 
-Previz 2D là bước dựng câu chuyện thành hình chuyển động ngay sau khi kịch bản xong (`03_CONTENT/README.md`, mục "Viết một tập"). Nó thay cho storyboard và animatic. Mục đích là soi **diễn xuất**: ai làm gì, mắt, miệng, tai, đuôi, nhịp gag, thoại có đúng lúc không. Previz khối không có mặt nên không soi được những thứ này. Previz khối (`04_PRODUCTION/SEEDANCE.md`) làm sau, khi previz 2D của cảnh đã chốt, để soi không gian và cú máy cho Seedance.
+Previz 2D là bước dựng câu chuyện thành hình chuyển động, làm khi kịch bản đã chốt và đã có ảnh của tập (`03_CONTENT/README.md`, mục "Làm một tập"). Nó thay cho storyboard và animatic. Mục đích là soi **diễn xuất**: ai làm gì, mắt, miệng, tai, đuôi, nhịp gag, thoại có đúng lúc không. Previz khối không có mặt nên không soi được những thứ này. Previz khối (`04_PRODUCTION/SEEDANCE.md`) làm sau, khi previz 2D của cảnh đã chốt, để soi không gian và cú máy cho Seedance.
 
 Cả previz 2D lẫn previz khối đều có CC, và chuyển động phải kỹ: đủ biên độ, giữ tư thế đủ lâu để đọc được ở cỡ cảnh của từng cú máy.
 
@@ -16,7 +16,7 @@ Mỗi cảnh trong beat sheet có một previz 2D:
 └── renders/        canh03_preview.mp4, canh03_preview_cc.mp4 + .srt (không lên git)
 ```
 
-Cảnh thử đặt ở `Previz_2D/TEST_<tên>/canhNN/`. Hiện có `TEST_Cutout/canh01`: 11 giây, khoảnh khắc Lumo vội với tay, khựng lại rồi bị Piko đè xuống nút ở Cảnh 3 tập 01.
+Cảnh thử đặt ở `Previz_2D/TEST_<tên>/canhNN/`.
 
 ## timing.py
 
@@ -56,7 +56,7 @@ CC = [
   - Lumo: tai (dựng, cụp ra sau), đuôi. Tavi: đuôi, gai. Nori: 4 cánh, 2 râu, vệt sáng thay chân. Piko: thân co giãn, 2 sừng.
 - **Diễn** đúng dáng và giới hạn khi diễn trong Character Bible: Nori luôn bay, Piko chỉ nảy, tay Lumo giơ cao nhất tới ngang tai. Mỗi hành động có lấy đà, có giữ tư thế; cảm xúc đọc được từ mặt và tai. Câu kịch bản có "nhìn" thì cho mắt nhìn đúng chỗ (`look()`).
 - **Quay mặt** bằng lật gương (scale X = -1), nên đồ đeo một bên đổi bên khi nhân vật quay (túi đeo chéo của Piko luôn ở hông phía mặt nhìn). Previz 2D chấp nhận điều này; previz khối và dựng 3D theo đúng Character Bible.
-- **Bối cảnh:** mặt phẳng màu đơn giản cộng đạo cụ chính đúng chỗ. Không cần đẹp.
+- **Bối cảnh:** mặt phẳng màu đơn giản cộng đạo cụ chính đúng chỗ. Không cần đẹp. Nhân vật phụ, đạo cụ theo hình khối, màu chính và cỡ trong ảnh của tập (bảng của tập trong `02_ASSET_LIBRARY/MODELING.md`).
 - **Key qua điểm cắt:** đổi chỗ hay tư thế tức thì thì đặt key giữ sớm hơn đúng một khung hình (`1 / FPS`); hai key cách nhau dưới một khung rơi vào cùng khung, key sau ghi đè key trước và nhân vật trượt dần qua nhiều cú. Nhân vật không có mặt trong cú thì đưa ra ngoài khung, nếu không sẽ lọt vào cú của người khác (Cảnh 2 tập 01 có sẵn `enter()`, `park()`). Mảnh nào bật tắt (`show`) thì đặt trạng thái ở giây 0 trước: trước key đầu tiên, Blender giữ đúng giá trị của key đó.
 - **Bộ nhân vật cutout** nằm ở `pipeline/cutout.py`: bốn nhân vật (Piko có túi đeo chéo; kính bảo hộ và Inventor Pack của Tavi là mảnh riêng để kéo kính, hạ ba lô), bộ mặt và biểu cảm dựng sẵn (lông mày bù góc cúi người, giữ nét tới sát lúc đổi), hàm keyframe và diễn, máy quay theo `SHOTS`, cài đặt render. `build_shot.py` của cảnh chỉ dựng bối cảnh, đạo cụ riêng và phần diễn.
 - **Khung hình:** chừa đáy khung (khoảng 15%) cho dải CC, đừng đặt chỗ chạm đất hay đạo cụ chính ở đó. Đạo cụ nhỏ mà gag dựa vào (cái thìa, la bàn) thì cắt sang cú máy cận. Cú cận cần thấy quan hệ giữa các đạo cụ (la bàn chỉ vào túi chứ không vào thìa, la bàn chỉ về vòm kính) hay một thao tác nhỏ (dời cái móc) có thể dựng riêng, phóng to, ở một góc xa của scene (Cảnh 1 tập 01 dựng ở X = 20 và X = 30, Cảnh 2 ở X = 40 tới 70).

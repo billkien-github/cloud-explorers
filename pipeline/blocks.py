@@ -155,7 +155,7 @@ class Rig:
 
 
 def build_lumo(loc):
-    """Đo từ lumo_rig.blend: hông 0.29–0.32, vai 0.55, cổ 0.58–0.63, đỉnh đầu 0.90, chóp tai 1.09, tay vai–cổ tay 0.23."""
+    """Tỉ lệ khối Lumo: hông 0.29–0.32, vai 0.55, cổ 0.58–0.63, đỉnh đầu 0.90, chóp tai 1.09, tay vai–cổ tay 0.22 (Character Bible), khối tay 0.29 gồm cả bàn tay."""
     m = cast_materials()["lumo"]
     r = Rig()
     r.root = empty("LUMO", "CAST", loc=loc)
@@ -168,8 +168,8 @@ def build_lumo(loc):
         ear = add_obj(f"Lumo_Ear_{'L' if side > 0 else 'R'}", box_bm((0.11, 0.04, 0.24), (0, 0, 0.12)), m, "CAST",
                       parent=r.head, loc=(side * 0.13, 0.02, 0.28))
         r.ears.append((ear, side))
-    r.arm_l = add_obj("Lumo_Arm_L", box_bm((0.08, 0.08, 0.30), (0, 0, -0.15)), m, "CAST", parent=r.root, loc=(0.20, 0, 0.55))
-    r.arm_r = add_obj("Lumo_Arm_R", box_bm((0.08, 0.08, 0.30), (0, 0, -0.15)), m, "CAST", parent=r.root, loc=(-0.20, 0, 0.55))
+    r.arm_l = add_obj("Lumo_Arm_L", box_bm((0.08, 0.08, 0.29), (0, 0, -0.145)), m, "CAST", parent=r.root, loc=(0.20, 0, 0.55))
+    r.arm_r = add_obj("Lumo_Arm_R", box_bm((0.08, 0.08, 0.29), (0, 0, -0.145)), m, "CAST", parent=r.root, loc=(-0.20, 0, 0.55))
     r.legs = [add_obj(f"Lumo_Leg_{s}", box_bm((0.11, 0.13, 0.29), (0, 0, -0.145)), m, "CAST", parent=r.root,
                       loc=(x, 0, 0.29)) for s, x in (("L", 0.09), ("R", -0.09))]
     r.tail = add_obj("Lumo_Tail", box_bm((0.11, 0.30, 0.11), (0, 0.15, 0)), m, "CAST", parent=r.root, loc=(0, 0.14, 0.27))

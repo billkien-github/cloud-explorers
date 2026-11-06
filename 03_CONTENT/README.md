@@ -72,17 +72,22 @@ Nội dung hấp dẫn và nhịp nhanh quan trọng hơn con số. Tỉ lệ d�
 
 **Luật đạo cụ:** nhìn là nhận ra, công dụng rõ, **có giới hạn** (quan trọng nhất), hiệu ứng dễ nhớ, sinh ra được nhiều tình huống. Đạo cụ không được giải quyết mọi việc ngay lập tức.
 
-## Viết một tập
+## Làm một tập
+
+Bước trước chốt rồi mới sang bước sau.
 
 | Bước | File | Nội dung |
 |---|---|---|
 | 1. Beat sheet | `Scripts/EPxxx_<tên>.md` | Logline (1–2 câu) + bảng nhịp theo khung tập, có thời gian |
 | 2. Kịch bản | `Scripts/EPxxx_<tên>.fountain` | Kịch bản đầy đủ, bắt đầu từ [`Scripts/template.fountain`](Scripts/template.fountain) |
-| 3. Previz 2D | `Previz_2D/EPxxx_<Tên>/canhNN/` | Mỗi cảnh một previz cutout 2D có CC, chuyển động kỹ ([`PREVIZ_2D.md`](PREVIZ_2D.md)). Độ dài thật của tập đo ở bước này |
+| 3. Ảnh của tập | `02_ASSET_LIBRARY/<loại>/<Tên>/concept/` | Lập bảng nhân vật phụ, bối cảnh, đạo cụ của tập trong `MODELING.md`, viết prompt, sinh ảnh bằng ChatGPT và soát. Chỉ sinh ảnh Seedance cần ([`02_ASSET_LIBRARY/MODELING.md`](../02_ASSET_LIBRARY/MODELING.md), mục "Ảnh cho một tập") |
+| 4. Previz 2D | `Previz_2D/EPxxx_<Tên>/canhNN/` | Mỗi cảnh một previz cutout 2D có CC, chuyển động kỹ ([`PREVIZ_2D.md`](PREVIZ_2D.md)). Độ dài thật của tập đo ở bước này |
+| 5. Previz khối | `04_PRODUCTION/EPxxx_<Tên>/shNNN/` | Previz 3D dạng khối theo previz 2D đã chốt của cảnh, để chốt cú máy cho Seedance ([`04_PRODUCTION/SEEDANCE.md`](../04_PRODUCTION/SEEDANCE.md)) |
+| 6. Seedance | `shNNN/seedance/` | Prompt theo giây, thư mục ảnh tải lên, sinh và soát take ([`04_PRODUCTION/SEEDANCE.md`](../04_PRODUCTION/SEEDANCE.md)) |
 
 Viết beat sheet trước kịch bản, kể cả khi kịch bản lấy từ nguồn ngoài (ChatGPT…): chuyển nội dung đó thành beat sheet trước, rồi mới viết Fountain. Tập đầu tiên dùng một bảo bối hay một cơ chế mới thì ghi cách nó hoạt động (báo hiệu, giới hạn) vào Character Bible trước khi viết kịch bản.
 
-Mỗi bước xong thì chạy `/review` trước khi chốt (`.claude/skills/review/SKILL.md`, gồm cả cách sửa và khi nào chạy lại). Chỉ dựng hàng loạt shot ở `04_PRODUCTION/` (previz khối rồi Seedance, `04_PRODUCTION/SEEDANCE.md`) khi previz 2D của cảnh đã chốt. Trước đó chỉ dựng thử vài shot để kiểm tra pipeline; số shot sẽ đánh lại theo previz 2D.
+Mỗi bước xong thì chạy `/review` trước khi chốt (`.claude/skills/review/SKILL.md`, gồm cả cách sửa và khi nào chạy lại); ảnh ở bước 3 soát theo `MODELING.md`. Bước 4–6 làm theo từng cảnh: chỉ dựng hàng loạt shot ở `04_PRODUCTION/` khi previz 2D của cảnh đã chốt. Trước đó chỉ dựng thử vài shot để kiểm tra pipeline; số shot sẽ đánh lại theo previz 2D.
 
 **Kịch bản viết bằng [Fountain](https://fountain.io):** format kịch bản chuẩn (screenplay) dạng chữ thường. Xem thay đổi được trong git, xuất PDF đúng format bằng Highland, Fade In hoặc extension "Better Fountain" của VS Code.
 

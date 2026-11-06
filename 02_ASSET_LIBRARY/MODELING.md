@@ -1,10 +1,53 @@
-# Làm nhân vật và đạo cụ 3D
+# Ảnh tham chiếu và model 3D
 
-Quy trình: **ChatGPT** sinh ảnh tham chiếu → **Blender** dựng lưới, rig, material theo ảnh bằng build script cạnh asset ([`README.md`](README.md)) → shot sinh hình cuối bằng **Seedance** ([`04_PRODUCTION/SEEDANCE.md`](../04_PRODUCTION/SEEDANCE.md)). Hình dáng, màu, chiều cao: [`01_BRAND/Character_Bible/`](../01_BRAND/Character_Bible/README.md).
+Ảnh nhân vật, đạo cụ, bối cảnh sinh bằng **ChatGPT**. Mỗi tập chỉ sinh ảnh mà Seedance cần (mục "Ảnh cho một tập"). Asset nào dựng model thì làm thêm bộ ảnh nhiều góc nhìn ("Bộ ảnh dựng model"), rồi **Blender** dựng lưới, rig, material theo ảnh bằng build script cạnh asset ([`README.md`](README.md)). Hình cuối của shot sinh bằng **Seedance** ([`04_PRODUCTION/SEEDANCE.md`](../04_PRODUCTION/SEEDANCE.md)). Hình dáng, màu, chiều cao: [`01_BRAND/Character_Bible/`](../01_BRAND/Character_Bible/README.md).
 
-## Bộ ảnh tham chiếu
+## Ảnh cho một tập
 
-Mỗi ảnh một góc nhìn, nền trơn. Ảnh nhìn sau đi cặp với ảnh nhìn trước cùng tên, thêm hậu tố `_back`. Mỗi nhân vật có:
+Làm khi kịch bản của tập đã chốt qua `/review`, trước previz 2D (các bước của một tập: [`03_CONTENT/README.md`](../03_CONTENT/README.md), mục "Làm một tập"). Chỉ sinh những ảnh Seedance cần để vẽ nhân vật, bối cảnh, đạo cụ giống nhau qua mọi shot; previz 2D và previz khối lấy hình dáng, màu, cỡ từ chính các ảnh này.
+
+1. **Lập danh sách** từ dòng "Asset riêng" trong mục "Sản xuất" của beat sheet, soát lại với kịch bản (thứ kịch bản cần mà beat sheet thiếu thì bổ sung vào beat sheet). Mỗi asset sinh:
+   - **Nhân vật phụ:** `<tên>_ref.png` toàn thân nhìn 3/4 và `<tên>_ref_back.png` nhìn sau, ghép thành `<tên>_turnaround.png` bằng `pipeline/turnaround.py` để tải lên Seedance một ảnh mà đủ hai mặt. Nhóm nhân vật nền: một ảnh cả nhóm (`valley_critters_ref.png`).
+   - **Địa điểm mới:** một ảnh `<tên>_hero.png`, khổ 16:9, không nhân vật.
+   - **Đạo cụ** có thiết kế riêng mà truyện dựa vào (máy Rain-O-Matic, bánh răng vàng): một ảnh `<tên>_ref.png` nhìn 3/4. Thêm ảnh trạng thái chỉ khi trạng thái đó lên hình và khó tả bằng chữ (`_frost`).
+   - **Không sinh:** đồ quen thuộc tả được bằng chữ trong prompt Seedance (thìa, ô, cuộn dây), hiệu ứng dựng trong Blender (mây bé), vật nhỏ đã có trong ảnh bối cảnh, thứ đã có ảnh từ tập trước.
+2. **Thêm bảng của tập** thành mục con "Tập NN" ở cuối mục này, như "Tập 01": mỗi asset một dòng gồm thư mục, tên file ảnh, cột Có để ❌; dưới bảng ghi những thứ không sinh ảnh và vì sao. Tên file theo [`README.md`](README.md).
+3. **Viết prompt vào file trước khi sinh:** nhân vật phụ, đạo cụ thành mục "Đạo cụ tập NN", "Nhân vật phụ tập NN" ở cuối phần "Prompt ChatGPT"; bối cảnh ở `04_PRODUCTION/SEEDANCE.md`, mục "Prompt sinh ảnh tham chiếu bằng ChatGPT". Theo khuôn các prompt có sẵn:
+   - Đầu mỗi asset ghi vai của nó trong phim (thấy gì, diễn gì), để biết ảnh cần cho thấy những gì.
+   - Đính kèm `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png` (bối cảnh: `01_BRAND/Brand_Guideline/world_key_art.png`), ghi rõ chỉ lấy phong cách và cỡ.
+   - Tả đúng những gì kịch bản cần: bộ phận được dùng tới, đếm được thì ghi số, cỡ so với Lumo. Nhân vật phụ tránh màu riêng của bốn nhân vật chính.
+   - Nền xám nhạt trơn (trừ ảnh bối cảnh), ánh sáng đều, một đối tượng, không chữ, không logo.
+   - Ảnh này đính kèm ảnh kia thì ghi thứ tự làm.
+4. **Sinh ảnh:** mỗi asset một chat, mỗi lần một ảnh; cách gửi, tải, lưu và các câu sửa hay dùng ở phần "Prompt ChatGPT".
+5. **Soát từng ảnh** với Character Bible và kịch bản (số lượng, trạng thái, bên trái bên phải, màu) trước khi gửi prompt kế. Ảnh sau phải cùng cỡ, cùng đường chân với ảnh trước. Chưa đạt thì nhắn sửa đúng điểm sai trong cùng chat. **Câu sửa nào ăn thì chép vào prompt trong file**, để lần sinh lại không lặp lỗi.
+6. **Xong cả tập:** ghép ảnh xoay, đánh ✅ trong bảng, xoá ảnh thừa (bản nháp, ảnh trùng ý), grep để mọi tên file nhắc trong tài liệu đều có thật, cập nhật Trạng thái trong `README.md`. Rồi sang previz 2D.
+
+### Tập 01
+
+Làm trước khi có quy tắc trên, nên đạo cụ có đủ ảnh nhiều góc nhìn để dựng model mà chưa có `_ref` (Seedance dùng ảnh nào: `04_PRODUCTION/SEEDANCE.md`, mục "Ảnh tham chiếu"). Danh sách asset: beat sheet `03_CONTENT/Scripts/EP001_great_rain_experiment.md`.
+
+| Asset | Thư mục | Ảnh | Có |
+|---|---|---|---|
+| Rain-O-Matic 3000 | `Props/Rain_O_Matic/` | `rain_o_matic_front.png`, `rain_o_matic_back.png`, `rain_o_matic_frost.png` | ✅ |
+| Nắp che nút đỏ | `Props/Rain_O_Matic/` | `button_cover_front.png`, `button_cover_side.png` | ✅ |
+| Bánh răng vàng | `Props/Golden_Gear/` | `golden_gear_front.png`, `golden_gear_side.png`, `golden_gear_frost.png` | ✅ |
+| Móc ròng rọc | `Props/Pulley_Hook/` | `pulley_hook_front.png`, `pulley_hook_side.png` | ✅ |
+| Vịt cao su | `Props/Rubber_Duck/` | `rubber_duck_side.png`, `rubber_duck_front.png`, `rubber_duck_gear.png` | ✅ |
+| Thìa | `Props/Spoon/` | `spoon_top.png`, `spoon_side.png`, `spoon_bent.png` | ✅ |
+| Ô | `Props/Umbrella/` | `umbrella_side.png`, `umbrella_closed.png`, `umbrella_inverted.png` | ✅ |
+| Hộp ốc | `Props/Screw_Box/` | `screw_box_front.png`, `screw_box_open.png` | ✅ |
+| Cuộn dây của Noah | `Props/Noah_Rope/` | `noah_rope_ref.png` | ✅ |
+| Con thuyền | `Environments/Noah_Story/` | `noah_ark_side.png`, `noah_ark_front.png` | ✅ |
+| Cầu ván | `Environments/Noah_Story/` | `plank_bridge_side.png`, `plank_bridge_top.png` | ✅ |
+| Đôi voi con | `Characters/Baby_Elephants/` | `baby_elephants_ref.png` (thiết kế cả đôi), `baby_elephant_front.png`, `baby_elephant_side.png`, `baby_elephant_back.png` | ✅ |
+| Noah | `Characters/Noah/` | `noah_front.png`, `noah_side.png`, `noah_hand_front.png`, `noah_hand_back.png` | ✅ |
+| Thú trên boong (thỏ, chim, hươu cao cổ) | `Characters/Ark_Animals/` | `ark_animals_ref.png` (thiết kế cả nhóm) | ✅ |
+
+Không sinh ảnh riêng: mây bé (hiệu ứng dựng trong Blender), chiếc lá khô (theo `Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`). Bối cảnh thế giới truyện và Wonder Hub: ảnh bối cảnh, prompt theo `04_PRODUCTION/SEEDANCE.md`, chưa sinh.
+
+## Bộ ảnh dựng model
+
+Chỉ làm cho asset sắp dựng model trong Blender. Mỗi ảnh một góc nhìn, nền trơn. Ảnh nhìn sau đi cặp với ảnh nhìn trước cùng tên, thêm hậu tố `_back`. Mỗi nhân vật có:
 
 - **Thân** (`<tên>_apose_body.png`, `<tên>_tpose_body.png`): chỉ phần dựng liền vào thân. Bỏ đồ rời và phần làm riêng (áo choàng, túi, ba lô, đuôi, cánh, râu, lá đội đầu); đồ ôm sát (mũ, kính, gile của Tavi) để liền. Dùng để dựng lưới thân và đặt xương.
 - **Đủ đồ** (`<tên>_outfit.png`): ảnh thân A-pose mặc đủ đồ, giữ nguyên tư thế, cỡ và vị trí trong khung để chồng khớp lên ảnh thân. Dùng để dựng và đặt đồ rời. Không cần bản T-pose vì đồ rời dựng trên tư thế A.
@@ -36,36 +79,15 @@ Ngoại lệ:
 | Story Lens (Nori) | ✅ · ✅ |
 | Pocket of Wonders (Piko) | ✅ · ✅ |
 
-Tập 01 (danh sách asset: beat sheet `03_CONTENT/Scripts/EP001_great_rain_experiment.md`):
+Bốn nhân vật chính có ảnh xoay `<tên>_turnaround.png` ghép từ ảnh đủ đồ (Piko: `piko_pouch_ref.png` và `piko_pouch_ref_back.png`); ảnh đủ đồ đổi thì ghép lại.
 
-| Asset | Thư mục | Ảnh | Có |
-|---|---|---|---|
-| Rain-O-Matic 3000 | `Props/Rain_O_Matic/` | `rain_o_matic_front.png`, `rain_o_matic_back.png`, `rain_o_matic_frost.png` | ✅ |
-| Nắp che nút đỏ | `Props/Rain_O_Matic/` | `button_cover_front.png`, `button_cover_side.png` | ✅ |
-| Bánh răng vàng | `Props/Golden_Gear/` | `golden_gear_front.png`, `golden_gear_side.png`, `golden_gear_frost.png` | ✅ |
-| Móc ròng rọc | `Props/Pulley_Hook/` | `pulley_hook_front.png`, `pulley_hook_side.png` | ✅ |
-| Vịt cao su | `Props/Rubber_Duck/` | `rubber_duck_side.png`, `rubber_duck_front.png`, `rubber_duck_gear.png` | ✅ |
-| Thìa | `Props/Spoon/` | `spoon_top.png`, `spoon_side.png`, `spoon_bent.png` | ✅ |
-| Ô | `Props/Umbrella/` | `umbrella_side.png`, `umbrella_closed.png`, `umbrella_inverted.png` | ✅ |
-| Hộp ốc | `Props/Screw_Box/` | `screw_box_front.png`, `screw_box_open.png` | ✅ |
-| Cuộn dây của Noah | `Props/Noah_Rope/` | `noah_rope_ref.png` | ✅ |
-| Con thuyền | `Environments/Noah_Story/` | `noah_ark_side.png`, `noah_ark_front.png` | ✅ |
-| Cầu ván | `Environments/Noah_Story/` | `plank_bridge_side.png`, `plank_bridge_top.png` | ✅ |
-| Đôi voi con | `Characters/Baby_Elephants/` | `baby_elephants_ref.png` (thiết kế cả đôi), `baby_elephant_front.png`, `baby_elephant_side.png`, `baby_elephant_back.png` | ✅ |
-| Noah | `Characters/Noah/` | `noah_front.png`, `noah_side.png`, `noah_hand_front.png`, `noah_hand_back.png` | ✅ |
-| Thú trên boong (thỏ, chim, hươu cao cổ) | `Characters/Ark_Animals/` | `ark_animals_ref.png` (thiết kế cả nhóm) | ✅ |
-
-Không cần ảnh riêng: mây bé (hiệu ứng dựng trong Blender), chiếc lá khô (theo `Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`). Bối cảnh thế giới truyện và Wonder Hub là ảnh tham chiếu bối cảnh, prompt theo `04_PRODUCTION/SEEDANCE.md`.
-
-Ảnh có bối cảnh: `<tên>_hero.png`.
-
-## Chuẩn ảnh
+## Chuẩn ảnh dựng model
 
 Trong Blender, ảnh trước đặt làm ảnh nền (Reference) ở Front view, ảnh sau ở Back view, scale theo chiều cao trong Character Bible. Ảnh sai tư thế hoặc hai ảnh lệch cỡ thì model sai theo, nên soát từng ảnh trước khi dùng:
 
 1. **Tư thế đối xứng, tay thẳng.** A-pose: tay dang chéo xuống khoảng 45°. T-pose: tay dang ngang tầm vai, song song mặt đất. Khe hở rõ giữa tay và thân. Nhân vật có chân: chân thẳng, bàn chân đặt phẳng, rộng bằng vai, mũi chân hướng ra trước, có khe hở giữa hai chân.
    - A-pose: vai biến dạng đẹp hơn khi tay buông xuống (tư thế hay gặp nhất). T-pose: tay xa thân nhất, dễ thấy vai, khuỷu, cổ tay; hợp với nhân vật bụng tròn tay ngắn như Lumo, Tavi.
-   - Dựng lưới theo tư thế nào: thử với Lumo, giữ tư thế nào qua `pipeline/rig_qa.py` tốt hơn rồi dùng cho cả nhóm.
+   - Dựng lưới theo tư thế nào: thử với Lumo, tư thế nào qua bước kiểm tra rig (mục "Dựng trong Blender") tốt hơn thì dùng cho cả nhóm.
 2. **Bàn tay úp:** lòng bàn tay hướng xuống đất, ngón duỗi thẳng và hơi tách nhau, ngón cái hướng ra trước. Dựng theo tay ngửa thì cổ tay ở tư thế nghỉ đã xoắn, animation trông gượng.
 3. **Thấy rõ khớp** để đặt xương: cằm và cổ, vai, khuỷu, cổ tay, háng, đầu gối, cổ chân.
 4. **Biểu cảm trung tính:** miệng khép, cười nhẹ, mắt mở nhìn thẳng. Biểu cảm do face rig làm.
@@ -80,10 +102,13 @@ Trong Blender, ảnh trước đặt làm ảnh nền (Reference) ở Front view
 - Đính kèm đúng file ghi ở mỗi bước, theo đúng thứ tự khi có nhiều file, kể cả khi ảnh đó đã có sẵn trong chat. Prompt tiếng Anh để GPT giữ đúng từng ý.
 - Ảnh T-pose sửa từ ảnh A-pose đã duyệt và chỉ đổi tay. Ảnh sau T-pose sửa từ ảnh sau A-pose, đính kèm thêm ảnh trước T-pose để lấy dáng tay. Nếu để GPT tự vẽ lại T-pose từ đầu, thân hay bị lệch (Tavi từng mất gai hai bên thân, tay to ra và có tay áo).
 - Claude làm giúp được qua Claude in Chrome, nhưng phải dùng Chrome trên máy Mac chứa repo: ảnh tải về nằm ở `~/Downloads` của Mac, Claude đổi tên và chuyển vào `concept/`. Chrome trên máy Windows tải về không sang được Mac. Ô chat của ChatGPT gửi tin khi gặp dấu xuống dòng, nên prompt được gõ thành một dòng.
-- Lưu ảnh nhận về đúng tên ghi ở mỗi bước vào `concept/` của asset. Soát theo "Chuẩn ảnh" và Character Bible rồi mới gửi bước tiếp; chưa đạt thì nhắn sửa đúng điểm sai trong cùng chat.
+- Lưu ảnh nhận về đúng tên ghi ở mỗi bước vào `concept/` của asset, soát (ảnh cho tập: bước 5 của "Ảnh cho một tập"; ảnh dựng model: thêm "Chuẩn ảnh dựng model") rồi mới gửi bước tiếp; chưa đạt thì nhắn sửa đúng điểm sai trong cùng chat.
 - Ảnh sau lệch cỡ, lệch vị trí so với ảnh trước, nhắn: `Same back view, but match the exact size and position of the front image: same top of the head, same feet line, same width.`
 - GPT ghép hai góc nhìn vào một ảnh, nhắn: `Only one view per image. Generate it again as a single view.`
-- Ảnh sau của vật có trang trí lệch một bên (Story Lens): soát xem bố cục đã lật ngang chưa. GPT hay vẽ lại y như mặt trước; khi đó nhắn rõ chi tiết nào chuyển sang bên nào.
+- Ảnh sau của vật có chi tiết lệch một bên (Story Lens, mu bàn tay của Noah): GPT hay vẽ lại y như mặt trước. Ghi rõ chi tiết nào chuyển sang bên nào (`the thumb is now on the opposite side`).
+- Ảnh nhìn ngang: ghi nhìn từ bên nào và quay về phía nào của người xem (`seen from its left side, facing the viewer's left`), phần chìa ra (tai, cánh) thấy mặt nào. GPT hay vẽ mặt đẹp dù sai góc nhìn (tai voi lộ mặt trong màu hồng). Vật có cơ cấu ở một bên (lò xo, bản lề của nắp che nút): nhìn ngang từ phía có cơ cấu cho khớp ảnh trước.
+- Tư thế tham chiếu bỏ đồ nhân vật cầm khi diễn (dây trong vòi voi con); diễn làm sau, ở previz hay rig.
+- GPT hay tự thêm màu, chi tiết không có trong prompt (màu tím trên Rain-O-Matic, cầu dốc ở mạn thuyền): soát với Character Bible và kịch bản, rồi ghi `no …` vào prompt.
 - ChatGPT đôi khi đưa hai bản và hỏi "Which image do you like more?": phải chọn một bản thì mới tải được. Nếu nút tải trong khung xem ảnh không ăn, tải bằng link tạo ngay trong trang (Claude làm được qua công cụ JavaScript của Claude in Chrome).
 
 ### Lumo: ảnh sau của thân
@@ -317,7 +342,7 @@ Now the BACK view of the same pouch as one separate image: seen straight from be
 
 ### Đạo cụ tập 01
 
-- Mỗi món một chat, lưu ảnh vào `concept/` của thư mục ghi ở bảng "Hiện trạng".
+- Mỗi món một chat, lưu ảnh vào `concept/` của thư mục ghi ở bảng "Tập 01".
 - Làm máy Rain-O-Matic trước, vì nắp che nút và móc ròng rọc đính kèm ảnh máy. Làm bánh răng trước con vịt, vì ảnh vịt ngậm bánh răng đính kèm ảnh bánh răng.
 - `cloud_explorers_character_sheet.png` (trong `01_BRAND/Character_Bible/`) chỉ để lấy phong cách và cỡ so với nhân vật. Cỡ đạo cụ lấy theo previz 2D tập 01.
 
@@ -525,7 +550,7 @@ Mỗi asset một build script dựng lưới, xương, face rig, material ra `<
 - **Lưới, texture:** quad, mỗi nhân vật dưới khoảng 50k mặt; texture 2048 là đủ (phim 1080p; 4096 nặng cho EEVEE trên Vega 11).
 - Scale theo chiều cao trong Character Bible.
 - Soát **bàn tay úp, ngón không dính nhau, miệng khép** trước khi rig.
-- Kiểm tra rig bằng `pipeline/rig_qa.py` (ngưỡng đạt trong `pipeline/README.md`) trên các tư thế khó: giơ tay, bật nhảy, ngoái đầu, cúi.
+- **Kiểm tra rig** trên các tư thế khó (giơ tay, bật nhảy, ngoái đầu, cúi), tư thế đặt theo trục thế giới: đo % diện tích mặt lưới bị bóp (< 40% so với tư thế nghỉ) hay giãn (> 250%), và tỉ lệ thể tích so với tư thế nghỉ. Đạt khi phần méo dưới khoảng 2%, thể tích gần 1.0.
 
 ### Gắn đồ rời (áo choàng, túi của Lumo; ba lô của Tavi)
 

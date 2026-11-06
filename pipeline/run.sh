@@ -6,7 +6,6 @@
 #   pipeline/run.sh preview -Shot <shot>             # cả shot, 960x540 -> renders/<shot>_preview.mp4 (có tiếng nếu scene có sound strip)
 #   pipeline/run.sh final -Shot <shot>               # 1920x1080, motion blur -> renders/<shot>_final.mp4
 #   pipeline/run.sh ref -Shot <shot>                 # 1920x1080, ít sample -> renders/<shot>_ref.mp4 (video dẫn cho Seedance)
-#   pipeline/run.sh audio -Shot <shot>               # ghép audio/<shot>_mix.wav vào video preview sẵn có, không render lại hình
 #   pipeline/run.sh open -Shot <shot>                # mở <shot>.blend trong Blender GUI (Space để play)
 #   pipeline/run.sh mcp -Shot <shot>                 # mở kèm --online-mode để add-on MCP tự bật (cổng 9876)
 # Blender mặc định ở /Applications/Blender.app; để nơi khác thì đặt biến môi trường BLENDER.
@@ -35,8 +34,8 @@ while [ $# -gt 0 ]; do
 done
 MODE="${MODE:-stills}"
 case "$MODE" in
-    build | stills | preview | final | ref | audio | open | mcp) ;;
-    *) fail "Chế độ không có: $MODE (build, stills, preview, final, ref, audio, open, mcp)" ;;
+    build | stills | preview | final | ref | open | mcp) ;;
+    *) fail "Chế độ không có: $MODE (build, stills, preview, final, ref, open, mcp)" ;;
 esac
 [ -n "$SHOT" ] || fail "Cần -Shot <thư mục shot tính từ gốc dự án>."
 
@@ -59,14 +58,6 @@ case "$MODE" in
     mcp)
         nohup "$BLENDER" --online-mode "$BLEND" >/dev/null 2>&1 &
         echo "Đã mở Blender với --online-mode, add-on MCP nghe ở 127.0.0.1:9876." ;;
-    audio)
-        video="$SHOT_DIR/renders/${NAME}_preview.mp4"
-        wav="$SHOT_DIR/audio/${NAME}_mix.wav"
-        out="$SHOT_DIR/renders/${NAME}_preview_sound.mp4"
-        if [ ! -f "$video" ]; then echo "Chưa có $video - chạy 'pipeline/run.sh preview -Shot $SHOT' trước."
-        elif [ ! -f "$wav" ]; then echo "Chưa có $wav"
-        else exec "$BLENDER" -b --factory-startup -P "$ROOT/pipeline/mux_audio.py" -- "$video" "$wav" "$out"
-        fi ;;
     *)
         if [ ! -f "$BLEND" ]; then "$BLENDER" -b --factory-startup -P "$BUILD"; fi
         exec "$BLENDER" -b "$BLEND" -P "$ROOT/pipeline/render.py" -- "$MODE" ${FRAMES:+"$FRAMES"} ;;

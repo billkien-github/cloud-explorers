@@ -4,12 +4,11 @@
 #   .\pipeline\run.ps1 preview -Shot <shot>             # cả shot, 960x540 -> renders\<shot>_preview.mp4 (có tiếng nếu scene có sound strip)
 #   .\pipeline\run.ps1 final -Shot <shot>               # 1920x1080, motion blur -> renders\<shot>_final.mp4
 #   .\pipeline\run.ps1 ref -Shot <shot>                 # 1920x1080, ít sample -> renders\<shot>_ref.mp4 (video dẫn cho Seedance)
-#   .\pipeline\run.ps1 audio -Shot <shot>               # ghép audio\<shot>_mix.wav vào video preview sẵn có, không render lại hình
 #   .\pipeline\run.ps1 open -Shot <shot>                # mở <shot>.blend trong Blender GUI (Space để play)
 #   .\pipeline\run.ps1 mcp -Shot <shot>                 # mở kèm --online-mode để add-on MCP tự bật (cổng 9876)
 # Giữ đồng bộ với run.sh (bản macOS): sửa file này thì sửa luôn file kia (pipeline/README.md).
 param(
-    [Parameter(Position = 0)][ValidateSet("build", "stills", "preview", "final", "ref", "audio", "open", "mcp")][string]$Mode = "stills",
+    [Parameter(Position = 0)][ValidateSet("build", "stills", "preview", "final", "ref", "open", "mcp")][string]$Mode = "stills",
     [Parameter(Position = 1)][string[]]$Frames = @(),                 # PowerShell đọc 300,540 thành mảng
     [Parameter(Mandatory = $true)][string]$Shot
 )
@@ -23,14 +22,6 @@ switch ($Mode) {
     "build" { & $Blender -b --factory-startup -P $Build }
     "open" { & $Blender $Blend }
     "mcp" { Start-Process -FilePath $Blender -ArgumentList "--online-mode", "`"$Blend`"" }
-    "audio" {
-        $video = Join-Path $ShotDir "renders\$($Name)_preview.mp4"
-        $wav = Join-Path $ShotDir "audio\$($Name)_mix.wav"
-        $out = Join-Path $ShotDir "renders\$($Name)_preview_sound.mp4"
-        if (-not (Test-Path $video)) { Write-Host "Chưa có $video - chạy '.\pipeline\run.ps1 preview -Shot $Shot' trước." }
-        elseif (-not (Test-Path $wav)) { Write-Host "Chưa có $wav" }
-        else { & $Blender -b --factory-startup -P (Join-Path $PSScriptRoot "mux_audio.py") -- $video $wav $out }
-    }
     default {
         if (-not (Test-Path $Blend)) { & $Blender -b --factory-startup -P $Build }
         $extra = @($Mode)

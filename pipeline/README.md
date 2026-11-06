@@ -2,15 +2,14 @@
 
 | File | Vai trò |
 |---|---|
-| `run.ps1`, `run.sh` | Lệnh chạy nhanh cho một shot: build, render, ghép tiếng, mở Blender. `run.ps1` cho Windows, `run.sh` cho macOS |
+| `run.ps1`, `run.sh` | Lệnh chạy nhanh cho một shot: build, render, mở Blender. `run.ps1` cho Windows, `run.sh` cho macOS |
 | `render.py` | Render một `.blend` theo 4 chế độ `stills` / `preview` / `final` / `ref`, ghi vào `renders/` cạnh file |
-| `mux_audio.py` | Ghép file âm thanh vào video đã render, không render lại hình, giữ nguyên màu |
 | `cutout.py` | Bộ nhân vật cutout 2D cho previz 2D: hình phẳng, bộ mặt, bốn nhân vật, hàm keyframe, máy quay theo `SHOTS`, render Workbench. Cách dùng ở docstring, quy ước dựng ở `03_CONTENT/PREVIZ_2D.md` |
 | `blocks.py` | Bộ khối 3D cho previz khối dẫn Seedance: hình khối, vật liệu, bốn nhân vật dạng khối đúng tỉ lệ, keyframe theo giây của cảnh (đoạn cắt ra từ cảnh dài vẫn trùng khung), máy quay theo `SHOTS`, tự kiểm nhân vật trong khung, cài đặt render. Quy ước previz khối: `04_PRODUCTION/SEEDANCE.md` |
 | `edit.py` | Ghép nhiều video thành một theo danh sách dựng: cắt đầu đuôi, nối, co giãn video khác cỡ, thêm tiếng, in CC từ `timing.py` và xuất `.srt` (`--clean`: chỉ `.srt`, không in lên hình). Take trong thư mục shot tự cắt theo `SEGMENT`, lấy CC theo `TIMING`, `OFFSET` của `build_shot.py`; take chưa có thì thay bằng khung tối đúng độ dài. Cách dùng ở docstring |
 | `cc.py` | In CC từ `timing.py` của cảnh lên một video previz (2D hay khối) và xuất `.srt`, không render lại hình. Là `edit.py` với một video. Cách viết CC: `03_CONTENT/PREVIZ_2D.md` |
 | `turnaround.py` | Ghép ảnh nhìn trước và nhìn sau của một nhân vật thành ảnh xoay `<tên>_turnaround.png` làm tham chiếu Seedance: cân nền về cùng màu xám, co cho nhân vật cùng chiều cao, chân cùng một đường, mép ghép mờ dần. Cách chạy ở docstring |
-| `rig_qa.py` | Kiểm tra rig: đặt tư thế theo trục thế giới, đo % mặt lưới bị bóp (< 40% diện tích) hay giãn (> 250%) và tỉ lệ thể tích so với tư thế nghỉ. Đạt khi bad% dưới khoảng 2%, thể tích gần 1.0 |
+| `seedance_upload.py` | Tạo thư mục tải lên Seedance của một shot (`renders/seedance_upload/`) theo bảng số tham chiếu trong `seedance/prompt.md`: chép video previz, từng ảnh với tên theo số, và `prompt.txt`. Chạy bằng Python thường, không cần Blender. Cách chạy ở docstring |
 
 Code riêng của từng asset hay shot (build script) nằm cạnh asset hay shot đó, không để ở đây. Chỉ chuyển một hàm vào `pipeline/` khi đã có từ hai nơi trở lên cần dùng.
 
@@ -26,7 +25,6 @@ $S = "04_PRODUCTION\EP001_Great_Rain_Experiment\sh010"
 .\pipeline\run.ps1 preview -Shot $S            # cả shot 960x540 -> renders\sh010_preview.mp4
 .\pipeline\run.ps1 final -Shot $S              # 1920x1080 + motion blur
 .\pipeline\run.ps1 ref -Shot $S                # 1920x1080, 8 sample, không motion blur: video dẫn cho Seedance
-.\pipeline\run.ps1 audio -Shot $S              # ghép audio\sh010_mix.wav vào video preview
 .\pipeline\run.ps1 open -Shot $S               # mở trong Blender GUI
 .\pipeline\run.ps1 mcp -Shot $S                # mở kèm --online-mode cho Blender MCP
 ```
@@ -66,5 +64,5 @@ Cho phép Claude điều khiển trực tiếp Blender đang mở: đọc scene,
 - Action trong 5.x là layered: lấy fcurves qua `bpy_extras.anim_utils.action_get_channelbag_for_slot(action, slot)`, không còn `action.fcurves`.
 - VSE trong 5.x: `scene.sequence_editor.strips.new_sound / new_movie` (`new_movie` nhận `fit_method="FIT"` để co video khác cỡ vừa khung). `frame_final_*`, `frame_offset_*` sắp bỏ: cắt bằng `left_handle_offset`, `right_handle_offset`, dời bằng `content_start`. Video khác fps với scene bị phát từng khung (nhanh hay chậm đi), Blender không tự đổi. `new_sound` trên video không có tiếng không báo lỗi mà trả về strip dài 1 khung.
 - Xuất video: đặt `image_settings.media_type = "VIDEO"` trước rồi mới đặt `file_format = "FFMPEG"`.
-- Ghép tiếng vào video đã render phải dùng view transform `Standard`, nếu không AgX áp thêm lần nữa làm bạc màu (`mux_audio.py` đã xử lý). Blender cần đường dẫn tuyệt đối khi nạp video.
+- Ghép tiếng vào video đã render phải dùng view transform `Standard`, nếu không AgX áp thêm lần nữa làm bạc màu (`edit.py` đã xử lý). Blender cần đường dẫn tuyệt đối khi nạp video.
 - Avast quét HTTPS làm hỏng `pip install` và tải gói (lỗi `InvalidChunkLength`). Khi cần cài thư viện, tạm tắt Avast shields 10 phút.

@@ -11,7 +11,7 @@ Bạn là kỹ thuật viên âm thanh của Cloud Explorers, phim hoạt hình 
 
 1. Mục "Kết quả của reviewer" trong `.claude/skills/review/SKILL.md`: mức độ lỗi, quy tắc bằng chứng, định dạng trả về.
 2. `review.json` trong thư mục review được giao: mục `audio` (`peak_dbfs`, `clipped_samples`, `rms_dbfs` theo từng 0.1 giây, `silent_ranges_s`), `cuts`, `duration_s`.
-3. Code dựng tiếng trong thư mục shot (`build_audio.py`, thư mục `audio/` nếu có) và `build_shot.py` (keyframe mở miệng, mốc hành động).
+3. Tiếng ghép thêm nếu có (`AUDIO` trong danh sách dựng `<tập>/canhNN_edit.py`) và `build_shot.py` (keyframe mở miệng, mốc hành động).
 4. Beat sheet của tập nếu được giao.
 
 ## Soi

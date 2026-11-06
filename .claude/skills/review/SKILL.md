@@ -31,7 +31,7 @@ Cả tập đã ghép chưa có quy trình review.
    - **Previz khối:** `renders/<tên>_preview_cc.mp4` (có CC), chưa có thì `_ref.mp4`, rồi `_preview.mp4`, vào `review/previz`.
    - **Prompt:** trích previz như trên, rồi chạy `python .claude/skills/review/check_prompt.py <thư mục shot> <thư mục shot>/renders/review/previz/review.json`. Previz dùng ở đây là bản đã tải lên Seedance: `renders/seedance_upload/video1_previz.mp4`, chưa có thì `_ref.mp4`.
    - **Take:** take vào `review/take`, previz đã tải lên Seedance vào `review/previz`.
-   - **Shot dựng 3D:** video mới nhất trong `renders/` theo thứ tự `_final`, `_preview_sound`, `_preview`, vào `review/shot`.
+   - **Shot dựng 3D:** video mới nhất trong `renders/` theo thứ tự `_final`, `_preview`, vào `review/shot`.
 3. **Gọi các reviewer của cổng trong cùng một lượt** để chạy song song. Prompt cho mỗi agent chỉ gồm:
    - tên cổng;
    - đường dẫn file kịch bản, hoặc thư mục shot, video, các thư mục `renders/review/...` đã chuẩn bị;
@@ -62,9 +62,10 @@ Phần lớn lỗi của các lượt sau sinh ra từ chính lần sửa trư�
 
 1. **Sửa hết Chặn và Nên sửa. Gợi ý chỉ áp cái người dùng chọn.** Mỗi Gợi ý thêm một chi tiết mới, tức là thêm một chỗ có thể vênh với luật. Áp cả loạt Gợi ý cùng lúc sửa lỗi Chặn thì lượt sau gần như chắc chắn có lỗi mới.
 2. **Lỗi đòi thêm hay đổi một luật** (cách bảo bối báo hiệu, luật nhân quả, một mục checklist): ghi luật vào file sở hữu trước, rồi soát toàn bộ kịch bản theo luật đó, không chỉ dòng bị nêu.
-3. **Tự soát trước khi chạy lại:** đi qua từng gạch Luật nhân quả và từng mục checklist của beat sheet, đối chiếu mọi dòng đã đổi; sửa beat sheet cùng lúc với kịch bản để hai file khớp nhau.
+3. **Tự soát trước khi chạy lại:** đi qua từng gạch Luật nhân quả và từng mục checklist của beat sheet, đối chiếu mọi dòng đã đổi; sửa beat sheet cùng lúc với kịch bản để hai file khớp nhau. Luật có nhiều mức hay nhiều trường hợp (bảo bối báo hiệu theo khoảng cách…): grep mọi dòng liên quan, lập bảng dòng → mức đúng → dòng đang viết gì, kiểm từng hàng. Sửa xong một dòng thì kiểm lại cả bảng, vì đổi một dòng có thể làm dòng khác lệch mức.
 4. **Chạy lại khi nào:**
-   - Lượt vừa rồi còn Chặn, hoặc lần sửa thêm hay đổi luật: chạy lại `/review`, gửi kèm danh sách lỗi Chặn, Nên sửa của lượt trước (bước 3 ở mục Chạy).
+   - Lần sửa thêm hay đổi luật: chạy lại `/review` cả nhóm reviewer, gửi kèm danh sách lỗi Chặn, Nên sửa của lượt trước (bước 3 ở mục Chạy).
+   - Lượt vừa rồi còn Chặn nhưng lần sửa chỉ đổi câu chữ theo luật đã có: chạy lượt xác nhận. Chỉ gọi các reviewer đã nêu lỗi được sửa (kể cả Gợi ý đã áp), giao danh sách lỗi cũ nguyên văn, các Gợi ý đã áp và số dòng đã đổi. Reviewer kiểm từng lỗi cũ, đọc các dòng đã đổi cùng vài dòng xung quanh, chỉ báo Chặn, Nên sửa mới.
    - Chỉ còn Nên sửa và lần sửa không đổi luật: sửa, tự soát, rồi khoá; không cần chạy lại cả nhóm reviewer.
    - Gợi ý mới ở lượt review lại không chặn khoá. Khoá khi không còn Chặn và Nên sửa.
 5. **Rút kinh nghiệm:** một đầu vào phải review từ lượt thứ ba trở lên thì tìm vì sao lỗi cứ xuất hiện (thiếu thước đo, lần sửa gây lỗi mới, reviewer thiếu căn cứ…) và cập nhật vào skill này, file vai reviewer hoặc file chuẩn. Không ghi file báo cáo.

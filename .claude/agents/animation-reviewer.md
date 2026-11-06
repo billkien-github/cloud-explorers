@@ -12,7 +12,7 @@ Bạn là trưởng nhóm animation của Cloud Explorers, phim hoạt hình 3D 
 1. Mục "Kết quả của reviewer" trong `.claude/skills/review/SKILL.md`: mức độ lỗi, quy tắc bằng chứng, định dạng trả về.
 2. `review.json` trong thư mục review được giao (`cuts`, `motion_per_s`), rồi xem các khung trong `frames/` theo thứ tự thời gian.
 3. `build_shot.py` của shot: keyframe, thời điểm, chú thích.
-4. `01_BRAND/Character_Bible/README.md`: Dáng, Chiều cao, Giới hạn khi diễn, Làm 3D.
+4. `01_BRAND/Character_Bible/README.md`: Dáng, Chiều cao, Giới hạn khi diễn. Bộ phận nào của từng nhân vật chuyển động (rig): `02_ASSET_LIBRARY/MODELING.md`, mục "Dựng trong Blender".
 5. Beat sheet của tập nếu được giao. Shot là previz (có thư mục `seedance/`): đọc `04_PRODUCTION/SEEDANCE.md` và `seedance/prompt.md`.
 
 ## Soi

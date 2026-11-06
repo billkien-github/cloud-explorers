@@ -2,13 +2,12 @@
 
 Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng khối, chuyển động, cú máy, nhịp thời gian, tất cả dựng bằng `build_shot.py`. Seedance lo phần **hình**: lấy video previz làm khung (video-to-video), cùng ảnh nhân vật, bối cảnh và prompt viết theo từng giây, rồi vẽ lại thành clip hoàn chỉnh. Camera và timing chốt trong Blender trước khi tốn credit.
 
-Đây là quy trình **đề xuất**, đang thử. Đã sinh trên Higgsfield: take 1 của `04_PRODUCTION/TEST_First_Rain/sh010` (27 giây, 7 shot, chưa soát) và take 1 của `EP001_Great_Rain_Experiment/sh020` (đã soát, chưa dùng được). Từ nay sinh trên BytePlus ModelArk.
+Đây là quy trình **đề xuất**, đang thử: mới có take 1 của `EP001_Great_Rain_Experiment/sh020` (đã soát, chưa dùng được).
 
 ## Seedance ở đâu, giới hạn gì (tra ngày 06/11/2026)
 
 - **Nơi chạy:** BytePlus ModelArk (console hoặc API), model **Seedance 2.5** (mã `dreamina-seedance-2-5-260628` theo tài liệu bên thứ ba, đối chiếu lại trong console). Mỗi lần sinh 4–30 giây, `duration` là số nguyên giây. Tham số: `ratio` 16:9; `resolution` 480p, 720p, 1080p (nguồn bên thứ ba ghi 1080p có giá từ tháng 10/2026; chưa có thì 720p); `watermark` tắt; `generate_audio` bật tắt tiếng động.
 - **Tham chiếu:** ảnh (role `reference_image`), video (`reference_video`), tiếng (`reference_audio`). Prompt gọi `@Image1`, `@Video1`, viết liền không cách, số theo thứ tự đưa vào. Qua API, video phải là URL (đặt file lên chỗ lưu trữ trước). Số tham chiếu tối đa và tổng thời lượng video tham chiếu (khoảng 30 giây) lấy từ nguồn bên thứ ba, chưa đối chiếu được trang chính thức.
-- **Higgsfield** (Seedance 2.5 qua add-on trong Blender, xem `README.md`): dùng cho các take thử đầu; gọi tham chiếu `@Video 1`, `@Image 1` (có dấu cách). Nơi chỉ có Seedance 2.0 thì mỗi lần ra 4–15 giây, tối đa 9 ảnh, 3 video tham chiếu.
 - Thông số trên thay đổi nhanh: kiểm tra lại trong console trước mỗi đợt sinh.
 
 ## Các bước
@@ -20,7 +19,7 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 | 3 | Duyệt previz: `run.ps1 stills`, `run.ps1 preview`, in CC bằng `pipeline/cc.py` (`03_CONTENT/PREVIZ_2D.md`, mục CC), rồi `/review <thư mục shot>` (hình có kể đúng kịch bản, nhịp, bố cục). **Chốt timing**: từ đây prompt bám theo từng con số | Bản previz đã chốt |
 | 4 | Render video tham chiếu: `run.ps1 ref` (1920x1080, 24 fps, MP4, ít sample cho nhanh, không in CC) | `renders/sh010_ref.mp4` |
 | 5 | Chọn ảnh tham chiếu (xem "Ảnh tham chiếu") | Danh sách `@Image` |
-| 6 | Soạn prompt theo giây (xem "Prompt theo giây"); gom file tải lên vào một thư mục, đặt tên theo số tham chiếu. Trước khi sinh: `/review <thư mục shot>/seedance/prompt.md` | `seedance/prompt.md`, `renders/seedance_upload/` |
+| 6 | Soạn prompt theo giây (xem "Prompt theo giây"), kèm bảng số tham chiếu → file tải lên → nguồn. Tạo ngay thư mục tải lên riêng của shot: `python pipeline/seedance_upload.py <thư mục shot>` chép video previz, từng ảnh (tên theo số) và `prompt.txt`; sửa prompt hay đổi ảnh thì chạy lại. Trước khi sinh: `/review <thư mục shot>/seedance/prompt.md` | `seedance/prompt.md`, `renders/seedance_upload/` |
 | 7 | Sinh trên BytePlus ModelArk: 16:9, 1080p, `duration` bằng `SECONDS` của `build_shot.py`, watermark tắt | `seedance/sh010_take01.mp4` |
 | 8 | Soát take theo bảng "Soát take": `/review <thư mục shot>/seedance/<take>.mp4`. Lỗi do prompt thì sửa prompt; lỗi do previz thì sửa `build_shot.py`, render lại, sửa mốc trong prompt | Take được chọn |
 | 9 | Dựng cảnh: ghi take được chọn của từng đoạn vào danh sách dựng `<tập>/canhNN_edit.py`, nối bằng `pipeline/edit.py` (cắt theo `SEGMENT`, CC theo `TIMING`) | `<tập>/renders/canhNN_edit_cc.mp4` + `.srt` |
@@ -30,7 +29,7 @@ Thư mục shot thêm `seedance/`:
 ```
 sh010/
 ├── build_shot.py, sh010.blend, backups/, renders/   (như cũ)
-├── renders/seedance_upload/  video1_previz.mp4, image1_<tên>.png…, prompt.txt: đúng thứ tự tải lên (không lên git)
+├── renders/seedance_upload/  video1_previz.mp4, image1_<tên>.png…, prompt.txt: đúng thứ tự tải lên, do pipeline/seedance_upload.py tạo (không lên git)
 └── seedance/
     ├── prompt.md            prompt đã gửi (tiếng Anh) + file tham chiếu theo số @Image + ghi nhận từng take
     └── sh010_take01.mp4     clip Seedance trả về, giữ nguyên, không sửa
@@ -43,7 +42,7 @@ sh010/
 - **Nhân vật dạng khối đúng chiều cao và tỉ lệ trong `01_BRAND/Character_Bible/README.md`.** Khối sai tỉ lệ thì Seedance kéo nhân vật theo.
 - **Màu khối** để Seedance biết ai là ai, quay hướng nào (bảng màu ghi vào prompt):
   - Một nhân vật: đỏ = mặt trước, đen = lưng, xanh lá = hai bên và đỉnh.
-  - Từ hai nhân vật: mỗi nhân vật một màu cố định (Lumo cam, Tavi xanh lá, Nori tím nhạt, Piko xanh ngọc), mặt trước đầu có ô trắng báo hướng nhìn. Bối cảnh, đạo cụ để xám để không lẫn màu nhân vật. Đã dùng ở `TEST_First_Rain`.
+  - Từ hai nhân vật: mỗi nhân vật một màu cố định (Lumo cam, Tavi xanh lá, Nori tím nhạt, Piko xanh ngọc), mặt trước đầu có ô trắng báo hướng nhìn. Bối cảnh, đạo cụ để xám để không lẫn màu nhân vật. Đang dùng ở Cảnh 1 tập 01.
 - **Khối 4 nhân vật**, máy quay, tự kiểm khung và cài đặt render ở `pipeline/blocks.py`.
 - **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. ModelArk nhận số nguyên giây, nên `SECONDS` làm tròn lên số nguyên và `SEGMENT` ghi độ dài đoạn trong cảnh: máy quay chỉ dựng các cú trong `SEGMENT`, phần dư giữ cú máy cuối, lúc dựng `pipeline/edit.py` cắt bỏ; `check_prompt.py` đọc cả hai. Đang dùng cho Cảnh 1 tập 01: `EP001_Great_Rain_Experiment/sh010` (0–28.8 s, S1–S6) và `sh020` (28.8–55 s, S7–S14).
 - **Vật hiện ra, biến mất** bằng key scale 0 và 1 cách nhau ít nhất một khung; hai key gần hơn một khung rơi vào cùng khung và vật lộ dần từ key trước đó.
@@ -56,10 +55,12 @@ sh010/
 
 ## Ảnh tham chiếu
 
-- Mỗi nhân vật **một ảnh cố định cho mọi shot** để giữ nhân vật đồng nhất: `02_ASSET_LIBRARY/Characters/<Tên>/concept/<tên>_hero.png`. Piko dùng `piko_pouch_ref.png` (đã đeo Pocket of Wonders đúng cách đeo). Lumo: chưa chốt, xem cuối file.
-  - Bốn nhân vật chính có thêm ảnh xoay `<tên>_turnaround.png`: ảnh đủ đồ nhìn trước bên trái, nhìn sau bên phải, nền trơn (Piko: `piko_pouch_ref.png` nhìn 3/4 và mặt sau). Mỗi nhân vật vẫn chiếm một suất `@Image` mà có cả mặt sau. Dùng thì ghi trong ACTIVE REFERENCES: `@Image1 = Lumo turnaround sheet: left front view, right back view of ONE character. Layout, background and pose not inherited.` Chưa thử trong take nào.
+- **Chọn ảnh đầy đủ nhất về hình**, mỗi asset một ảnh để tiết kiệm suất `@Image`: ảnh xoay (trước và sau trong một ảnh) hơn ảnh một mặt, ảnh 3/4 hơn ảnh nhìn thẳng, nền trơn hơn ảnh có bối cảnh. Ảnh sinh cho từng tập: `02_ASSET_LIBRARY/MODELING.md`, mục "Ảnh cho một tập".
+- Mỗi nhân vật **một ảnh cố định cho mọi shot** để giữ nhân vật đồng nhất: ảnh xoay `02_ASSET_LIBRARY/Characters/<Tên>/concept/<tên>_turnaround.png` (nhìn trước bên trái, nhìn sau bên phải, nền trơn; ghép bằng `pipeline/turnaround.py`). Ảnh xoay của Piko ghép từ ảnh Piko đeo Pocket of Wonders. Nhân vật chưa có ảnh xoay thì dùng `<tên>_ref.png`.
+  - Ghi trong ACTIVE REFERENCES: `@Image1 = Lumo turnaround sheet: left front view, right back view of ONE character. Layout, background and pose not inherited.`
+  - Chưa thử trong take nào: take đầu dùng ảnh xoay thì soát xem Seedance có vẽ hai bản của cùng một nhân vật không, và mặt sau có đúng khi nhân vật quay lưng.
 - Bối cảnh: ảnh riêng của từng địa điểm, chưa có thì `01_BRAND/Brand_Guideline/world_key_art.png`. Đã có: Thung lũng Mây khô hạn (Cảnh 1 tập 01) `02_ASSET_LIBRARY/Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`.
-- Đạo cụ: `02_ASSET_LIBRARY/Props/<Tên>/concept/<tên>_ref.png` (nhìn 3/4, nền trơn). Nhân vật nền (sinh vật nhỏ của thung lũng): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`; ghi trong prompt tư thế nào dùng cho clip.
+- Đạo cụ: `02_ASSET_LIBRARY/Props/<Tên>/concept/<tên>_ref.png` (nhìn 3/4, nền trơn). Đạo cụ tập 01 chưa có `_ref` thì dùng `_front.png` (vật dài: `_side.png`), hoặc ảnh trạng thái khi trạng thái đó lên hình (`_frost.png`). Nhân vật nền (sinh vật nhỏ của thung lũng): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`; ghi trong prompt tư thế nào dùng cho clip.
 - Chỉ đưa ảnh của thứ có trong shot. Số `@Image` theo thứ tự tải lên: mỗi số một ảnh, ghi bảng số → file trong `prompt.md` và soát lại trước khi sinh (bài mẫu của Higgsfield có chỗ hai ảnh cùng ghi `@Image 2`).
 - Bối cảnh, Piko đeo túi và sinh vật nhỏ sinh bằng ChatGPT theo các prompt dưới. Sinh lại thì đính kèm đúng ảnh ghi ở mỗi prompt, lưu đúng đường dẫn ghi kèm, soát theo Character Bible trước khi dùng.
 
@@ -118,7 +119,7 @@ Viết tiếng Anh. Dựa theo bài mẫu của Higgsfield (nguồn cuối file)
    - hành động, mốc nhấn ghi tới 0.1 giây ("at 9.7s Lumo turns the head toward camera");
    - biểu cảm (mắt, miệng, tai, đuôi);
    - `END 3.5s:` trạng thái cuối khối (ai ở đâu, đang làm gì).
-8. **AUDIO:** không nhạc, không lời thoại (nhạc và lồng tiếng nhiều thứ tiếng làm ở hậu kỳ). Có sinh tiếng động hay không: chưa chốt.
+8. **AUDIO:** không nhạc, không lời thoại (nhạc và lồng tiếng nhiều thứ tiếng làm ở hậu kỳ).
 9. **HOLD:** nhắc lại các khoá quan trọng nhất ở cuối.
 
 Quy tắc viết:
@@ -127,7 +128,7 @@ Quy tắc viết:
 - Mỗi mốc chỉ một hành động chính. Không nhồi nhiều việc hơn số giây cho phép.
 - Chữ và video mâu thuẫn về chuyển động thì video thắng (ghi rõ trong prompt).
 - **Lời thoại:** ghi khoảng giây nhân vật nói theo kịch bản ("3.0–4.5s Lumo talks, mouth moving, no voice"), giọng lồng ở hậu kỳ. Câu nói không được tạo thêm cảnh: máy vẫn theo previz.
-- **Thời lượng mỗi lần sinh:** Seedance 2.5 sinh trọn một đoạn tới 30 giây (take 1 của `TEST_First_Rain` trên Higgsfield dài 27 giây, một lần sinh). Đoạn dài hơn, hoặc nơi chỉ cho 15 giây (Seedance 2.0), thì cắt previz ở chỗ cắt cảnh hoặc chỗ nhân vật dừng, mỗi đoạn một prompt, mốc thời gian tính lại từ 0.
+- **Thời lượng mỗi lần sinh:** Seedance 2.5 sinh trọn một đoạn tới 30 giây. Đoạn dài hơn, hoặc nơi chỉ cho 15 giây (Seedance 2.0), thì cắt previz ở chỗ cắt cảnh hoặc chỗ nhân vật dừng, mỗi đoạn một prompt, mốc thời gian tính lại từ 0.
 - Ảnh đạo cụ vẽ thêm đồ (ảnh Pocket of Wonders có túi mở, tràn đồ): ghi trong ACTIVE REFERENCES chỉ lấy gì, không lấy gì.
 - Những chỗ Seedance hay làm sai (rút từ take 1 của `EP001_Great_Rain_Experiment/sh020`), nên ghi sẵn trong prompt:
   - Nhân vật chỉ lấp ló ở mép khung trong previz dễ bị bỏ, có khi biến mất giữa cú máy: ghi rõ ai ở mép nào, thêm luật "stay visible at that edge, partly cut".
@@ -193,8 +194,7 @@ Ghi kết quả từng take (đạt, lỗi gì) vào cuối `seedance/prompt.md`
 
 ## Chưa chốt
 
-- **Ảnh tham chiếu nhân vật:** giữ `<tên>_hero.png` và `piko_pouch_ref.png` hay đổi sang ảnh xoay `<tên>_turnaround.png`. Ảnh hero của Lumo (đang dùng tạm trong prompt các shot) đủ áo choàng dài và túi, nhưng nền cảnh phức tạp, không thấy đuôi; ảnh xoay nền trơn, đủ đồ, thấy đuôi qua khe áo choàng ở mặt sau. Cách thử: một take đổi sang ảnh xoay, soát xem Seedance có vẽ hai bản của cùng một nhân vật không và mặt sau có đúng khi nhân vật quay lưng.
-- **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`. Đang thử bằng `TEST_First_Rain/sh010` và hai đoạn dưới 30 giây của Cảnh 1 tập 01 (`EP001_Great_Rain_Experiment/sh010`, `sh020`; cả hai đã có prompt, `sh020` có take 1).
+- **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`. Đang thử bằng hai đoạn dưới 30 giây của Cảnh 1 tập 01 (`EP001_Great_Rain_Experiment/sh010`, `sh020`; cả hai đã có prompt, `sh020` có take 1).
 - Có cho Seedance sinh tiếng động không, hay làm hết tiếng ở hậu kỳ.
 - Take lưu vào git (qua LFS) hết, hay chỉ take được chọn.
 

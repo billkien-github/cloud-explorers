@@ -177,9 +177,9 @@ if upload.is_dir():
             say("Nên sửa", f"renders/seedance_upload/{name} không ứng với @{k} nào trong prompt")
     ptxt = upload / "prompt.txt"
     if ptxt.exists() and ptxt.read_text(encoding="utf-8").strip() != prompt.strip():
-        say("Chặn", "renders/seedance_upload/prompt.txt khác khối prompt trong prompt.md: chép lại trước khi sinh")
+        say("Chặn", "renders/seedance_upload/prompt.txt khác khối prompt trong prompt.md: chạy lại pipeline/seedance_upload.py trước khi sinh")
 else:
-    say("Nên sửa", "Chưa có renders/seedance_upload/ (gom file tải lên theo số tham chiếu)")
+    say("Nên sửa", "Chưa có renders/seedance_upload/: tạo bằng pipeline/seedance_upload.py")
 for k, n, up, src_path in re.findall(r"\|\s*`@(Video|Image) ?(\d+)`\s*\|\s*`([^`]+)`\s*\|\s*`([^`]+)`", md):
     if not ((shot / src_path).exists() or (root / src_path).exists()):
         say("Nên sửa", f"Nguồn của @{k} {n} không tồn tại: {src_path}")

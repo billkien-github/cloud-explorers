@@ -11,13 +11,13 @@ Dặn dò cho agent làm việc trong repo **Cloud Explorers** (phim hoạt hìn
 | Chủ đề | File sở hữu |
 |---|---|
 | Tổng quan dự án, trạng thái, cấu trúc thư mục, quy ước chung, công cụ, git | `README.md` |
-| Nhân vật: tính cách, ngoại hình, màu, chiều cao, bảo bối, cách làm 3D | `01_BRAND/Character_Bible/README.md` |
-| Hướng nội dung, Wonder Hub và Chronicle Engine, Season 0, series, khung tập, cách viết kịch bản (Fountain) | `03_CONTENT/README.md` |
+| Nhân vật: tính cách, ngoại hình, màu, chiều cao, bảo bối, giới hạn khi diễn | `01_BRAND/Character_Bible/README.md` |
+| Hướng nội dung, Wonder Hub và Chronicle Engine, Season 0, series, khung tập, các bước làm một tập, cách viết kịch bản (Fountain) | `03_CONTENT/README.md` |
 | Beat sheet, kịch bản từng tập | `03_CONTENT/Scripts/EPxxx_<tên>.md` (beat sheet), `.fountain` (kịch bản) |
 | Previz 2D cutout, file mốc thời gian của cảnh (`timing.py`), CC | `03_CONTENT/PREVIZ_2D.md` |
 | Quy ước thư mục asset | `02_ASSET_LIBRARY/README.md` |
-| Làm model 3D nhân vật, đạo cụ: bộ ảnh tham chiếu, prompt ChatGPT, dựng và rig trong Blender | `02_ASSET_LIBRARY/MODELING.md` |
-| Previz Blender + Seedance, quy ước khối previz, prompt theo giây | `04_PRODUCTION/SEEDANCE.md` |
+| Ảnh tham chiếu và model 3D: ảnh của từng tập cho Seedance, bộ ảnh dựng model, prompt ChatGPT và cách sinh ảnh, dựng và rig trong Blender | `02_ASSET_LIBRARY/MODELING.md` |
+| Previz Blender + Seedance, quy ước khối previz, chọn ảnh tham chiếu, thư mục tải lên, prompt theo giây | `04_PRODUCTION/SEEDANCE.md` |
 | Code dùng chung, render, Blender MCP, lưu ý kỹ thuật Blender | `pipeline/README.md` |
 | Review bằng agent (beat sheet, kịch bản, previz, prompt Seedance, take, shot): nhóm reviewer theo đầu vào, cách chạy, mức độ lỗi, định dạng kết quả | `.claude/skills/review/SKILL.md`; việc riêng của từng reviewer trong `.claude/agents/<tên>-reviewer.md` |
 | Cách giữ tài liệu, việc của agent sau mỗi lần làm | `CLAUDE.md` (file này) |

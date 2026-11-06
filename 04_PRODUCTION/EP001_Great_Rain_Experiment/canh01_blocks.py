@@ -183,7 +183,7 @@ def build(timing, offset, seconds, out_blend, segment=None):
     bsdf_in(cast_materials()["star"], "Emission Strength").default_value = 0.8
 
     add_obj("Lumo_Bag", box_bm((0.1, 0.06, 0.09)), prop_dark, "CAST", parent=lumo_r.root, loc=(-0.2, -0.1, 0.3))
-    compass = add_obj("Lumo_Compass", cyl_bm(0.08, 0.025), compass_m, "PROPS", parent=lumo_r.arm_r, loc=(0.04, -0.04, -0.32))
+    compass = add_obj("Lumo_Compass", cyl_bm(0.08, 0.025), compass_m, "PROPS", parent=lumo_r.arm_r, loc=(0.04, -0.04, -0.31))
     needle = add_obj("Lumo_CompassNeedle", box_bm((0.022, 0.11, 0.01), (0, -0.04, 0)), prop_dark, "PROPS", parent=compass,
                      loc=(0, 0, 0.017))
     piko_bag = add_obj("Piko_Bag", sphere_bm(0.06, (0, 0, -0.04), (1, 1, 1.1)), prop_dark, "CAST", parent=piko_r.squash,
