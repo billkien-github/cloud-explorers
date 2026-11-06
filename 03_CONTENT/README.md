@@ -11,7 +11,7 @@ Chính nhân vật **can thiệp và làm lệch** câu chuyện cổ tích hay 
 
 | | Là gì |
 |---|---|
-| **Wonder Hub** | Đài thiên văn cổ có mái vòm, dưới chân đồi trong Thung lũng Mây, trên một hòn đảo giữa biển mây. Căn cứ của nhóm từ cuối Season 0 (Lumo đặt tên) |
+| **Wonder Hub** | Đài thiên văn cổ có mái vòm, dưới chân đồi trong Thung lũng Mây, trên một hòn đảo giữa biển mây. Căn cứ của nhóm từ cuối Season 0 (Lumo đặt tên). Dáng ngoài: `02_ASSET_LIBRARY/Environments/Wonder_Hub/concept/wonder_hub_island_hero.png` |
 | **Chronicle Engine** (Cỗ Máy Biên Niên) | Cỗ máy cổ bên trong Wonder Hub, do một nền văn minh chưa rõ tạo ra. Ai tạo ra nó và vì sao nó phản ứng với bốn bảo bối là bí ẩn xuyên series, hé dần qua từng tập |
 | **Story Portal** (cổng truyện) | Cánh cổng Chronicle Engine mở vào thế giới của một câu chuyện. Cả 5 series đều đi qua cổng này |
 
