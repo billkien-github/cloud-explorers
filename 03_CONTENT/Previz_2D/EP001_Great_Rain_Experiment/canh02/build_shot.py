@@ -150,7 +150,7 @@ def frame(w, h, th, cx, cz):
 
 # ================================================================ bối cảnh: đỉnh đồi trọc trên thung lũng
 GOLD, PURPLE, METAL, METAL_D, COPPER, ROPE = "#E8B33A", "#7B3FB5", "#B8C0C8", "#7E8790", "#C87533", "#8B6A3E"
-FUR, CREAM, LEATHER, GREEN = "#FD8A2B", "#FEECCF", "#8A5A35", "#7EA258"
+FUR, CREAM, LEATHER, GREEN = "#FD8A2B", "#FEECCF", "#8A5A35", "#84B746"
 part("Sky", None, [([(-5, -3), (12, -3), (12, 6), (-5, 6)], "#CFE7F3")], 3.0)
 part("FarHills", None, [([(2.8, -0.6), (4.6, 0.05), (6.2, -0.2), (8.5, 0.15), (12, -0.3), (12, -0.6)], "#BCD3B0")], 2.9)
 part("Valley", None, [([(3.5, -3), (12, -3), (12, -0.6), (3.5, -0.6)], "#E3C893")], 2.6)

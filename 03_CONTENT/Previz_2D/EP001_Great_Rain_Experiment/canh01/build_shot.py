@@ -124,7 +124,7 @@ title = [text("Title1", "CLOUD EXPLORERS", 0.42, (2.0, 2.5), "#FC6640"),
 # --- S6: cận la bàn trong hai tay Lumo (X = 20); túi tím ở mép phải, đúng hướng mũi sao
 NEEDLE_TO_BAG = 112                                             # hướng từ la bàn trong tay Lumo tới túi Piko (độ, 0 = lên)
 part("Compass_BG", None, [([(18.9, -0.6), (21.1, -0.6), (21.1, 0.6), (18.9, 0.6)], "#E9D3A6")], 1.0)
-part("Compass_PikoBody", None, [(ell(0.42, 0.75, 21.02, 0.05), "#3BDCFD"), (ell(0.08, 0.06, 20.82, 0.45), "#E8FBFF")], 0.95)
+part("Compass_PikoBody", None, [(ell(0.42, 0.75, 21.02, 0.05), "#44DAFC"), (ell(0.08, 0.06, 20.82, 0.45), "#E8FBFF")], 0.95)
 part("Compass_BagHint", None, [(turn(rrect(0.014, 0.5, 0.007, 20.5, 0.13), -30, 20.5, -0.12), GOLD),   # túi đeo chéo
                                (ell(0.085, 0.085, 20.5, -0.2), PURPLE), (rrect(0.075, 0.024, 0.01, 20.5, -0.12), GOLD),
                                (ell(0.033, 0.02, 20.5, -0.21), "#F6EBD9")], 0.9)
@@ -147,7 +147,7 @@ BENT = [(rrect(0.018, 0.08, 0.009, 0.02, -0.12), "#C9D1DA"),                    
 ZOOM = 2.4
 part("Test_BG", None, [([(29.0, -0.6), (31.0, -0.6), (31.0, 0.6), (29.0, 0.6)], "#E9D3A6")], 1.0)
 part("Test_Ground", None, [([(29.0, -0.6), (31.0, -0.6), (31.0, -0.19), (29.0, -0.19)], SOIL)], 0.95)
-part("Test_PikoBody", None, [(ell(0.6, 0.85, 31.15, 0.2), "#3BDCFD")], 0.9)                   # thân thạch Piko ở mép phải
+part("Test_PikoBody", None, [(ell(0.6, 0.85, 31.15, 0.2), "#44DAFC")], 0.9)                   # thân thạch Piko ở mép phải
 test_spoon = part("Test_Spoon", None, [(turn(pts, 90, 0.02, -0.16), col) for pts, col in BENT], 0.45,
                   (29.98 - ZOOM * 0.02, -0.17 + ZOOM * 0.16))                                   # cán nằm trên đất, lòng thìa vểnh lên
 scl(test_spoon, 0.0, ZOOM, ZOOM)

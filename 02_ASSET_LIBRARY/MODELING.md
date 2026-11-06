@@ -101,6 +101,11 @@ Ngoại lệ:
 
 Bốn nhân vật chính có ảnh xoay `<tên>_turnaround.png` ghép từ ảnh đủ đồ (Piko: `piko_pouch_ref.png` và `piko_pouch_ref_back.png`); ảnh đủ đồ đổi thì ghép lại.
 
+Ảnh lệch nhau, khi dựng theo:
+- **Đuôi Tavi:** số và cỡ tinh thể theo ảnh đủ đồ (`tavi_outfit.png`, `tavi_outfit_back.png`: 5–6 tinh thể nhỏ); `tavi_tail_ref.png` (4 tinh thể to) chỉ lấy dáng đuôi và màu.
+- **Inventor Pack:** cỡ và chi tiết theo `inventor_pack_front.png`, `inventor_pack_back.png`; ảnh đủ đồ của Tavi chỉ để đặt chỗ (nhìn trước ba lô lộ rộng ra hai vai hơn nhìn sau). Cờ lê, dụng cụ ở túi bên chỉ có trong ảnh trước: dựng theo ảnh trước, nhìn sau vẫn thấy phần nhô lên.
+- **Story Lens:** hai viên đá tím ở hai bên vành chỉ có trong ảnh trước: dựng theo ảnh trước; đá gắn trên vành nên nhìn sau thấy gờ của nó.
+
 ## Chuẩn ảnh dựng model
 
 Trong Blender, ảnh trước đặt làm ảnh nền (Reference) ở Front view, ảnh sau ở Back view, scale theo chiều cao trong Character Bible. Ảnh sai tư thế hoặc hai ảnh lệch cỡ thì model sai theo, nên soát từng ảnh trước khi dùng:
@@ -129,6 +134,8 @@ Trong Blender, ảnh trước đặt làm ảnh nền (Reference) ở Front view
 - Ảnh nhìn ngang: ghi nhìn từ bên nào và quay về phía nào của người xem (`seen from its left side, facing the viewer's left`), phần chìa ra (tai, cánh) thấy mặt nào. GPT hay vẽ mặt đẹp dù sai góc nhìn (tai voi lộ mặt trong màu hồng). Vật có cơ cấu ở một bên (lò xo, bản lề của nắp che nút): nhìn ngang từ phía có cơ cấu cho khớp ảnh trước.
 - Tư thế tham chiếu bỏ đồ nhân vật cầm khi diễn (dây trong vòi voi con); diễn làm sau, ở previz hay rig.
 - GPT hay tự thêm màu, chi tiết không có trong prompt (màu tím trên Rain-O-Matic, cầu dốc ở mạn thuyền): soát với Character Bible và kịch bản, rồi ghi `no …` vào prompt.
+- Ghi "a clear gap between the arms and the body" thì GPT có thể vẽ tay rời hẳn khỏi thân (Piko). Ghi tay liền ở vai, chỉ hở giữa mặt dưới cánh tay và thân. Ảnh sửa từ ảnh khác thì GPT hay kéo tay về gần nằm ngang: ghi lại góc (`about 45 degrees below horizontal, an A-pose`). Đổi tư thế tay thì ghi vai giữ nguyên chỗ cũ, nếu không GPT dời vai lên cao (tay T-pose của Nori).
+- Vật có chi tiết đối xứng (mũi sao tám cánh của Wonder Compass): GPT hay thêm chi tiết mới mà giữ nguyên phần đối xứng cũ. Ghi rõ các phần còn lại phải bằng nhau và vì sao (`not longer than the diagonal ones, it never looks like a fixed compass rose`).
 - ChatGPT đôi khi đưa hai bản và hỏi "Which image do you like more?": phải chọn một bản thì mới tải được. Nếu nút tải trong khung xem ảnh không ăn, tải bằng link tạo ngay trong trang (Claude làm được qua công cụ JavaScript của Claude in Chrome).
 
 ### Lumo: ảnh sau của thân
@@ -139,7 +146,7 @@ The attached image is the approved FRONT view of Lumo, a cute chibi fox characte
 - Seen from directly behind, orthographic, no perspective distortion, camera at chest height.
 - Exactly the same A-pose (arms straight, about 45 degrees down, palms facing down), same proportions and head size, same size and position in the frame, same canvas: the ear tips and the feet at the same height as in the front image.
 - Seen from behind, Lumo's right arm is on the viewer's right.
-- The very large ears keep exactly the same shape, size and outward spread as in the front view. Their backs are orange fur with a cream-white upper third (the tips); the pink is only on the inside. The white tuft on top of the head, the back of the head, the neck, the back and the backs of the arms and legs are orange fur. Cream paws and cream feet.
+- The very large ears keep exactly the same shape, size and outward spread as in the front view. Their backs are orange fur all the way to the tips, the same orange as the front of the ears (no cream or white tip); the pink is only on the inside. The cream tuft stays on top of the head; the back of the head, the neck, the back and the backs of the arms and legs are orange fur. Cream paws and cream feet.
 - NO tail: the lower back and bottom are smooth orange fur. No cape, no bag, no clothes.
 - Plain flat light-gray background, soft even lighting, no ground shadow, no text.
 ```
@@ -165,6 +172,7 @@ Now create the BACK view of this outfit image as one separate image: seen from d
 - The red cape covers the back from the neck down to the knees, with the gold cloud pattern along its lower edge as in Image 2, and no other emblem.
 - The bag strap crosses the back diagonally from Lumo's left shoulder (the viewer's left) down to the right hip (the viewer's right), where only the edge of the bag shows.
 - The fluffy tail comes out through a vertical slit in the middle of the back of the cape, at the lower back, with its cream-white tip.
+- The backs of the ears are orange fur all the way to the tips, no cream or white tip.
 - Plain flat light-gray background, soft even lighting, no ground shadow, no text.
 ```
 Lưu `lumo_tail_ref.png`:
@@ -243,7 +251,7 @@ Edit this image of Nori, a small glowing light spirit from a soft stylized 3D an
 ```
 Đính kèm `nori_apose_body.png`, lưu `nori_tpose_body.png`:
 ```
-Use the attached approved image as the base and edit ONLY the tiny arms: rotate each arm at the shoulder up to point straight out horizontally, parallel to the ground. Everything else stays identical: body, face, size and position in the frame. The arms keep the same size and shape. One separate image, plain flat light-gray background, no glow halo, no text.
+Use the attached approved image as the base and edit ONLY the tiny arms: rotate each arm at the shoulder up to point straight out horizontally, parallel to the ground. The shoulder stays exactly where it is now, low on the side of the round body: the arm pivots there and does not move higher up the body. Everything else stays identical: body, face, size and position in the frame. The arms keep the same size and shape. One separate image, plain flat light-gray background, no glow halo, no text.
 ```
 Đính kèm `nori_apose_body.png`, lưu `nori_apose_body_back.png`:
 ```
@@ -251,14 +259,14 @@ Create the BACK view of the attached approved front image as one separate image:
 ```
 Đính kèm theo thứ tự `nori_apose_body_back.png`, `nori_tpose_body.png`; lưu `nori_tpose_body_back.png`:
 ```
-Image 1 is the approved A-pose BACK view, Image 2 the approved T-pose FRONT view. Create the T-pose BACK view as one separate image: use Image 1 as the base and edit ONLY the tiny arms, rotating them up to point straight out horizontally exactly like the arms in Image 2 (seen from behind). Everything else stays identical to Image 1.
+Image 1 is the approved A-pose BACK view, Image 2 the approved T-pose FRONT view. Create the T-pose BACK view as one separate image: use Image 1 as the base and edit ONLY the tiny arms, rotating them up to point straight out horizontally exactly like the arms in Image 2 (seen from behind), from the same low shoulder spot on the side of the round body. Everything else stays identical to Image 1.
 ```
 
 ### Nori: đủ đồ
 
 Đính kèm theo thứ tự `nori_apose_body.png`, `nori_wing_ref.png`; lưu `nori_outfit.png`:
 ```
-Image 1 is Nori's approved front view (body only), from a soft stylized 3D animated film for young children. Image 2 shows Nori's right upper and lower wings. Create ONE new image: Image 1 exactly as it is (same pose, face, size and position in the frame, same canvas), now with:
+Image 1 is Nori's approved front view (body only), from a soft stylized 3D animated film for young children. Image 2 shows Nori's right upper and lower wings. Create ONE new image: Image 1 exactly as it is (same pose, face, size and position in the frame, same canvas; the round body keeps exactly the same diameter and position, do not shrink it to make room for the wings), now with:
 - Four transparent wings like those in Image 2, mirrored for the left side (two bigger upper wings, two smaller lower wings), attached to the back of the body and spreading out to both sides.
 - Two thin lavender antennae on top of the head, curving outward, each ending in a small glowing pale-yellow star.
 - No feet: under the round body, a short soft trail of golden light that fades out, in place of legs.
@@ -267,7 +275,7 @@ Image 1 is Nori's approved front view (body only), from a soft stylized 3D anima
 ```
 Đính kèm theo thứ tự `nori_outfit.png`, `nori_apose_body_back.png`; lưu `nori_outfit_back.png`:
 ```
-Image 1 is Nori's approved outfit FRONT view. Image 2 is Nori's approved BACK view without wings and antennae. Create the BACK view of the outfit as one separate image: use Image 2 as the base (same round body, arms, size and position in the frame, same canvas) and add the same four transparent wings, the two antennae with glowing stars and the golden light trail as in Image 1, all seen from directly behind. Seen from behind, Nori's right side is on the viewer's right. Show clearly where the four wings join the upper back and where the antennae rise from the top of the head. No face. Plain flat light-gray background, soft even lighting, no ground shadow, no text.
+Image 1 is Nori's approved outfit FRONT view. Image 2 is Nori's approved BACK view without wings and antennae. Create the BACK view of the outfit as one separate image: use Image 2 as the base (same round body, arms, size and position in the frame, same canvas) and add the same four transparent wings, the two antennae with glowing stars and the golden light trail as in Image 1, all seen from directly behind. Each wing keeps the same size, angle and position as in Image 1, mirrored left to right: the upper wings do not rise higher and the lower wings do not shrink. Seen from behind, Nori's right side is on the viewer's right. Show clearly where the four wings join the upper back and where the antennae rise from the top of the head. No face. Plain flat light-gray background, soft even lighting, no ground shadow, no text.
 ```
 Đính kèm `nori_outfit.png`, lưu `nori_wing_ref.png`:
 ```
@@ -281,7 +289,7 @@ From the attached image, show only Nori's two right wings (one upper, one lower)
 Edit this image of Piko, a jelly creature from a soft stylized 3D animated film for young children. Create ONE image. Keep the body shape, the glossy aqua jelly look, the two dark-blue horns, eyes, cheeks and proportions exactly the same, and change only the following:
 0. Remove the pouch and its gold cord completely.
 1. Mouth closed with a playful smile, no teeth or tongue visible, eyes open looking straight at the camera.
-2. The two stubby arms held out from the body, angled about 45 degrees down, with a clear gap between the arms and the body.
+2. The two stubby arms grow out of the sides of the body like soft rounded jelly buds, joined smoothly at the shoulder with no gap there, angled about 45 degrees below horizontal (an A-pose, not almost horizontal); a clear gap only between the underside of each arm and the body below it. The arms never float apart from the body.
 3. No bubbles inside the body and no water drops around it.
 4. No legs: the wide rounded bottom rests on the ground.
 5. Orthographic front view, no perspective distortion, Piko centered with some margin, from the horn tips to the bottom. Portrait 2:3.
@@ -289,15 +297,15 @@ Edit this image of Piko, a jelly creature from a soft stylized 3D animated film 
 ```
 Đính kèm `piko_apose_body.png`, lưu `piko_tpose_body.png`:
 ```
-Use the attached approved image as the base and edit ONLY the stubby arms: rotate each arm at the shoulder up to point straight out horizontally, parallel to the ground. Everything else stays identical: body, horns, face, size and position in the frame. The arms keep the same size and shape. One separate image, plain flat light-gray background, no text.
+Use the attached approved image as the base and edit ONLY the stubby arms: rotate each arm at the shoulder up to point straight out horizontally, parallel to the ground. Each arm stays joined to the body at the same shoulder spot, no gap at the shoulder. Everything else stays identical: body, horns, face, size and position in the frame. The arms keep the same size and shape. One separate image, plain flat light-gray background, no text.
 ```
 Đính kèm `piko_apose_body.png`, lưu `piko_apose_body_back.png`:
 ```
-Create the BACK view of the attached approved front image as one separate image: seen from directly behind, orthographic, same pose, same size and position in the frame, same canvas. Seen from behind, Piko's right arm is on the viewer's right. The two dark-blue horns seen from behind; the back is one smooth glossy aqua jelly surface with no face, no bubbles, no pouch, no cord. Plain flat light-gray background, soft even lighting, no ground shadow, no text.
+Create the BACK view of the attached approved front image as one separate image: seen from directly behind, orthographic, same pose, same size and position in the frame, same canvas. Seen from behind, Piko's right arm is on the viewer's right. The two dark-blue horns seen from behind; the back is one smooth glossy aqua jelly surface with no face, no bubbles, no pouch, no cord. The arms stay joined to the body at the shoulder exactly as in the front image. Plain flat light-gray background, soft even lighting, no ground shadow, no text.
 ```
 Đính kèm theo thứ tự `piko_apose_body_back.png`, `piko_tpose_body.png`; lưu `piko_tpose_body_back.png`:
 ```
-Image 1 is the approved A-pose BACK view, Image 2 the approved T-pose FRONT view. Create the T-pose BACK view as one separate image: use Image 1 as the base and edit ONLY the stubby arms, rotating them up to point straight out horizontally exactly like the arms in Image 2 (seen from behind). Everything else stays identical to Image 1.
+Image 1 is the approved A-pose BACK view, Image 2 the approved T-pose FRONT view. Create the T-pose BACK view as one separate image: use Image 1 as the base and edit ONLY the stubby arms, rotating them up to point straight out horizontally exactly like the arms in Image 2 (seen from behind), still joined to the body at the shoulder. Everything else stays identical to Image 1.
 ```
 
 ### Sinh vật nhỏ của thung lũng: thân
@@ -330,7 +338,7 @@ Mỗi đạo cụ một chat: đính kèm `<tên>_ref.png` của nó trong `Prop
 
 **Wonder Compass**
 ```
-The attached image is the Wonder Compass, a magic prop from a soft stylized 3D animated film for young children. Create ONE image of exactly the same object seen straight from the front, orthographic, no perspective: the round gold case with the ring on top, the blue sky dial with white clouds and the glowing eight-pointed star needle, the blue diamond gems and the cream cloud ornament at the bottom of the case. Same design, colors and materials. Centered with some margin, square 1:1. Plain flat light-gray background, soft even lighting, no ground shadow, no text.
+The attached image is the Wonder Compass, a magic prop from a soft stylized 3D animated film for young children. Create ONE image of exactly the same object seen straight from the front, orthographic, no perspective: the round gold case with the ring on top, the blue sky dial with white clouds and the glowing eight-pointed star needle (one point is the pointer: about one and a half times longer than the others, bright gold, with a small glowing blue gem at its tip; the other seven points are shorter, all the same length, pale white-blue, so the four points toward 12, 3, 6 and 9 o'clock are not longer than the diagonal ones and it never looks like a fixed compass rose; the pointer points to the upper right, about half past one on a clock, not at any gem or mark on the case), the blue diamond gems and the cream cloud ornament at the bottom of the case. Same design, colors and materials. Centered with some margin, square 1:1. Plain flat light-gray background, soft even lighting, no ground shadow, no text.
 ```
 ```
 Now the BACK view of the same object as one separate image: seen straight from behind, orthographic, same size and position in the frame. The back of the case is closed, smooth gold metal with a small engraved cloud swirl in the middle; the ring on top, the side gems and the cloud ornament seen from behind. Plain flat light-gray background, soft even lighting, no ground shadow, no text.

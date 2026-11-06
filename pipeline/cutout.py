@@ -293,7 +293,7 @@ def build_lumo(x, layer):
 
 
 def build_tavi(x, layer):
-    green, shade, snout, crystal, cap, vest, belly = "#7EA258", "#6B8E4A", "#E8CF9E", "#14F5F4", "#7A4A2A", "#EFE2C4", "#ECBA7B"
+    green, shade, snout, crystal, cap, vest, belly = "#84B746", "#70A03B", "#E8CF9E", "#14F5F4", "#7A4A2A", "#EFE2C4", "#EFCB99"
     p = SimpleNamespace(name="Tavi", dir=1)
     p.GOGGLES_DOWN = (0.06, -0.135)                                           # độ dời kính từ mũ xuống ngang mắt
     p.root = node("Tavi", None, (x, 0.0), layer)
@@ -327,26 +327,26 @@ def build_tavi(x, layer):
 
 
 def build_nori(x, z, layer):
-    body, wing, star_c = "#A787F6", "#D3ABFC", "#FEF7A0"
+    body, wing, star_c = "#E8C3FB", "#D3ABFC", "#FEF7A0"
     p = SimpleNamespace(name="Nori", dir=1)
     p.root = node("Nori", None, (x, z), layer)                                # gốc ở tâm thân; bay, không chân
-    part("Nori_Glow", p.root, [(ell(0.27, 0.27), "#DCCFFF")], 0.04)
+    part("Nori_Glow", p.root, [(ell(0.27, 0.27), "#F6E7FF")], 0.04)
     # 4 cánh: mỗi mảnh một cặp (cánh trên to chếch lên, cánh dưới nhỏ chếch xuống); cặp phía xa lệch lên trước để ló ra
     p.wings = [part(f"Nori_Wing{i}", p.root, [(turn(ell(0.17, 0.08, -0.15, 0.1), -25 + extra), col),
                                               (turn(ell(0.12, 0.06, -0.13, -0.05), 20 + extra / 2), col)], y, (-0.05 + dx, 0.04))
                for i, (col, y, dx, extra) in enumerate((("#C49BF0", 0.035, 0.05, -14), (wing, 0.03, 0.0, 0)))]
     part("Nori_Trail", p.root, [([(-0.08, -0.12), (0.08, -0.12), (0.0, -0.42)], "#E6D9FF")], 0.01)   # vệt sáng thay chân
-    p.antennae = [part(f"Nori_Antenna{i}", p.root, [(rrect(0.015, 0.16, 0.007, 0, 0.08), "#8E6FE0"), (star(0.045, 0, 0.17), star_c)],
+    p.antennae = [part(f"Nori_Antenna{i}", p.root, [(rrect(0.015, 0.16, 0.007, 0, 0.08), "#C5A0E5"), (star(0.045, 0, 0.17), star_c)],
                        y, (dx, 0.17)) for i, (dx, y) in enumerate(((-0.05, 0.02), (0.04, -0.016)))]
-    part("Nori_Body", p.root, [(ell(0.2, 0.2), body), (ell(0.1, 0.06, -0.07, 0.09), "#BCA6F9")])
+    part("Nori_Body", p.root, [(ell(0.2, 0.2), body), (ell(0.1, 0.06, -0.07, 0.09), "#EDD2FC")])
     p.head = node("Nori_Face", p.root, (0.0, 0.0), 0.0)
     add_face(p, p.head, (0.08, 0.04), (0.04, 0.055), "#5B3FA8", (0.13, -0.06), 0.9, "#6D52C2")
-    p.arm = part("Nori_Arm", p.root, [(ell(0.03, 0.045, 0, -0.04), "#9A78F0")], -0.02, (0.02, -0.14))  # dưới thân, xa miệng
+    p.arm = part("Nori_Arm", p.root, [(ell(0.03, 0.045, 0, -0.04), "#D6ADF5")], -0.02, (0.02, -0.14))  # dưới thân, xa miệng
     return p
 
 
 def build_piko(x, layer):
-    body, horn, drop, gold, purple = "#3BDCFD", "#1F5FB4", "#9BEBFF", "#E8B33A", "#7B3FB5"
+    body, horn, drop, gold, purple = "#44DAFC", "#1F5FB4", "#9BEBFF", "#E8B33A", "#7B3FB5"
     p = SimpleNamespace(name="Piko", dir=1)
     p.root = node("Piko", None, (x, 0.0), layer)                              # không chân, chỉ nảy và co giãn
     blob = []
@@ -366,7 +366,7 @@ def build_piko(x, layer):
     p.bag = node("Piko_Bag", p.root, (0.3, 0.2), -0.03)                      # khớp ở miệng túi, lắc theo cú nảy
     part("Piko_BagSack", p.bag, [(ell(0.036, 0.016, 0, 0.006), purple), (ell(0.056, 0.055, 0, -0.07), purple),
                                  (rrect(0.05, 0.016, 0.008, 0, -0.012), gold), (ell(0.024, 0.014, 0, -0.072), "#F6EBD9")])
-    p.arm = part("Piko_Arm", p.root, [(ell(0.035, 0.05, 0.02, -0.03), "#2FC4EA")], -0.029, (0.24, 0.22))  # tay thấp dưới miệng,
+    p.arm = part("Piko_Arm", p.root, [(ell(0.035, 0.05, 0.02, -0.03), "#36C2E9")], -0.029, (0.24, 0.22))  # tay thấp dưới miệng,
     # lớp giữa dây đeo và túi: thò tay vào túi thì bàn tay khuất trong túi
     p.drops = part("Piko_Drops", p.root, [(ell(0.018, 0.024, -0.33, 0.55), drop), (ell(0.014, 0.019, -0.36, 0.22), drop),
                                 (ell(0.012, 0.016, 0.37, 0.45), drop)], -0.025)        # giọt nước bắn quanh người, tránh vùng mặt
