@@ -100,7 +100,9 @@ Tuỳ chọn khác (`--model`, `--resolution`, `--no-audio`, `--duration`, `--wa
 - **Bối cảnh:** chỉ cần đúng khối, kích thước, vật cản và đạo cụ chính. Hình thật do ảnh tham chiếu và prompt quyết định.
 - **Bố trí để thấy mặt:** nhân vật nhìn thẳng vào vật chính (máy, cửa) thì máy quay phía trước chỉ thấy lưng. Đặt chỗ tương tác ở hông vật để nhân vật đứng nghiêng về phía máy quay; tránh để hai, ba nhân vật thẳng hàng với máy quay (che nhau).
 - **Nhiều shot trong một previz:** mỗi shot một camera, cắt bằng timeline marker gắn camera; danh sách `SHOTS` ở đầu script ghi giây bắt đầu, kết thúc.
-- **Tự kiểm tra trong script:** máy không ra ngoài bối cảnh, đầu nhân vật luôn trong khung. Kiểm tra này không bắt được nhân vật bị che, vẫn phải xem ảnh tĩnh từng shot.
+- **Cú nhìn của nhân vật** (nhìn xuống vật trong tay): máy đặt ở chỗ mắt, nhìn vào vật; đầu nhân vật ẩn bằng scale 0 suốt cú đó để không che máy; tay hiện ở đáy khung (Cảnh 1 tập 000A, S2 và S6). Mọi thay đổi chỉ dành cho một cú (ẩn đầu, ẩn vật che máy) chỉ áp khi cú đó thuộc đoạn đang dựng: đuôi của đoạn trước giữ máy cú cuối nên sẽ thấy thay đổi đó (Lumo mất đầu ở đuôi `sh010`).
+- **Chữ** (tên phim, biển hiệu) không dựng trong previz khối, thêm ở hậu kỳ: chữ trong video dẫn sẽ lọt vào take.
+- **Tự kiểm tra trong script:** máy không ra ngoài bối cảnh, không chui xuống đất (cảnh có dốc, hố thì truyền `ground` cho `check_in_frame`), đầu nhân vật luôn trong khung. Kiểm tra này không bắt được nhân vật bị che, vẫn phải xem ảnh tĩnh từng shot.
 - Previz không có mặt: biểu cảm, mắt, miệng, tai, đuôi chỉ có trong prompt.
 
 ## Ảnh tham chiếu

@@ -282,8 +282,9 @@ def cameras(shots, cams, sensor=36):
     return out
 
 
-def check_in_frame(shots, cams, must_see, extra=()):
-    """must_see[shot] = [(object, điểm cục bộ)]; extra = [(shot, object, từ giây, tới giây)]. In PREVIZ_CHECK."""
+def check_in_frame(shots, cams, must_see, extra=(), ground=None):
+    """must_see[shot] = [(object, điểm cục bộ)]; extra = [(shot, object, từ giây, tới giây)]; ground(vị trí) = độ cao
+    mặt đất dưới máy (mặc định 0, cảnh có dốc, hố thì truyền vào). In PREVIZ_CHECK."""
     scene = bpy.context.scene
     problems = {}
     for name, t0, t1 in shots:
@@ -296,7 +297,8 @@ def check_in_frame(shots, cams, must_see, extra=()):
                 p = world_to_camera_view(scene, cam, ob.matrix_world @ local)
                 if not (0.03 < p.x < 0.97 and 0.03 < p.y < 0.97 and p.z > 0.05):
                     problems.setdefault(f"{name}: {ob.name} ra khỏi khung", []).append(f)
-            if cam.matrix_world.translation.z < 0.05:
+            pos = cam.matrix_world.translation
+            if pos.z < (ground(pos) if ground else 0.0) + 0.05:
                 problems.setdefault(f"{name}: máy dưới đất", []).append(f)
     for label, fs in problems.items():
         print("PREVIZ_CHECK", label, f"{len(fs)} khung, từ {fs[0]} đến {fs[-1]}")
