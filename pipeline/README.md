@@ -5,6 +5,8 @@
 | `run.ps1` | Lệnh chạy nhanh cho một shot: build, render, ghép tiếng, mở Blender |
 | `render.py` | Render một `.blend` theo 4 chế độ `stills` / `preview` / `final` / `ref`, ghi vào `renders/` cạnh file |
 | `mux_audio.py` | Ghép file âm thanh vào video đã render, không render lại hình, giữ nguyên màu |
+| `cutout.py` | Bộ nhân vật cutout 2D cho previz 2D: hình phẳng, bộ mặt, bốn nhân vật, hàm keyframe, máy quay theo `SHOTS`, render Workbench. Cách dùng ở docstring, quy ước dựng ở `03_CONTENT/PREVIZ_2D.md` |
+| `blocks.py` | Bộ khối 3D cho previz khối dẫn Seedance: hình khối, vật liệu, bốn nhân vật dạng khối đúng tỉ lệ, keyframe theo giây của cảnh (đoạn cắt ra từ cảnh dài vẫn trùng khung), máy quay theo `SHOTS`, tự kiểm nhân vật trong khung, cài đặt render. Quy ước previz khối: `04_PRODUCTION/SEEDANCE.md` |
 | `cc.py` | In CC từ `timing.py` của cảnh lên video previz (2D hay khối) và xuất `.srt`, không render lại hình. Cách viết CC: `03_CONTENT/PREVIZ_2D.md` |
 | `rig_qa.py` | Kiểm tra rig: đặt tư thế theo trục thế giới, đo % mặt lưới bị bóp (< 40% diện tích) hay giãn (> 250%) và tỉ lệ thể tích so với tư thế nghỉ. Đạt khi bad% dưới khoảng 2%, thể tích gần 1.0 |
 

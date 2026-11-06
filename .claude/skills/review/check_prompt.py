@@ -58,6 +58,9 @@ if isinstance(consts.get("TIMING"), str):
                 and vals and all(isinstance(x, (int, float)) for x in vals) \
                 and all(-0.01 <= float(x) - off <= end + 0.01 for x in vals):  # chỉ mốc nằm trong đoạn này
             consts[name] = tuple(float(x) - off for x in vals) if isinstance(v, tuple) else float(v) - off
+    if "SHOTS" not in consts:  # cú máy của đoạn lấy từ SHOTS của cảnh, dời về 0
+        consts["SHOTS"] = [(n, max(0.0, a - off), min(end, b - off)) for n, a, b in tm.SHOTS
+                           if a - off < end - 0.01 and b - off > 0.01]
 fps, seconds, shots = consts.get("FPS", 24), consts.get("SECONDS"), consts.get("SHOTS", [])
 cuts_code = [s[1] for s in shots[1:]]
 marks = {}
@@ -93,8 +96,8 @@ if seconds:
     if t and not near(float(t.group(1)), seconds):
         say("Chặn", f"Tiêu đề ghi {t.group(1)}s, build_shot.py SECONDS = {seconds}")
     f = re.search(r"(\d+) frames", sec["ACTIVE REFERENCES"])
-    if f and int(f.group(1)) != fps * seconds:
-        say("Chặn", f"ACTIVE REFERENCES ghi {f.group(1)} frames, build_shot.py là {fps * seconds}")
+    if f and int(f.group(1)) != round(fps * seconds):  # 26.2 s x 24 = 628.8 -> scene.frame_end 629
+        say("Chặn", f"ACTIVE REFERENCES ghi {f.group(1)} frames, build_shot.py là {round(fps * seconds)}")
 if review and seconds and not near(review["duration_s"], seconds, 0.1):
     say("Chặn", f"Video previz dài {review['duration_s']}s, build_shot.py SECONDS = {seconds}: render lại previz")
 
@@ -107,8 +110,9 @@ elif cuts_prompt and [round(x, 2) for x in cuts_prompt] != [round(x, 2) for x in
     say("Chặn", f"CAMERA cắt ở {cuts_prompt}, SHOTS trong build_shot.py cắt ở {cuts_code}")
 if review:
     measured = [c["time_s"] for c in review["cuts"]]
-    if [round(x, 1) for x in measured] != [round(x, 1) for x in cuts_code]:
-        say("Chặn", f"Video previz đo được điểm cắt {measured}, SHOTS là {cuts_code}: video cũ hoặc build lệch")
+    if len(measured) != len(cuts_code) or any(abs(a - b) > 1.5 / fps for a, b in zip(measured, cuts_code)):  # lệch tới 1 khung
+        say("Chặn", f"Video previz đo được điểm cắt {measured}, SHOTS là {[round(x, 2) for x in cuts_code]}: "
+                    "video cũ hoặc build lệch")
 
 # ---- khối TIMELINE: liền nhau từ 0 tới hết, không vắt qua điểm cắt
 blocks = [(float(a), float(b)) for a, b in

@@ -15,12 +15,18 @@ Nguồn chuẩn cho mọi thông tin về nhân vật. Concept: [`cloud_explorer
 | Tính cách | Tò mò, năng động, luôn khởi xướng phiêu lưu | Thiên tài sáng chế, thích lắp ráp, thử nghiệm, nhiều ý tưởng "điên rồ" | Điềm đạm, tinh tế, giàu kiến thức, đưa ra manh mối và góc nhìn mới | Tinh nghịch, háu ăn, đáng yêu, cực kỳ khó đoán |
 | Chất hài | Hấp tấp, làm trước nghe sau | Giải pháp phức tạp cho việc đơn giản | Giải thích dài, bị ngắt lời | Chạm lung tung, dễ phân tâm vì đồ lấp lánh, hay gây bất ngờ "ngoài kịch bản" |
 | Ngoại hình | Cáo, tai rất to (trong hồng), chỏm lông trắng trên đầu, mắt nâu to, bụng và mõm màu kem, đuôi bông | Bò sát nhỏ, bụng kem, **gai tinh thể** dọc lưng và đuôi, mắt xanh lá | Khối tròn phát sáng, đầu liền thân, **4 cánh trong suốt**, 2 râu đầu ngôi sao vàng, tay nhỏ, vệt sáng thay chân | Khối thạch trong suốt, 2 sừng xanh đậm, tay nhỏ, giọt nước bắn quanh người |
-| Đồ đeo | Áo choàng đỏ viền hoa văn mây vàng, khuy tròn vàng, túi da đeo chéo có hình mây | Mũ phi công da + kính bảo hộ, áo gile kem nhiều túi, thắt lưng, đeo Inventor Pack sau lưng | — | Pocket of Wonders: túi nhỏ cỡ nắm tay, dây vàng buộc vào gốc sừng trái, túi treo cạnh má, ngang tầm tay |
+| Đồ đeo | Áo choàng đỏ viền hoa văn mây vàng, khuy tròn vàng, túi da đeo chéo có hình mây | Mũ phi công da + kính bảo hộ, áo gile kem nhiều túi, thắt lưng, đeo Inventor Pack sau lưng | — | Pocket of Wonders: túi nhỏ cỡ nắm tay, đeo chéo: dây vàng quàng qua gốc sừng phải, chạy dọc lưng, vòng chéo dưới miệng; túi ở hông trái, ngang tầm tay (ảnh `piko_pouch_ref.png` mặt trước, `piko_pouch_back_ref.png` mặt sau) |
 | Dáng | Đứng, đi 2 chân | Đứng, đi 2 chân, chân ngắn, có đuôi | **Bay, không chân** | **Không chân**, nảy và trườn trên đất |
 | Chiều cao | 1.00 (chuẩn) | 0.85 | 0.70 | 0.80 |
 | Màu tham chiếu | Lông cam `#FD8A2B`, kem `#FEECCF`, áo choàng `#FC6640` | Da `#7EA258`, bụng `#ECBA7B`, tinh thể `#14F5F4` | Thân `#A787F6`, cánh `#D3ABFC`, sao `#FEF7A0` | Thân `#3BDCFD` → `#0988D1`, lưỡi `#D23C55` |
 
 Mã màu lấy mẫu trực tiếp từ ảnh concept (vùng được chiếu sáng), dùng làm điểm xuất phát khi làm material.
+
+**Chờ chốt:**
+- Chiều cao đo tới đâu (đỉnh đầu hay chóp tai, chóp sừng, râu). Previz 2D hiện đo tới chóp: Tavi và Piko gần bằng nhau.
+- Piko lúc khô (chưa có nước) có ẩn các giọt nước quanh người không. Previz 2D Cảnh 1 tập 01 đang ẩn tới khi Piko húp giọt sương.
+
+**Nhân vật nền: sinh vật nhỏ của Thung lũng Mây** (có mặt từ Cảnh 1 tập 01). Thân tròn hình hạt đậu màu be hồng nhạt, bụng sáng hơn, mắt chấm, tay chân ngắn, không sừng, không cánh, không đuôi; mỗi con đội một chiếc lá khô làm mũ; cao khoảng 1/6 Lumo. Đứng nền, không tranh khung với bốn nhân vật chính. Concept 4 tư thế (ủ rũ, thở dài, chạy che lá to, té nước): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`.
 
 **Cặp quan hệ tạo chuyện:** Lumo ↔ Tavi (vội vàng vs cẩn thận) · Tavi ↔ Nori (máy móc vs nguồn gốc) · Nori ↔ Piko (trật tự vs hỗn loạn) · **Lumo ↔ Piko** (cặp gây hài nhiều nhất).
 
@@ -40,7 +46,7 @@ Concept: `02_ASSET_LIBRARY/Props/<Tên>/concept/`.
 | Nhân vật | Cách làm |
 |---|---|
 | Lumo, Tavi | Meshy sinh thân và rig Humanoid (dùng được thư viện animation). Đồ rời (áo choàng, túi), đuôi, xương tai, gai, mặt làm trong Blender. Áo choàng của Lumo bản 3D ngắn tới hông (concept dài tới gối) để đuôi và chân không xuyên áo |
-| Nori, Piko | Giữ đúng concept: **không chân**. Meshy chỉ sinh hình thân. Rig bằng code trong Blender: thân co giãn bằng shape keys, tay nhỏ, cánh, râu, sừng, mặt. Túi của Piko là đồ rời, treo vào sừng trái bằng dây làm trong Blender, đung đưa theo cú nảy |
+| Nori, Piko | Giữ đúng concept: **không chân**. Meshy chỉ sinh hình thân. Rig bằng code trong Blender: thân co giãn bằng shape keys, tay nhỏ, cánh, râu, sừng, mặt. Túi của Piko là đồ rời, dây đeo chéo quàng qua gốc sừng phải làm trong Blender, túi đung đưa theo cú nảy |
 
 Chi tiết: `02_ASSET_LIBRARY/MESHY.md`.
 

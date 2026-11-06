@@ -43,7 +43,9 @@ sh010/
 - **Màu khối** để Seedance biết ai là ai, quay hướng nào (bảng màu ghi vào prompt):
   - Một nhân vật: đỏ = mặt trước, đen = lưng, xanh lá = hai bên và đỉnh.
   - Từ hai nhân vật: mỗi nhân vật một màu cố định (Lumo cam, Tavi xanh lá, Nori tím nhạt, Piko xanh ngọc), mặt trước đầu có ô trắng báo hướng nhìn. Bối cảnh, đạo cụ để xám để không lẫn màu nhân vật. Đã dùng ở `TEST_First_Rain`.
-- **Khối 4 nhân vật** dựng trong `TEST_First_Rain/sh010/build_shot.py`. Previz thứ hai cần thì chuyển sang `pipeline/`.
+- **Khối 4 nhân vật**, máy quay, tự kiểm khung và cài đặt render ở `pipeline/blocks.py`.
+- **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. Đang dùng cho Cảnh 1 tập 01: `EP001_Great_Rain_Experiment/sh010` (0–28.8 s, S1–S6) và `sh020` (28.8–55 s, S7–S14).
+- **Vật hiện ra, biến mất** bằng key scale 0 và 1 cách nhau ít nhất một khung; hai key gần hơn một khung rơi vào cùng khung và vật lộ dần từ key trước đó.
 - **Bối cảnh:** chỉ cần đúng khối, kích thước, vật cản và đạo cụ chính. Hình thật do ảnh tham chiếu và prompt quyết định.
 - **Bố trí để thấy mặt:** nhân vật nhìn thẳng vào vật chính (máy, cửa) thì máy quay phía trước chỉ thấy lưng. Đặt chỗ tương tác ở hông vật để nhân vật đứng nghiêng về phía máy quay; tránh để hai, ba nhân vật thẳng hàng với máy quay (che nhau).
 - **Nhiều shot trong một previz:** mỗi shot một camera, cắt bằng timeline marker gắn camera; danh sách `SHOTS` ở đầu script ghi giây bắt đầu, kết thúc.
@@ -52,10 +54,51 @@ sh010/
 
 ## Ảnh tham chiếu
 
-- Mỗi nhân vật **một ảnh cố định cho mọi shot** để giữ nhân vật đồng nhất: `02_ASSET_LIBRARY/Characters/<Tên>/concept/<tên>_hero.png` (Lumo: chưa chốt, xem cuối file).
-- Bối cảnh: `01_BRAND/Brand_Guideline/world_key_art.png` hoặc ảnh riêng của từng địa điểm (thêm vào khi có).
-- Đạo cụ: `02_ASSET_LIBRARY/Props/<Tên>/concept/<tên>_hero.png`.
+- Mỗi nhân vật **một ảnh cố định cho mọi shot** để giữ nhân vật đồng nhất: `02_ASSET_LIBRARY/Characters/<Tên>/concept/<tên>_hero.png`. Piko dùng `piko_pouch_ref.png` (đã đeo Pocket of Wonders đúng cách đeo). Lumo: chưa chốt, xem cuối file.
+- Bối cảnh: ảnh riêng của từng địa điểm, chưa có thì `01_BRAND/Brand_Guideline/world_key_art.png`. Đã có: Thung lũng Mây khô hạn (Cảnh 1 tập 01) `02_ASSET_LIBRARY/Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`.
+- Đạo cụ: `02_ASSET_LIBRARY/Props/<Tên>/concept/<tên>_hero.png`. Nhân vật nền (sinh vật nhỏ của thung lũng): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`; ghi trong prompt tư thế nào dùng cho clip.
 - Chỉ đưa ảnh của thứ có trong shot. Số `@Image` theo thứ tự tải lên: mỗi số một ảnh, ghi bảng số → file trong `prompt.md` và soát lại trước khi sinh (bài mẫu của Higgsfield có chỗ hai ảnh cùng ghi `@Image 2`).
+- Bối cảnh, Piko đeo túi và sinh vật nhỏ sinh bằng ChatGPT theo các prompt dưới. Sinh lại thì đính kèm đúng ảnh ghi ở mỗi prompt, lưu đúng đường dẫn ghi kèm, soát theo Character Bible trước khi dùng.
+
+### Prompt sinh ảnh tham chiếu bằng ChatGPT
+
+**Thung lũng Mây khô hạn** (bối cảnh Cảnh 1 tập 01). Đính kèm `01_BRAND/Brand_Guideline/world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`.
+```
+The attached image is a style and palette reference only: soft stylized 3D animated film for young children, warm sunlight, pastel blue sky, floating islands with pagodas and a cloud sea far away. Do not copy its layout, its lush green ground or its waterfalls.
+
+Create a NEW location in the same world: the Valley of Clouds during a long drought. One wide 16:9 image, eye level, sunny afternoon, no characters, no animals.
+- Valley floor: pale beige earth with a network of dry cracks, patches of dry yellowed grass, a few smooth pale rocks.
+- Center left: a small rectangular garden bed of darker brown soil edged with flat stones, a few thin pale seedlings drooping; next to it a dry curled twig holding one curled dry leaf, and a small wilted flower with its head bent down.
+- Right: a big rounded hill of dry yellow grass rising above the garden; a thin band of soft white cloud clings to its summit like a scarf.
+- Far background, small and hazy: floating islands with tiny pagodas and the cloud sea from the reference.
+- No water anywhere in the valley: no river, no pond, no waterfall. No buildings in the valley or on the hill.
+- Thirsty but gentle and cute, never bleak or scary. Soft rounded shapes, pastel colors, soft shadows.
+- No text, no logos, no watermark.
+```
+
+**Piko đeo Pocket of Wonders.** Đính kèm theo thứ tự `02_ASSET_LIBRARY/Characters/Piko/concept/piko_ref.png`, `02_ASSET_LIBRARY/Props/Pocket_of_Wonders/concept/pocket_of_wonders_ref.png`. Lưu `02_ASSET_LIBRARY/Characters/Piko/concept/piko_pouch_ref.png`; ảnh nhìn sau `piko_pouch_back_ref.png`.
+```
+Image 1 is Piko, a character of a soft stylized 3D animated film for young children. Image 2 is Piko's pouch. Draw Piko wearing the pouch. Keep Piko exactly as in Image 1: same translucent aqua jelly body, two dark-blue horns, eyes, mouth, tiny paws, proportions; no legs.
+
+How Piko wears the pouch:
+- Only the pouch itself from Image 2: purple velvet, gold drawstring with tassels, cream cloud emblem. Its mouth is gathered shut; none of the items in Image 2 (bottle, crystal, mushroom, map, compass, feather, stars) are visible.
+- The pouch is small, about the size of one of Piko's paws.
+- A thin gold cord carries it crossbody: looped over the root of Piko's RIGHT horn (the horn on the viewer's left when Piko faces us), down Piko's back, then diagonally across the front just under the mouth to Piko's LEFT hip.
+- The pouch hangs at Piko's left hip (the viewer's right when Piko faces us), at paw height, resting against the jelly body.
+
+Full body, three-quarter view, Piko turned toward the viewer's left so that Piko's left side and the pouch face us. Happy expression. Plain flat light-grey background, soft even studio light. No text, no logos, no watermark.
+```
+Ảnh nhìn sau, nhắn tiếp: `Now the same Piko with the same pouch seen from behind, as a separate image, same rules: show the gold cord looped over the right horn and running down the back.`
+
+**Sinh vật nhỏ của thung lũng** (nhân vật nền, có mặt từ Cảnh 1 tới Cảnh 7). Đính kèm `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`. Thiết kế chọn xong thì ghi vào Character Bible.
+```
+The attached sheet shows the four main characters of a soft stylized 3D animated film for young children; use it for style only. Design ONE new background creature species: the tiny creatures of the Valley of Clouds.
+- Tiny: about one sixth of the fox's height in the sheet. Round, soft and simple, so they never compete with the four main characters.
+- A small rounded bean-shaped body in a soft pastel color that is not orange, green, lavender or aqua (for example pale peach-beige), a slightly lighter belly, two small dot eyes, tiny stubby arms and feet. No horns, no wings, no tail. Not a fox, not a reptile, not a jelly blob.
+- Each one wears a single dry leaf on its head like a hat.
+
+A design sheet on a plain light-grey background with the same creature in four poses: 1) sitting droopy and sad under its dry leaf; 2) sighing, the leaf sliding down over its eyes; 3) running, holding a big green leaf over its head like an umbrella; 4) splashing happily in a small puddle. No text, no labels, no logos, no watermark.
+```
 
 ## Prompt theo giây
 
@@ -81,7 +124,8 @@ Quy tắc viết:
 - Mỗi mốc chỉ một hành động chính. Không nhồi nhiều việc hơn số giây cho phép.
 - Chữ và video mâu thuẫn về chuyển động thì video thắng (ghi rõ trong prompt).
 - **Lời thoại:** ghi khoảng giây nhân vật nói theo kịch bản ("3.0–4.5s Lumo talks, mouth moving, no voice"), giọng lồng ở hậu kỳ. Câu nói không được tạo thêm cảnh: máy vẫn theo previz.
-- Nền tảng chỉ cho sinh tối đa 15 giây: cắt previz ở chỗ cắt cảnh hoặc chỗ nhân vật dừng, mỗi đoạn một prompt, mốc thời gian tính lại từ 0.
+- **Thời lượng mỗi lần sinh:** Higgsfield Seedance 2.5 sinh trọn một đoạn dưới 30 giây (take 1 của `TEST_First_Rain` dài 27 giây, 649 khung, một lần sinh). Nơi chỉ cho 15 giây (Seedance 2.0) thì cắt previz ở chỗ cắt cảnh hoặc chỗ nhân vật dừng, mỗi đoạn một prompt, mốc thời gian tính lại từ 0.
+- Ảnh đạo cụ vẽ thêm đồ (ảnh Pocket of Wonders có túi mở, tràn đồ): ghi trong ACTIVE REFERENCES chỉ lấy gì, không lấy gì.
 
 **STYLE chuẩn:**
 ```
@@ -137,8 +181,8 @@ Ghi kết quả từng take (đạt, lỗi gì) vào cuối `seedance/prompt.md`
 
 ## Chưa chốt
 
-- **Ảnh tham chiếu Lumo**, mỗi bản lệch một kiểu: `lumo_hero.png` (đủ áo choàng dài và túi, nhưng nền cảnh phức tạp), hay `lumo_apose_meshy.png` (nền trơn, nhưng không áo choàng, không túi).
-- **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`. Đang thử bằng `TEST_First_Rain/sh010`.
+- **Ảnh tham chiếu Lumo**, mỗi bản lệch một kiểu: `lumo_hero.png` (đủ áo choàng dài và túi, nhưng nền cảnh phức tạp), `lumo_apose_meshy.png` (nền trơn, nhưng không áo choàng, không túi), hay `lumo_apose.png` (nền trơn, đủ áo choàng và túi, nhưng áo choàng dài quá hông trong khi bản 3D ngắn tới hông theo Character Bible).
+- **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`. Đang thử bằng `TEST_First_Rain/sh010` và hai đoạn dưới 30 giây của Cảnh 1 tập 01 (`EP001_Great_Rain_Experiment/sh010`, `sh020`; `sh020` đã có prompt).
 - Có cho Seedance sinh tiếng động không, hay làm hết tiếng ở hậu kỳ.
 - Take lưu vào git (qua LFS) hết, hay chỉ take được chọn.
 
