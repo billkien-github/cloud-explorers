@@ -46,6 +46,7 @@ sh010/
 - **Khối 4 nhân vật**, máy quay, tự kiểm khung và cài đặt render ở `pipeline/blocks.py`.
 - **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. Đang dùng cho Cảnh 1 tập 01: `EP001_Great_Rain_Experiment/sh010` (0–28.8 s, S1–S6) và `sh020` (28.8–55 s, S7–S14).
 - **Vật hiện ra, biến mất** bằng key scale 0 và 1 cách nhau ít nhất một khung; hai key gần hơn một khung rơi vào cùng khung và vật lộ dần từ key trước đó.
+- **Vật cầm tay:** khối tay bọc lấy đầu cán như nắm tay, vật hơi chếch khỏi trục tay; đặt vật ở bên hông hay cạnh đầu, không chĩa vào mặt. Que nối thẳng từ một quả cầu tay sát mặt thì Seedance vẽ tay thành bong bóng có que xuyên qua và đưa vật vào miệng (take 1 của `EP001_Great_Rain_Experiment/sh020`). Vật nhỏ làm to hơn cỡ thật một chút cho đọc được.
 - **Bối cảnh:** chỉ cần đúng khối, kích thước, vật cản và đạo cụ chính. Hình thật do ảnh tham chiếu và prompt quyết định.
 - **Bố trí để thấy mặt:** nhân vật nhìn thẳng vào vật chính (máy, cửa) thì máy quay phía trước chỉ thấy lưng. Đặt chỗ tương tác ở hông vật để nhân vật đứng nghiêng về phía máy quay; tránh để hai, ba nhân vật thẳng hàng với máy quay (che nhau).
 - **Nhiều shot trong một previz:** mỗi shot một camera, cắt bằng timeline marker gắn camera; danh sách `SHOTS` ở đầu script ghi giây bắt đầu, kết thúc.
@@ -126,6 +127,15 @@ Quy tắc viết:
 - **Lời thoại:** ghi khoảng giây nhân vật nói theo kịch bản ("3.0–4.5s Lumo talks, mouth moving, no voice"), giọng lồng ở hậu kỳ. Câu nói không được tạo thêm cảnh: máy vẫn theo previz.
 - **Thời lượng mỗi lần sinh:** Higgsfield Seedance 2.5 sinh trọn một đoạn dưới 30 giây (take 1 của `TEST_First_Rain` dài 27 giây, 649 khung, một lần sinh). Nơi chỉ cho 15 giây (Seedance 2.0) thì cắt previz ở chỗ cắt cảnh hoặc chỗ nhân vật dừng, mỗi đoạn một prompt, mốc thời gian tính lại từ 0.
 - Ảnh đạo cụ vẽ thêm đồ (ảnh Pocket of Wonders có túi mở, tràn đồ): ghi trong ACTIVE REFERENCES chỉ lấy gì, không lấy gì.
+- Những chỗ Seedance hay làm sai (rút từ take 1 của `EP001_Great_Rain_Experiment/sh020`), nên ghi sẵn trong prompt:
+  - Nhân vật chỉ lấp ló ở mép khung trong previz dễ bị bỏ, có khi biến mất giữa cú máy: ghi rõ ai ở mép nào, thêm luật "stay visible at that edge, partly cut".
+  - Chữ gọi cỡ cảnh ("medium two-shot") làm Seedance kéo chặt khung: ghi thêm "exactly as framed in @Video 1, never tighter, never wider".
+  - Bố cục của ảnh bối cảnh có thể đè lên previz (cành khô dời chỗ, che mặt nhân vật): ghi vật nào đứng đúng chỗ `@Video 1` đặt, không vật gì đi ngang trước mặt nhân vật.
+  - Khối nhỏ bị chép nguyên hình (tay cầu của Piko thành bong bóng nước), vật nhỏ bị đổi loại (bông hoa thành mầm cây): ghi khối đó là gì, trông ra sao.
+  - Đồ đeo xoay theo hướng mặt (túi Piko thành dây chuyền khi Piko nhìn thẳng): tả cách đeo bằng con số và chữ "never" (một dây chéo, không hai dây).
+  - Hướng chỉ của một vật đối xứng (mũi sao tám cánh) không đọc ra: cho một dấu hiệu nhìn thấy, ví dụ tia sáng từ mũi tới vật được chỉ.
+  - Vật cầm tay có thể đè lên mặt nhân vật: ghi vật ở đâu so với mặt.
+  - Thêm "no voice" vào từng khoảng nói; không viết lời trong ngoặc kép (ví dụ "aha") ở chỗ nhân vật mở miệng.
 
 **STYLE chuẩn:**
 ```

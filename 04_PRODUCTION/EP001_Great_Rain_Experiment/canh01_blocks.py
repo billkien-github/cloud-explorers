@@ -184,18 +184,27 @@ def build(timing, offset, seconds, out_blend):
     needle = add_obj("Lumo_CompassNeedle", box_bm((0.022, 0.11, 0.01), (0, -0.04, 0)), prop_dark, "PROPS", parent=compass,
                      loc=(0, 0, 0.017))
     piko_bag = add_obj("Piko_Bag", sphere_bm(0.06, (0, 0, -0.04), (1, 1, 1.1)), prop_dark, "CAST", parent=piko_r.squash,
-                       loc=(0.24, -0.27, 0.24))
-    add_obj("Piko_BagStrap", box_bm((0.02, 0.02, 0.5), (0, 0, 0.25)), prop_dark, "CAST", parent=piko_r.squash,
-            loc=(0.24, -0.27, 0.24)).rotation_euler = (math.radians(-10), math.radians(-38), 0)
+                       loc=(0.33, -0.12, 0.24))                     # hông trái, ngang tầm tay
+    add_obj("Piko_BagStrap", box_bm((0.02, 0.02, 0.68), (0, 0, 0.34)), prop_dark, "CAST", parent=piko_r.squash,
+            loc=(0.33, -0.12, 0.24)).rotation_euler = (math.radians(-10), math.radians(-43), 0)   # chéo lên gốc sừng phải
     bag_glint = add_obj("Piko_BagGlint", sphere_bm(0.035, segs=12), gold_m, "PROPS", parent=piko_bag, loc=(0, -0.04, 0.03))
     spoon_arm = piko_r.arms[1]                                      # tay trái Piko: phía máy quay khi Piko nhìn sang trái
-    spoon = empty("Piko_Spoon", "PROPS", parent=spoon_arm, loc=(0, -0.02, -0.08))
-    add_obj("Piko_SpoonHandle", box_bm((0.02, 0.02, 0.14), (0, 0, -0.07)), prop, "PROPS", parent=spoon)
-    spoon_bowl = empty("Piko_SpoonBowlPivot", "PROPS", parent=spoon, loc=(0, 0, -0.14))
-    add_obj("Piko_SpoonBowl", sphere_bm(0.035, (0, 0, -0.04), (0.8, 0.4, 1.2)), prop, "PROPS", parent=spoon_bowl)
-    spoon_ground = add_obj("Spoon_Ground", box_bm((0.14, 0.02, 0.02)), prop, "PROPS")
-    add_obj("Spoon_GroundBowl", sphere_bm(0.035, scale=(0.8, 1.2, 0.4)), prop, "PROPS", parent=spoon_ground,
-            loc=(0.06, 0.0, 0.05)).rotation_euler = (0, math.radians(-50), 0)
+    grip = bpy.data.objects["Piko_Arm_+1"]                          # tay cầm thìa: hạt đậu dẹt bọc quanh đầu cán (nắm tay
+    me = bpy.data.meshes.new("Piko_PawGrip")                        # bằng thạch), không phải quả cầu có que xuyên qua
+    bm = sphere_bm(0.065, (0, 0, -0.06), (1.0, 0.8, 1.35), segs=16)
+    bm.to_mesh(me)
+    bm.free()
+    me.materials.append(cast_materials()["piko"])
+    grip.data = me
+    spoon = empty("Piko_Spoon", "PROPS", parent=spoon_arm, loc=(0, -0.01, -0.11))
+    spoon.rotation_euler = (math.radians(-15), 0, 0)                # cán ló ra đáy nắm tay, hơi chúi về trước
+    add_obj("Piko_SpoonHandle", box_bm((0.022, 0.022, 0.18), (0, 0, -0.09)), prop, "PROPS", parent=spoon)
+    spoon_bowl = empty("Piko_SpoonBowlPivot", "PROPS", parent=spoon, loc=(0, 0, -0.18))
+    add_obj("Piko_SpoonBowl", sphere_bm(0.045, (0, 0, -0.05), (0.8, 0.4, 1.2)), prop, "PROPS", parent=spoon_bowl)
+    spoon_ground = add_obj("Spoon_Ground", box_bm((0.18, 0.022, 0.022), (-0.09, 0, 0)), prop, "PROPS")   # gốc ở chỗ gập
+    ground_fold = empty("Spoon_GroundFold", "PROPS", parent=spoon_ground)
+    ground_fold.rotation_euler = (0, math.radians(-125), 0)        # lòng thìa gập ngược lên trên cán, như thìa trong tay
+    add_obj("Spoon_GroundBowl", sphere_bm(0.045, (0.05, 0, 0), (1.2, 0.8, 0.4)), prop, "PROPS", parent=ground_fold)
     dust = add_obj("DigDust", sphere_bm(0.05, scale=(1.6, 1.0, 0.6)), prop, "PROPS")
     knock_dust = add_obj("KnockDust", sphere_bm(0.05, scale=(1.6, 1.0, 0.6)), prop, "PROPS", loc=(1.62, TAVI_Y - 0.12, 0.03))
     buzz = add_obj("Lumo_Buzz", sphere_bm(0.03, segs=10), gold_m, "PROPS", parent=lumo_r.root, loc=(-0.2, -0.15, 0.4))
@@ -266,18 +275,18 @@ def build(timing, offset, seconds, out_blend):
         rot(spoon_arm, [(u0 + 0.35 + 0.12 * k, (-15 if k % 2 else -35, 0, 25))])   # lục lọi trong túi
     rot(piko_bag, [(u0, (0, 0, 0)), (u0 + 0.2, (14, 0, 0)), (u0 + 0.5, (-14, 0, 0)), (u0 + 0.8, (14, 0, 0)), (u1, (0, 0, 0))])
     keys(spoon, "scale", [(tm.SPOON_OUT - HOLD, Vector((0, 0, 0))), (tm.SPOON_OUT, Vector((1, 1, 1)))])
-    rot(spoon_arm, [(tm.SPOON_OUT + 0.2, (-85, 0, 0))])             # giơ cái thìa ra trước mặt
+    rot(spoon_arm, [(tm.SPOON_OUT + 0.2, (-100, 0, 45))])           # giơ cái thìa chếch ra bên hông, không chĩa vào mặt
     piko.pose(tm.SPOON_OUT + 0.2, lean=0)
     k0, k1 = tm.PIKO_LOOK
     piko.pose(k0, lean=4)
     piko.pose(tm.PIKO_GLANCE_FLOWER[0], yaw=fl_yaw)                 # liếc bông hoa gục
     piko.pose(tm.PIKO_GLANCE_FLOWER[1])
     piko.pose(tm.PIKO_LOOK_GROUND[1], lean=14, yaw=LEFT)            # nhìn đất
-    rot(spoon_arm, [(tm.PIKO_GLANCE_FLOWER[1], (-85, 0, 0)), (k1, (-140, 0, 0))])
+    rot(spoon_arm, [(tm.PIKO_GLANCE_FLOWER[1], (-100, 0, 45)), (k1, (-165, 30, 0))])   # giơ thìa lên cạnh đầu
     for i, h in enumerate(tm.DIG):                                  # CỘP. CỘP. CỘP!
         if i:
-            rot(spoon_arm, [(h - 0.3, (-155 if i == 2 else -140, 0, 0))])
-        rot(spoon_arm, [(h, (-35, 0, 0))])                          # mũi thìa chạm đất phía trước
+            rot(spoon_arm, [(h - 0.3, (-175 if i == 2 else -165, 30, 0))])   # giơ lên cạnh đầu, xa mặt
+        rot(spoon_arm, [(h, (-45, 0, 0))])                          # lòng thìa bổ xuống đất phía trước
         flash(dust, h, 1.2, 0.3)
         if i < 2:
             keys(sq, "scale", [(h - 0.02, Vector((1, 1, 1))), (h + 0.06, Vector((1.07, 1.07, 0.93))), (h + 0.18, Vector((1, 1, 1)))])
@@ -286,11 +295,11 @@ def build(timing, offset, seconds, out_blend):
     for k in range(int((s1 - 0.05 - s0) / 0.05) + 1):               # rung bần bật
         key(sq, "scale", s0 + 0.02 + 0.05 * k, Vector((1.06, 1.06, 0.94)) if k % 2 else Vector((0.95, 0.95, 1.05)))
     key(sq, "scale", s1, Vector((1, 1, 1)))
-    rot(spoon_arm, [(tm.DIG[2] + 0.1, (-30, 0, 0)), (tm.DIG[2] + 0.5, (-125, 0, 0))])   # giơ thìa cong lên ngang mắt
+    rot(spoon_arm, [(tm.DIG[2] + 0.1, (-40, 0, 0)), (tm.DIG[2] + 0.5, (-92, 0, 20))])   # giơ thìa cong ra trước ngang thân, thấp hơn mặt: chỗ gập lộ ngang khung
     piko.pose(s1 + 0.1, lean=6)
     piko.pose(tm.PIKO_BLINK[0] + 0.1, lean=0)
     q0, q1 = tm.PIKO_SET_SPOON                                      # với ra xa, đặt cái thìa cong xuống đất
-    rot(spoon_arm, [(q0, (-125, 0, 0)), (q1 - 0.1, (-65, 0, 0)), (q1, (-65, 0, 0))])
+    rot(spoon_arm, [(q0, (-92, 0, 20)), (q1 - 0.1, (-65, 0, 0)), (q1, (-65, 0, 0))])
     piko.pose(q0, lean=0)
     piko.pose(q1 - 0.1, lean=28)
     piko.pose(q1, lean=28)
@@ -429,7 +438,8 @@ def build(timing, offset, seconds, out_blend):
     kn0, kn1 = tm.TAVI_KNOCK                                        # Tavi dậm đất: Lumo quay sang nhìn
     lumo.pose(kn0 + 0.1)
     lumo.pose(kn0 + 0.35, yaw=LEFT)
-    lumo.go(kn0 + 0.35, 2.25, 0.0)
+    lumo.go(kn0 + 0.45, 2.25, 0.0)
+    steps(L.legs, kn0 + 0.1, kn0 + 0.45, 2, 25)
     head(L, kn0 + 0.35, 10)
     rot(L.arm_r, [(kn0 + 0.1, (-60, 0, 0)), (kn0 + 0.4, (-15, 0, 0))])
     for ear, side in L.ears:
@@ -446,17 +456,21 @@ def build(timing, offset, seconds, out_blend):
         head(L, n0 + 0.6, 0)
     sh0 = tm.TAVI_SHIVER[0]                                         # "làm lạnh,": Lumo rùng mình theo
     for k in range(8):
-        lumo.pose(sh0 + 0.3 + 0.07 * k, roll=4 if k % 2 else -4)
+        lumo.pose(sh0 + 0.3 + 0.07 * k, roll=10 if k % 2 else -10)
     lumo.pose(sh0 + 0.95, roll=0)
+    for ear, side in L.ears:                                        # tai cụp khi rùng mình
+        rot(ear, [(sh0 + 0.2, (0, side * 12, 0)), (sh0 + 0.35, (0, side * 60, 0)), (sh0 + 0.95, (0, side * 60, 0)),
+                  (sh0 + 1.15, (0, side * 12, 0))])
     pt0, pt1 = tm.TAVI_POINT
     lumo.pose(pt0, lean=0)
     lumo.go(pt0 + 0.1, 2.25)
     lumo.go(pt0 + 0.35, 2.12)                                       # lùi lại nhường chỗ cho Tavi
-    lumo.pose(gl - 0.4)
-    lumo.pose(gl - 0.15, yaw=yaw_to((2.12, 0.0), HILLTOP))          # quay theo tay Tavi
-    head(L, gl - 0.15, 0)
-    head(L, gl + 0.05, -26)
-    lumo.pose(gl + 0.15, lean=-4)
+    steps(L.legs, pt0 + 0.1, pt0 + 0.35, 1, 20)
+    lumo.pose(gl)
+    lumo.pose(gl + 0.25, yaw=yaw_to((2.12, 0.0), HILLTOP))          # quay theo tay Tavi, sau khi Tavi đã chỉ
+    head(L, gl + 0.25, 0)
+    head(L, gl + 0.45, -26)
+    lumo.pose(gl + 0.55, lean=-4)
     wag(L.tail, p1, T_END, 0.5, 14, (20, 0, 0))
 
     # ============================================================ TAVI
@@ -541,18 +555,18 @@ def build(timing, offset, seconds, out_blend):
     tavi.pose(h1, roll=0)
     f0, f1 = tm.TAVI_RAIN                                           # "sẽ có mưa!": giơ hai tay rồi rung ngón hạ dần
     for arm, s in ((T.arm_r, 1), (T.arm_l, -1)):
-        rot(arm, [(f0 + 0.15, (-115, 0, s * 10))])
+        rot(arm, [(f0 + 0.15, (-165, 0, s * 10))])   # hai tay giơ qua đầu
         for k in range(int((f1 - 0.35 - f0) / 0.1) + 1):
-            rot(arm, [(f0 + 0.25 + 0.1 * k, (-115 + 6 * k + (8 if (k + (s > 0)) % 2 else -8), 0, s * 10))])
+            rot(arm, [(f0 + 0.25 + 0.1 * k, (-165 + 10 * k + (8 if (k + (s > 0)) % 2 else -8), 0, s * 10))])
     head(T, f1 - 0.2, 14)
     tavi.go(pt0, 1.55)                                              # bước lên trước Lumo, chỉ dốc lên đỉnh đồi
     tavi.go(pt0 + 0.25, 2.15, TAVI_Y - 0.25, z=0.04)
-    tavi.go(tm.TAVI_STRIDE[1], 2.82, TAVI_Y - 0.05)
+    tavi.go(tm.TAVI_STRIDE[1], 3.05, TAVI_Y - 0.05)
     steps(T.legs, pt0, tm.TAVI_STRIDE[1], 3, 25)
     tavi.pose(tm.TAVI_STRIDE[1])
-    tavi.pose(pt0 + 0.7, lean=-8, yaw=yaw_to((2.82, TAVI_Y - 0.05), HILLTOP))
+    tavi.pose(pt0 + 0.7, lean=-8, yaw=yaw_to((3.05, TAVI_Y - 0.05), HILLTOP))
     rot(T.arm_l, [(tm.TAVI_STRIDE[1], (-6, 0, 0))])
-    rot(T.arm_r, [(tm.TAVI_STRIDE[1], (-6, 0, 0)), (pt0 + 0.7, (-140, 0, 0)), (T_END, (-140, 0, 0))])
+    rot(T.arm_r, [(tm.TAVI_STRIDE[1], (-6, 0, 0)), (pt0 + 0.7, (-160, 0, 0)), (T_END, (-160, 0, 0))])
     head(T, tm.TAVI_STRIDE[1], 0)
     head(T, pt0 + 0.7, -32)
 
@@ -589,7 +603,7 @@ def build(timing, offset, seconds, out_blend):
                            (nl1 + HOLD, Vector((0, 0, 0)))])
 
     # ============================================================ ánh lóe: túi Piko mỗi lần la bàn chỉ vào; lá ướt sương
-    for t in (tm.STAR_SPIN[1] + 0.35, e0 + 0.3, x1 + 0.4, x1 + 1.05):
+    for t in (tm.STAR_SPIN[1] + 0.35, e0 + 0.3, x1 + 0.4):
         flash(bag_glint, t, 1.3)
     twinkle(leaf_glint, tm.TAVI_LOOK_LEAF[0] + 0.5, tm.TAVI_LOOK_UP[0] + 0.3)
 
