@@ -54,7 +54,7 @@
 
 - **Bối cảnh:** Thung lũng Mây (khô / ướt, dùng chung một bối cảnh đổi material), đỉnh đồi đặt máy, Wonder Hub dưới chân đồi nhìn từ xa và cổng truyện, thế giới truyện (mỏm đồi khô có cây, biển nước lặng, con thuyền, cầu ván; mây của truyện khác màu mây của máy, có tia nắng xuyên qua).
 - **Nhân vật phụ:** Noah (chỉ cần dáng ngược sáng và bàn tay, không cần rig mặt), đôi voi con, vài sinh vật nhỏ của thung lũng (có mặt từ Cảnh 1).
-- **Asset riêng:** máy Rain-O-Matic 3000 (núm NHẸ, đồng hồ, nút MAX POWER, cần gạt TẮT, vòi phụt mây, nắp che nút, vòm kính có cửa nhỏ và trạng thái phủ sương giá, bánh răng vàng tháo rời; prompt trong `02_ASSET_LIBRARY/MESHY.md`), ròng rọc có móc (dây đóng băng, gãy), vịt cao su, thìa, ô, hộp ốc, cuộn dây của Noah, con thuyền, cầu ván có nẹp ngang, mây bé.
+- **Asset riêng:** máy Rain-O-Matic 3000 (núm NHẸ, đồng hồ, nút MAX POWER, cần gạt TẮT, vòi phụt mây, nắp che nút, vòm kính có cửa nhỏ và trạng thái phủ sương giá, bánh răng vàng tháo rời; prompt ảnh concept trong `02_ASSET_LIBRARY/MODELING.md`), ròng rọc có móc (dây đóng băng, gãy), vịt cao su, thìa, ô, hộp ốc, cuộn dây của Noah, con thuyền, cầu ván có nẹp ngang, mây bé.
 
 ## Kiểm tra trước khi khóa kịch bản
 

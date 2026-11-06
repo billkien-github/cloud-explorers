@@ -2,26 +2,24 @@
 
 | | |
 |---|---|
-| [`MESHY.md`](MESHY.md) | Cách làm nhân vật, đạo cụ bằng Meshy + Blender, prompt |
-| [`Third_Party/README.md`](Third_Party/README.md) | Nguồn asset bên ngoài, giấy phép, gợi ý cho tập 01 |
+| [`MODELING.md`](MODELING.md) | Làm nhân vật, đạo cụ 3D: bộ ảnh tham chiếu và hiện trạng, prompt ChatGPT, dựng và rig trong Blender |
 
 ## Quy ước cho mỗi asset
 
 ```
 Characters/<Tên>/
-├── concept/          Ảnh 2D: ảnh hero, turnaround, ảnh A-pose đưa vào Meshy
-├── source/           File gốc tải từ Meshy, mỗi lần tải một thư mục <tên>_meshy_vNN/. Không sửa, chỉ thêm bản mới
-├── build_<tên>.py    Script: import source, thêm xương, face rig, material -> <tên>_rig.blend
+├── concept/          Ảnh 2D: ảnh hero, ảnh tham chiếu dựng model (nhìn trước, sau; A-pose, T-pose)
+├── build_<tên>.py    Script: dựng lưới, xương, face rig, material -> <tên>_rig.blend
 ├── <tên>_rig.blend   File đã rig, do script tạo ra (dùng trong shot)
 ├── qa_<tên>.py       Script kiểm tra rig (dùng pipeline/rig_qa.py)
 └── qa/               Bảng ảnh tư thế, số liệu độ méo
 ```
 
 - Ảnh trong `concept/`:
-  - `<tên>_hero.png`: ảnh minh hoạ có bối cảnh, để tham khảo.
-  - `<tên>_apose.png`, `<tên>_tpose.png`: nhân vật 2 chân ở A-pose / T-pose, nền trơn, đầu vào Meshy.
-  - `<tên>_ref.png`: một đối tượng, nền trơn (nhân vật không chân, đạo cụ), đầu vào Meshy.
-  - Bản đã sửa cho Meshy thì thêm hậu tố mô tả: `lumo_apose_meshy.png`.
-- Lần tải Meshy mới thì tạo thư mục phiên bản mới (`source/lumo_meshy_v02/`), giữ nguyên tên file của Meshy vì FBX gọi texture theo tên, không ghi đè bản cũ.
+  - `<tên>_hero.png`: ảnh minh hoạ có bối cảnh (nhân vật chính, bối cảnh). Đạo cụ không có ảnh hero, dùng `_ref`.
+  - `<tên>_ref.png`: ảnh concept nền trơn, nhìn 3/4 hoặc nhiều tư thế (đạo cụ, sinh vật nhỏ); ảnh gốc để sinh các ảnh tham chiếu. Ảnh gốc của nhân vật đã xoá sau khi sinh xong bộ ảnh tham chiếu.
+  - `<tên>_apose_body.png`, `<tên>_tpose_body.png`: chỉ phần thân, A-pose / T-pose. `<tên>_outfit.png`: thân A-pose mặc đủ đồ.
+  - `<tên>_<bộ phận>_ref.png`: một bộ phận làm riêng (đuôi, cánh, áo choàng, túi). Đạo cụ: `<tên>_front.png`, `<tên>_back.png`.
+  - Ảnh nhìn sau thêm hậu tố `_back` vào tên ảnh nhìn trước: `lumo_apose_body_back.png`. Bộ ảnh cần có: `MODELING.md`.
 - Shot dùng asset bằng cách import hoặc link `<tên>_rig.blend`, không sửa asset ngay trong shot.
 - `Props/`, `Environments/` theo cùng cách. `Materials/` chứa material dùng chung, `Animation_Library/` chứa animation dùng lại cho nhiều nhân vật.

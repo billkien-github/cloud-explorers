@@ -2,17 +2,18 @@
 
 | File | Vai trò |
 |---|---|
-| `run.ps1` | Lệnh chạy nhanh cho một shot: build, render, ghép tiếng, mở Blender |
+| `run.ps1`, `run.sh` | Lệnh chạy nhanh cho một shot: build, render, ghép tiếng, mở Blender. `run.ps1` cho Windows, `run.sh` cho macOS |
 | `render.py` | Render một `.blend` theo 4 chế độ `stills` / `preview` / `final` / `ref`, ghi vào `renders/` cạnh file |
 | `mux_audio.py` | Ghép file âm thanh vào video đã render, không render lại hình, giữ nguyên màu |
 | `cutout.py` | Bộ nhân vật cutout 2D cho previz 2D: hình phẳng, bộ mặt, bốn nhân vật, hàm keyframe, máy quay theo `SHOTS`, render Workbench. Cách dùng ở docstring, quy ước dựng ở `03_CONTENT/PREVIZ_2D.md` |
 | `blocks.py` | Bộ khối 3D cho previz khối dẫn Seedance: hình khối, vật liệu, bốn nhân vật dạng khối đúng tỉ lệ, keyframe theo giây của cảnh (đoạn cắt ra từ cảnh dài vẫn trùng khung), máy quay theo `SHOTS`, tự kiểm nhân vật trong khung, cài đặt render. Quy ước previz khối: `04_PRODUCTION/SEEDANCE.md` |
-| `cc.py` | In CC từ `timing.py` của cảnh lên video previz (2D hay khối) và xuất `.srt`, không render lại hình. Cách viết CC: `03_CONTENT/PREVIZ_2D.md` |
+| `edit.py` | Ghép nhiều video thành một theo danh sách dựng: cắt đầu đuôi, nối, co giãn video khác cỡ, thêm tiếng, in CC từ `timing.py` và xuất `.srt` (`--clean`: chỉ `.srt`, không in lên hình). Take trong thư mục shot tự cắt theo `SEGMENT`, lấy CC theo `TIMING`, `OFFSET` của `build_shot.py`; take chưa có thì thay bằng khung tối đúng độ dài. Cách dùng ở docstring |
+| `cc.py` | In CC từ `timing.py` của cảnh lên một video previz (2D hay khối) và xuất `.srt`, không render lại hình. Là `edit.py` với một video. Cách viết CC: `03_CONTENT/PREVIZ_2D.md` |
 | `rig_qa.py` | Kiểm tra rig: đặt tư thế theo trục thế giới, đo % mặt lưới bị bóp (< 40% diện tích) hay giãn (> 250%) và tỉ lệ thể tích so với tư thế nghỉ. Đạt khi bad% dưới khoảng 2%, thể tích gần 1.0 |
 
 Code riêng của từng asset hay shot (build script) nằm cạnh asset hay shot đó, không để ở đây. Chỉ chuyển một hàm vào `pipeline/` khi đã có từ hai nơi trở lên cần dùng.
 
-## `run.ps1`
+## `run.ps1`, `run.sh`
 
 Chạy từ thư mục gốc dự án. `-Shot` là thư mục shot tính từ gốc. Shot cần có `build_shot.py`. Tên file `.blend` lấy theo phần đầu tên thư mục (`sh010` → `sh010.blend`).
 
@@ -29,17 +30,27 @@ $S = "04_PRODUCTION\EP001_Great_Rain_Experiment\sh010"
 .\pipeline\run.ps1 mcp -Shot $S                # mở kèm --online-mode cho Blender MCP
 ```
 
+macOS dùng `pipeline/run.sh`, cùng chế độ và đối số; đường dẫn shot viết bằng `/`. Blender mặc định ở `/Applications/Blender.app`, để nơi khác thì đặt biến môi trường `BLENDER`.
+
+```bash
+S=04_PRODUCTION/EP001_Great_Rain_Experiment/sh010
+pipeline/run.sh build -Shot $S
+pipeline/run.sh stills 300,540 -Shot $S
+```
+
+**Giữ hai file đồng bộ:** `run.ps1` và `run.sh` phải có cùng chế độ, đối số, giá trị mặc định và tên file ra. Sửa hay thêm gì ở file này thì sửa luôn file kia trong cùng lần làm. Máy chỉ chạy được một bản (Mac chưa có PowerShell) thì chạy thử bản đó, soát bản kia bằng mắt và báo người dùng là bản đó chưa chạy thử.
+
 ## Blender MCP
 
-Cho phép Claude điều khiển trực tiếp Blender đang mở: đọc scene, chạy Python, chụp viewport.
+Cho phép Claude điều khiển trực tiếp Blender đang mở: đọc scene, chạy Python, chụp viewport. Mới cài trên máy Windows; trên macOS chưa cài add-on và server.
 
-| Thành phần | Vị trí |
+| Thành phần | Vị trí (máy Windows) |
 |---|---|
 | Add-on `MCP` v1.0.3 | Đã cài và bật trong Blender 5.2 (repo `user_default`) |
 | MCP server | `C:\Users\APC\blender_mcp_src\.venv\Scripts\blender-mcp.exe` |
 | Đăng ký với Claude Code | Scope `local` cho thư mục `studio` (`claude mcp get blender`) |
 
-1. Mở Blender bằng `run.ps1 mcp` (dùng cờ `--online-mode` cho riêng lần chạy đó), hoặc bật **Edit → Preferences → System → Network → Allow Online Access**. Add-on chỉ tự bật khi Blender được phép truy cập mạng.
+1. Mở Blender bằng `run.ps1 mcp` hoặc `run.sh mcp` (dùng cờ `--online-mode` cho riêng lần chạy đó), hoặc bật **Edit → Preferences → System → Network → Allow Online Access**. Add-on chỉ tự bật khi Blender được phép truy cập mạng.
 2. Mở một phiên Claude mới trong thư mục `studio` để có các tool `execute_blender_code`, `get_objects_summary`, `get_screenshot_of_window_as_image`…
 3. Add-on chỉ lắng nghe ở `127.0.0.1:9876` (trong máy).
 
@@ -52,7 +63,7 @@ Cho phép Claude điều khiển trực tiếp Blender đang mở: đọc scene,
 - `ShaderNodeMix` ở chế độ màu có nhiều socket trùng tên (`A`, `B`, `Result` cho float, vector, color). Phải chọn socket theo kiểu `RGBA`, không theo tên.
 - Vật thể chỉ có Emission mà cường độ ≈ 0 sẽ render thành khối đen. Cộng thêm Transparent BSDF để nó biến mất khi tắt.
 - Action trong 5.x là layered: lấy fcurves qua `bpy_extras.anim_utils.action_get_channelbag_for_slot(action, slot)`, không còn `action.fcurves`.
-- VSE trong 5.x: `scene.sequence_editor.strips.new_sound / new_movie`.
+- VSE trong 5.x: `scene.sequence_editor.strips.new_sound / new_movie` (`new_movie` nhận `fit_method="FIT"` để co video khác cỡ vừa khung). `frame_final_*`, `frame_offset_*` sắp bỏ: cắt bằng `left_handle_offset`, `right_handle_offset`, dời bằng `content_start`. Video khác fps với scene bị phát từng khung (nhanh hay chậm đi), Blender không tự đổi. `new_sound` trên video không có tiếng không báo lỗi mà trả về strip dài 1 khung.
 - Xuất video: đặt `image_settings.media_type = "VIDEO"` trước rồi mới đặt `file_format = "FFMPEG"`.
 - Ghép tiếng vào video đã render phải dùng view transform `Standard`, nếu không AgX áp thêm lần nữa làm bạc màu (`mux_audio.py` đã xử lý). Blender cần đường dẫn tuyệt đối khi nạp video.
 - Avast quét HTTPS làm hỏng `pip install` và tải gói (lỗi `InvalidChunkLength`). Khi cần cài thư viện, tạm tắt Avast shields 10 phút.

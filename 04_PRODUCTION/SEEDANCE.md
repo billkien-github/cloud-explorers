@@ -23,7 +23,8 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 | 6 | Soạn prompt theo giây (xem "Prompt theo giây"); gom file tải lên vào một thư mục, đặt tên theo số tham chiếu. Trước khi sinh: `/review <thư mục shot>/seedance/prompt.md` | `seedance/prompt.md`, `renders/seedance_upload/` |
 | 7 | Sinh trên BytePlus ModelArk: 16:9, 1080p, `duration` bằng `SECONDS` của `build_shot.py`, watermark tắt | `seedance/sh010_take01.mp4` |
 | 8 | Soát take theo bảng "Soát take": `/review <thư mục shot>/seedance/<take>.mp4`. Lỗi do prompt thì sửa prompt; lỗi do previz thì sửa `build_shot.py`, render lại, sửa mốc trong prompt | Take được chọn |
-| 9 | Hậu kỳ: lồng tiếng, nhạc, tiếng động ở `05_POST_PRODUCTION/` | |
+| 9 | Dựng cảnh: ghi take được chọn của từng đoạn vào danh sách dựng `<tập>/canhNN_edit.py`, nối bằng `pipeline/edit.py` (cắt theo `SEGMENT`, CC theo `TIMING`) | `<tập>/renders/canhNN_edit_cc.mp4` + `.srt` |
+| 10 | Hậu kỳ: lồng tiếng, nhạc, tiếng động ở `05_POST_PRODUCTION/` | |
 
 Thư mục shot thêm `seedance/`:
 ```
@@ -44,7 +45,7 @@ sh010/
   - Một nhân vật: đỏ = mặt trước, đen = lưng, xanh lá = hai bên và đỉnh.
   - Từ hai nhân vật: mỗi nhân vật một màu cố định (Lumo cam, Tavi xanh lá, Nori tím nhạt, Piko xanh ngọc), mặt trước đầu có ô trắng báo hướng nhìn. Bối cảnh, đạo cụ để xám để không lẫn màu nhân vật. Đã dùng ở `TEST_First_Rain`.
 - **Khối 4 nhân vật**, máy quay, tự kiểm khung và cài đặt render ở `pipeline/blocks.py`.
-- **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. ModelArk nhận số nguyên giây, nên `SECONDS` làm tròn lên số nguyên và `SEGMENT` ghi độ dài đoạn trong cảnh: máy quay chỉ dựng các cú trong `SEGMENT`, phần dư giữ cú máy cuối, lúc dựng cắt bỏ; `check_prompt.py` đọc cả hai. Đang dùng cho Cảnh 1 tập 01: `EP001_Great_Rain_Experiment/sh010` (0–28.8 s, S1–S6) và `sh020` (28.8–55 s, S7–S14).
+- **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. ModelArk nhận số nguyên giây, nên `SECONDS` làm tròn lên số nguyên và `SEGMENT` ghi độ dài đoạn trong cảnh: máy quay chỉ dựng các cú trong `SEGMENT`, phần dư giữ cú máy cuối, lúc dựng `pipeline/edit.py` cắt bỏ; `check_prompt.py` đọc cả hai. Đang dùng cho Cảnh 1 tập 01: `EP001_Great_Rain_Experiment/sh010` (0–28.8 s, S1–S6) và `sh020` (28.8–55 s, S7–S14).
 - **Vật hiện ra, biến mất** bằng key scale 0 và 1 cách nhau ít nhất một khung; hai key gần hơn một khung rơi vào cùng khung và vật lộ dần từ key trước đó.
 - **Vật cầm tay:** khối tay bọc lấy đầu cán như nắm tay, vật hơi chếch khỏi trục tay; đặt vật ở bên hông hay cạnh đầu, không chĩa vào mặt. Que nối thẳng từ một quả cầu tay sát mặt thì Seedance vẽ tay thành bong bóng có que xuyên qua và đưa vật vào miệng (take 1 của `EP001_Great_Rain_Experiment/sh020`). Vật nhỏ làm to hơn cỡ thật một chút cho đọc được.
 - **Bối cảnh:** chỉ cần đúng khối, kích thước, vật cản và đạo cụ chính. Hình thật do ảnh tham chiếu và prompt quyết định.
@@ -57,7 +58,7 @@ sh010/
 
 - Mỗi nhân vật **một ảnh cố định cho mọi shot** để giữ nhân vật đồng nhất: `02_ASSET_LIBRARY/Characters/<Tên>/concept/<tên>_hero.png`. Piko dùng `piko_pouch_ref.png` (đã đeo Pocket of Wonders đúng cách đeo). Lumo: chưa chốt, xem cuối file.
 - Bối cảnh: ảnh riêng của từng địa điểm, chưa có thì `01_BRAND/Brand_Guideline/world_key_art.png`. Đã có: Thung lũng Mây khô hạn (Cảnh 1 tập 01) `02_ASSET_LIBRARY/Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`.
-- Đạo cụ: `02_ASSET_LIBRARY/Props/<Tên>/concept/<tên>_hero.png`. Nhân vật nền (sinh vật nhỏ của thung lũng): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`; ghi trong prompt tư thế nào dùng cho clip.
+- Đạo cụ: `02_ASSET_LIBRARY/Props/<Tên>/concept/<tên>_ref.png` (nhìn 3/4, nền trơn). Nhân vật nền (sinh vật nhỏ của thung lũng): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`; ghi trong prompt tư thế nào dùng cho clip.
 - Chỉ đưa ảnh của thứ có trong shot. Số `@Image` theo thứ tự tải lên: mỗi số một ảnh, ghi bảng số → file trong `prompt.md` và soát lại trước khi sinh (bài mẫu của Higgsfield có chỗ hai ảnh cùng ghi `@Image 2`).
 - Bối cảnh, Piko đeo túi và sinh vật nhỏ sinh bằng ChatGPT theo các prompt dưới. Sinh lại thì đính kèm đúng ảnh ghi ở mỗi prompt, lưu đúng đường dẫn ghi kèm, soát theo Character Bible trước khi dùng.
 
@@ -77,7 +78,7 @@ Create a NEW location in the same world: the Valley of Clouds during a long drou
 - No text, no logos, no watermark.
 ```
 
-**Piko đeo Pocket of Wonders.** Đính kèm theo thứ tự `02_ASSET_LIBRARY/Characters/Piko/concept/piko_ref.png`, `02_ASSET_LIBRARY/Props/Pocket_of_Wonders/concept/pocket_of_wonders_ref.png`. Lưu `02_ASSET_LIBRARY/Characters/Piko/concept/piko_pouch_ref.png`; ảnh nhìn sau `piko_pouch_back_ref.png`.
+**Piko đeo Pocket of Wonders.** Đính kèm theo thứ tự `02_ASSET_LIBRARY/Characters/Piko/concept/piko_apose_body.png`, `02_ASSET_LIBRARY/Props/Pocket_of_Wonders/concept/pocket_of_wonders_ref.png`. Lưu `02_ASSET_LIBRARY/Characters/Piko/concept/piko_pouch_ref.png`; ảnh nhìn sau `piko_pouch_back_ref.png`.
 ```
 Image 1 is Piko, a character of a soft stylized 3D animated film for young children. Image 2 is Piko's pouch. Draw Piko wearing the pouch. Keep Piko exactly as in Image 1: same translucent aqua jelly body, two dark-blue horns, eyes, mouth, tiny paws, proportions; no legs.
 
@@ -191,7 +192,7 @@ Ghi kết quả từng take (đạt, lỗi gì) vào cuối `seedance/prompt.md`
 
 ## Chưa chốt
 
-- **Ảnh tham chiếu Lumo**, mỗi bản lệch một kiểu: `lumo_hero.png` (đủ áo choàng dài và túi, nhưng nền cảnh phức tạp), `lumo_apose_meshy.png` (nền trơn, nhưng không áo choàng, không túi), hay `lumo_apose.png` (nền trơn, đủ áo choàng và túi, nhưng áo choàng dài quá hông trong khi bản 3D ngắn tới hông theo Character Bible).
+- **Ảnh tham chiếu Lumo:** giữ `lumo_hero.png` (đang dùng tạm trong prompt các shot; đủ áo choàng dài và túi, nhưng nền cảnh phức tạp, không thấy đuôi) hay đổi sang `lumo_outfit.png` (nền trơn, áo choàng dài tới gối, túi, đuôi; prompt trong `02_ASSET_LIBRARY/MODELING.md`).
 - **Mỗi lần sinh là một shot hay một đoạn nhiều shot.** Bài mẫu của Higgsfield dựng 19 shot trong một previz 30 giây rồi sinh một lần, nhân vật giữ đồng nhất qua các lần cắt. Nếu theo cách này thì thư mục sinh nằm ở cấp đoạn, không ở cấp `sh010/`. Đang thử bằng `TEST_First_Rain/sh010` và hai đoạn dưới 30 giây của Cảnh 1 tập 01 (`EP001_Great_Rain_Experiment/sh010`, `sh020`; cả hai đã có prompt, `sh020` có take 1).
 - Có cho Seedance sinh tiếng động không, hay làm hết tiếng ở hậu kỳ.
 - Take lưu vào git (qua LFS) hết, hay chỉ take được chọn.

@@ -45,6 +45,7 @@ CC = [
   blender -b --factory-startup -P pipeline/cc.py -- <video> <timing.py> <video>_cc.mp4 [giây bắt đầu của đoạn]
   ```
   Ra video có CC (chữ trắng trên nền tối, giữa đáy khung) và file `.srt` cạnh nó. Các dòng chồng thời gian được gộp thành nhiều dòng. Previz khối của một đoạn thì truyền giây bắt đầu của đoạn để dời CC về 0.
+- **Nhiều video nối lại** (các đoạn take của một cảnh, các cảnh của một tập): `pipeline/edit.py` lấy CC của từng đoạn theo `timing.py` và giây trong cảnh, dòng vắt qua chỗ nối thành một dòng liền. `--clean` không in lên hình, chỉ xuất `.srt` để tải lên làm phụ đề riêng.
 - Bản có CC chỉ để duyệt và review. Video dẫn cho Seedance (`run.ps1 ref`) không in CC, nếu không chữ sẽ lọt vào take.
 
 ## Dựng previz 2D (cutout bằng code)

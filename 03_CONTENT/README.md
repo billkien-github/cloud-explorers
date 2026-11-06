@@ -7,9 +7,35 @@
 
 Chính nhân vật **can thiệp và làm lệch** câu chuyện cổ tích hay phát minh, chứ không chỉ đứng xem.
 
+## Wonder Hub và Chronicle Engine
+
+| | Là gì |
+|---|---|
+| **Wonder Hub** | Đài thiên văn cổ có mái vòm, dưới chân đồi trong Thung lũng Mây, trên một hòn đảo giữa biển mây. Căn cứ của nhóm từ cuối Season 0 (Lumo đặt tên) |
+| **Chronicle Engine** (Cỗ Máy Biên Niên) | Cỗ máy cổ bên trong Wonder Hub, do một nền văn minh chưa rõ tạo ra. Ai tạo ra nó và vì sao nó phản ứng với bốn bảo bối là bí ẩn xuyên series, hé dần qua từng tập |
+| **Story Portal** (cổng truyện) | Cánh cổng Chronicle Engine mở vào thế giới của một câu chuyện. Cả 5 series đều đi qua cổng này |
+
+**Giới hạn của Chronicle Engine:** chỉ mở cổng, không giải quyết việc bên trong thế giới truyện. Thế giới truyện vẫn tự vận hành, nên việc nhóm làm trong đó có thể gây hậu quả ngoài dự kiến. Cỗ máy chưa thức tỉnh hết, không tự cho thấy mọi chức năng: thiếu bánh răng vàng thì nó yếu, cổng chỉ le lói sáng.
+
+**Bánh răng vàng nối Season 0 với tập 01:** cuối EP000E, lúc cả nhóm vừa ổn định cỗ máy, một bánh răng vàng bật ra, rơi lọt vào túi đang mở của Piko. Không nhân vật nào thấy, chỉ khán giả thấy. Cỗ máy dịu đi, cổng khép lại còn le lói sáng. Ở tập 01, bánh răng này ra khỏi túi Piko, được lắp vào máy làm mưa, tia sáng của nó mở cổng; rút ra thì cổng khép; cuối tập nó nằm trong hộp ốc.
+
+## Season 0: The Awakening
+
+Mini-series mở đầu, trước tập 01. Bốn nhân vật chưa quen nhau. Mỗi người tình cờ tìm thấy bảo bối của mình, và bảo bối dẫn cả bốn tới Wonder Hub.
+
+| Mã | Tập | Độ dài | Chất |
+|---|---|---|---|
+| EP000A | Lumo: Chiếc la bàn bí ẩn | ~5 phút | Phiêu lưu, khám phá |
+| EP000B | Tavi: Phát minh không tưởng | ~5 phút | Hài phát minh hỏng |
+| EP000C | Nori: Câu chuyện bị lãng quên | ~5 phút | Bí ẩn, giải đố |
+| EP000D | Piko: Chiếc túi kỳ diệu | ~5 phút | Hài tình huống, rượt đuổi |
+| EP000E | Cỗ Máy Biên Niên | ~9 phút | Bốn người gặp nhau, đánh thức Chronicle Engine, lần đầu hợp sức |
+
+Bốn tập nguồn gốc không theo khung 6 nhịp ở dưới: mỗi tập là một câu chuyện nhỏ trọn vẹn, xem riêng vẫn hiểu, kết bằng một tín hiệu chỉ về hòn đảo. Nhịp cho trẻ em và luật đạo cụ vẫn áp dụng. EP000E không giới thiệu lại nhân vật, và kết bằng bánh răng vàng rơi vào túi Piko (mục trên), nối thẳng sang mở đầu tập 01.
+
 ## Series
 
-5 series nối với nhau qua **Story Portal** (cổng du hành) đặt tại căn cứ **Wonder Hub**:
+5 series, đều đi qua Story Portal ở Wonder Hub:
 
 | Series | Nội dung | Tỷ trọng |
 |---|---|---|
