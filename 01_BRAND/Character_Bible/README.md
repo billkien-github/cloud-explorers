@@ -32,6 +32,10 @@ Mã màu lấy mẫu ở vùng được chiếu sáng của ảnh tham chiếu t
 
 **Nhân vật nền: bướm phát sáng** (EP000A). Bướm nhỏ cỡ một ngón tay Lumo, cánh hồng đào nhạt phát sáng mềm. Màu tránh tím, vàng sao của Nori, vàng của Wonder Compass và xanh ngọc tín hiệu của hòn đảo Wonder Hub, để không lẫn với Nori và với ánh sáng dẫn truyện. Concept ba tư thế (xoè cánh, bay, đậu): `02_ASSET_LIBRARY/Characters/Glow_Butterflies/concept/glow_butterflies_ref.png`.
 
+**Nhân vật nền: quyển sách nhỏ** (EP000C). Một quyển sách sống cỡ bằng nửa thân Nori, bìa vải đỏ gạch sẫm, gáy và bốn góc bọc da nâu sẫm, giấy màu kem, hai mắt tròn trên bìa trước, một dải ruy băng kem đánh dấu trang thò ra như cái đuôi. Bay bằng cách vỗ hai bìa như cánh chim. Không nói; vui thì giũ trang sột soạt, giận hay ngại thì gập bìa lại (BỘP!). Tinh nghịch, mê truyện phiêu lưu, hay trốn khỏi giá để đọc.
+
+**Nhân vật nền: sách bay** (EP000C). Sách trong thư viện cổ bay như đàn chim, vỗ bìa như cánh, không có mặt; nhiều cỡ, bìa màu trầm (nâu, kem, đỏ gạch nhạt, xám tro). Không tranh khung với Nori và quyển sách nhỏ. Đây là tính chất của sách trong thư viện, không phải phép của Nori: nghe ai gọi tên chủ đề thì một quyển thuộc chủ đề đó bay tới người gọi; gọi "tất cả" kèm chủ đề thì cả đàn sách thuộc chủ đề đó bay tới cùng lúc; gọi kèm số giá hay "lên giá" thì những quyển được gọi bay về đúng giá. Quyển quá to thì bay chậm, chao đảo, có thể rơi.
+
 **Cặp quan hệ tạo chuyện:** Lumo ↔ Tavi (vội vàng vs cẩn thận) · Tavi ↔ Nori (máy móc vs nguồn gốc) · Nori ↔ Piko (trật tự vs hỗn loạn) · **Lumo ↔ Piko** (cặp gây hài nhiều nhất).
 
 ## Bảo bối
@@ -49,8 +53,12 @@ Concept: `02_ASSET_LIBRARY/Props/<Tên>/concept/`.
 
 **Wonder Compass báo hiệu thế nào** (giữ nguyên mọi tập): mũi sao luôn quay về điều kỳ lạ, dù xoay la bàn hay người cầm đi vòng (la bàn thật thì chỉ hướng Bắc). Càng gần thì la bàn càng sáng, rung mạnh, kêu TÍT TÍT TÍT. Điều kỳ lạ ở xa lóe sáng thì la bàn lóe theo cùng nhịp. Điều kỳ lạ ở gần đã tắt thì mũi sao chuyển sang điều kỳ lạ kế tiếp; còn kỳ lạ thì mũi sao nằm yên chỉ về nó. La bàn không chỉ đường đi, không báo nguy hiểm.
 
+**Story Lens cho manh mối thế nào** (giữ nguyên mọi tập): Nori cầm cán, đưa mặt kính lên trước mắt, nhìn một thứ. Bình thường nhìn qua kính chỉ thấy mọi thứ to hơn một chút, ánh tím nhạt, như qua kính lúp. Nhìn vào thứ đang giấu một bí ẩn mà Nori muốn hiểu, mặt kính sáng lên và hiện **một hình gợi ý**: hình vẽ đơn giản kiểu tranh sách truyện, một vật hay một ý (cái bập bênh, bông tuyết), không chữ, không mũi tên. Khán giả thấy hình qua cú cận mặt kính. Hình giữ vài giây rồi mờ đi; nhìn lại đúng thứ đó chỉ hiện lại hình cũ, không thêm gì. Hình chỉ gợi ý, không phải câu trả lời: Nori phải tự nối hình với những gì quanh mình. Kính không chỉ đường, không chiếu hình ra ngoài, không làm vật bên ngoài sáng lên, không đọc chữ, không báo nguy hiểm, không cho thấy tương lai. Hòn đảo Wonder Hub lóe xanh ngọc thì mặt kính lóe xanh ngọc cùng nhịp (Season 0, như Wonder Compass). Story Lens trông như kính lúp nên không bao giờ hướng về phía mặt trời, và nằm trong nắng cũng không hội tụ thành chấm sáng trên giấy hay vật nào (trẻ không bắt chước soi kính lúp ngoài nắng).
+
 ## Diễn
 
 Dựng model, rig từng nhân vật (bộ phận nào làm riêng, bộ phận nào chuyển động), bộ ảnh tham chiếu và prompt ChatGPT: `02_ASSET_LIBRARY/MODELING.md`.
 
 **Giới hạn khi diễn:** tay Lumo rất ngắn so với đầu (vai tới cổ tay chỉ 0.22 m), chỉ với tới ngang cằm: không gãi đầu, che mắt, ôm đầu hay vỗ tay trước miệng được; tay giơ cao nhất chỉ tới ngang tai. Động tác ngượng, bối rối dùng nhún vai, xòe tay, cụp tai, nghiêng đầu.
+
+Nori: tay ngắn mọc ở nửa dưới thân tròn, cầm được vật nhỏ bằng một tay, sách nhỏ hay một trang giấy bằng hai tay; đưa Story Lens lên trước mắt bằng cách cầm cán giơ lên. Không chân: không đứng, không ngồi, dừng thì lơ lửng. Không có túi: Story Lens luôn cầm trong tay, cần hai tay thì đặt kính xuống trước. Cảm xúc dùng cánh (rũ xuống, vỗ nhanh), râu sao (cụp, sáng lóe), nghiêng thân.

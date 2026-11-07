@@ -31,7 +31,11 @@ Mini-series mở đầu, trước tập 01. Bốn nhân vật chưa quen nhau. M
 | EP000D | Piko: Chiếc túi kỳ diệu | ~5 phút | Hài tình huống, rượt đuổi |
 | EP000E | Cỗ Máy Biên Niên | ~9 phút | Bốn người gặp nhau, đánh thức Chronicle Engine, lần đầu hợp sức |
 
-Bốn tập nguồn gốc không theo khung 6 nhịp ở dưới: mỗi tập là một câu chuyện nhỏ trọn vẹn, xem riêng vẫn hiểu, kết bằng một tín hiệu chỉ về hòn đảo. Nhịp cho trẻ em và luật đạo cụ vẫn áp dụng. EP000E không giới thiệu lại nhân vật, và kết bằng bánh răng vàng rơi vào túi Piko (mục trên), nối thẳng sang mở đầu tập 01.
+Bốn tập nguồn gốc không theo khung 6 nhịp ở dưới: mỗi tập là một câu chuyện nhỏ trọn vẹn, xem riêng vẫn hiểu, kết bằng một tín hiệu chỉ về hòn đảo. Nhịp cho trẻ em và luật đạo cụ vẫn áp dụng, và mục tiêu của nhân vật vẫn phải rõ trong phút đầu (một câu thoại hay một hình cho thấy nhân vật muốn gì). EP000E không giới thiệu lại nhân vật, và kết bằng bánh răng vàng rơi vào túi Piko (mục trên), nối thẳng sang mở đầu tập 01.
+
+**Tín hiệu nối bốn tập:** hòn đảo có Wonder Hub lóe xanh ngọc; mỗi lần đảo lóe, bảo bối nào đang được nói tới (đã có chủ hay chưa) cũng lóe xanh ngọc cùng nhịp. Post-credit của mỗi tập nguồn gốc cho thấy bảo bối của tập sau lóe cùng nhịp đảo.
+
+**Bốn biểu tượng của bốn bảo bối**, hình khối đơn giản: ngôi sao tám cánh kiểu hoa gió (Wonder Compass), bánh răng (Inventor Pack), chiếc kính cầm tay (Story Lens), chiếc túi nhỏ (Pocket of Wonders). Lần đầu xuất hiện trong sách bạc ở EP000C (biểu tượng của bảo bối đã có chủ thì sáng sẵn từ trong trang); EP000E dùng lại đúng bốn hình này. Cửa chính của Wonder Hub là một cánh cửa tròn lớn có bốn hốc mang bốn biểu tượng (Story Lens cho thấy ở EP000C); EP000E mở cửa bằng bốn bảo bối.
 
 ## Series
 
@@ -64,11 +68,11 @@ Nội dung hấp dẫn và nhịp nhanh quan trọng hơn con số. Tỉ lệ d�
 
 1. Khoảng **15–20 giây** lại có một gag hoặc một chuyển động lớn. Mỗi cảnh chỉ một mục tiêu.
 2. Tối đa **một bí ẩn** cùng lúc.
-3. Gag lặp theo **luật bộ ba** (lần 1 gài, lần 2 lặp, lần 3 lật ngược). Có một câu cả nhóm hô được để trẻ nhớ và hô theo.
-4. Mọi thứ dùng để giải quyết phải được **gài trước**.
+3. Gag lặp theo **luật bộ ba** (lần 1 gài, lần 2 lặp, lần 3 lật ngược). Lần 2 phải lặp đúng kiểu lần 1 (bị ngắt giữa câu thì lần 2 cũng bị ngắt giữa câu, không phải nói xong rồi mới bị). Có một câu cả nhóm hô được để trẻ nhớ và hô theo; câu hô luôn đứng ở cùng một chỗ trong chuỗi động tác (ví dụ trước khi nhìn kính), để lần lật ngược đọc ra được.
+4. Mọi thứ dùng để giải quyết phải được **gài trước**: thấy trên hình ở cảnh trước, kể cả vật nhỏ hay ánh sáng (EP000C: vệt nắng hình trăng, cuốn truyện bỏ quên trên bậu cửa phải có ở Cảnh 1), không chỉ ghi trong luật. Sự kiện mở truyện nên do hành động theo tính cách của nhân vật gây ra, không tự nhiên xảy ra.
 5. Lời giải là **một kế hoạch rõ** mà trẻ đoán theo được (đếm, làm theo bước), mỗi bảo bối góp phần theo đúng giới hạn của nó.
 6. **Bài học thể hiện bằng hành động**, chỉ nói thành lời một câu ngắn.
-7. Nguy hiểm thì kỳ ảo, có cứu giúp kịp thời, không làm trẻ sợ. Không có hành vi nguy hiểm ngoài đời mà trẻ dễ bắt chước (bỏ đồ vật nhỏ vào miệng, thò tay vào máy đang chạy…).
+7. Nguy hiểm thì kỳ ảo, có cứu giúp kịp thời, không làm trẻ sợ. Không có hành vi nguy hiểm ngoài đời mà trẻ dễ bắt chước (bỏ đồ vật nhỏ vào miệng, thò tay vào máy đang chạy, soi kính lúp hay ống nhòm về phía mặt trời…).
 
 **Luật đạo cụ:** nhìn là nhận ra, công dụng rõ, **có giới hạn** (quan trọng nhất), hiệu ứng dễ nhớ, sinh ra được nhiều tình huống. Đạo cụ không được giải quyết mọi việc ngay lập tức.
 
@@ -95,7 +99,7 @@ Mỗi bước xong thì chạy `/review` trước khi chốt (`.claude/skills/re
 |---|---|
 | Nhịp của khung tập | `# HOOK`, `# DISCOVERY`… Dòng `= …` ngay dưới là tóm tắt nhịp, không in ra PDF |
 | Tiêu đề cảnh | `EXT. THUNG LŨNG MÂY - NGÀY` (`EXT.` ngoài trời, `INT.` trong nhà) |
-| Hành động | Tả những gì nhìn thấy, nghe thấy, thì hiện tại. Không viết suy nghĩ. Gag tả cụ thể từng bước |
+| Hành động | Tả những gì nhìn thấy, nghe thấy, thì hiện tại. Không viết suy nghĩ: ý định phải thành động tác (EP000C: "như định đi tìm trong sách khác" đổi thành giơ tay định gọi sách rồi dừng). Gag tả cụ thể từng bước. Ràng buộc bố trí, an toàn của beat sheet (vị trí đồ vật, hướng nhìn, ai thấy gì) viết thẳng vào dòng hành động, không chỉ để trong ghi chú, vì previz làm theo dòng hành động (EP000C: ô cửa trăng bị tả "cao gần trần" dù beat sheet cấm). Một động tác của nhân vật nền chỉ mang một nghĩa cả tập, đúng Character Bible |
 | Tiếng động | Viết HOA trong hành động: `BOING!`, `SLURP!` |
 | Thoại | Tên nhân vật viết HOA một dòng, thoại ngay dưới. Chỉ dẫn diễn xuất trong ngoặc: `(thì thầm)` |
 | Nói ngoài khung / lời dẫn | `TAVI (O.S.)` / `NARRATOR (V.O.)` |
