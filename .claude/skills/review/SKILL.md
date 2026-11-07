@@ -12,10 +12,10 @@ Tám reviewer trong `.claude/agents/<tên>-reviewer.md`. Mỗi cổng gọi mộ
 |---|---|---|
 | Kịch bản | `EPxxx`, hoặc file `.md`, `.fountain` trong `03_CONTENT/Scripts/` | `story`, `character`, `audience`, `safety` |
 | Previz 2D | Thư mục cảnh trong `03_CONTENT/Previz_2D/` | `story`, `character`, `audience`, `pacing` |
-| Previz khối | Thư mục shot có `seedance/` | `story`, `audience`, `pacing`, `visual`, `character` |
+| Previz khối | Thư mục shot mà `build_shot.py` dựng bằng khối (`sceneNN_blocks.py`, `pipeline/blocks.py`), có hay chưa có `seedance/` | `story`, `audience`, `pacing`, `visual`, `character` |
 | Prompt | `<shot>/seedance/prompt.md` | `check_prompt.py`, rồi `pacing`, `character` |
 | Take | File video trong `<shot>/seedance/takes/` | `character`, `visual`, `animation`, `pacing`, `safety`; thêm `audio` nếu take có tiếng |
-| Shot dựng 3D | Thư mục shot không có `seedance/`, hoặc một video trong `renders/` của nó | `character`, `visual`, `animation`, `pacing`; thêm `audio` nếu có tiếng |
+| Shot dựng 3D | Thư mục shot dựng bằng model 3D (không phải khối previz), hoặc một video trong `renders/` của nó | `character`, `visual`, `animation`, `pacing`; thêm `audio` nếu có tiếng |
 
 Cả tập đã ghép chưa có quy trình review.
 
@@ -32,7 +32,7 @@ Cả tập đã ghép chưa có quy trình review.
    - **Prompt:** trích previz như trên, rồi chạy `python .claude/skills/review/check_prompt.py <thư mục shot> <thư mục shot>/renders/review/previz/review.json`. Previz dùng ở đây là bản đã tải lên Seedance: `renders/seedance_upload/video1_previz.mp4`, chưa có thì `_ref.mp4`.
    - **Take:** take vào `review/take`, previz đã tải lên Seedance vào `review/previz`.
    - **Shot dựng 3D:** video mới nhất trong `renders/` theo thứ tự `_final`, `_preview`, vào `review/shot`.
-3. **Gọi các reviewer của cổng trong cùng một lượt** để chạy song song. Prompt cho mỗi agent chỉ gồm:
+3. **Gọi các reviewer của cổng trong cùng một lượt** để chạy song song. Review nhiều cảnh một lúc: mỗi reviewer một agent cho mỗi cảnh, giao mọi đoạn của cảnh đó (để soát cả chỗ nối giữa các đoạn), không giao một agent cả tập (quá nhiều khung, đọc sót). Prompt cho mỗi agent chỉ gồm:
    - tên cổng;
    - đường dẫn file kịch bản, hoặc thư mục shot, video, các thư mục `renders/review/...` đã chuẩn bị;
    - kịch bản của tập nếu có (`.fountain` nếu đã có, không thì beat sheet), lấy theo thư mục `EPxxx_*` của cảnh, shot hoặc đường dẫn ghi trong docstring `build_shot.py`;
@@ -58,11 +58,11 @@ Cả tập đã ghép chưa có quy trình review.
 
 ## Sửa và review lại
 
-Phần lớn lỗi của các lượt sau sinh ra từ chính lần sửa trước. Sửa theo thứ tự:
+Phần lớn lỗi của các lượt sau sinh ra từ chính lần sửa trước. Các bước dưới đây áp cho mọi cổng; cổng kịch bản làm cụ thể theo skill `/revise-script` (`.claude/skills/revise-script/SKILL.md`: bảng lỗi, sửa beat sheet rồi Fountain, tự soát bằng bảng ngưỡng và bảng trạng thái, ghi danh sách lỗi của lượt). Sửa theo thứ tự:
 
 1. **Sửa hết Chặn và Nên sửa. Gợi ý chỉ áp cái người dùng chọn.** Mỗi Gợi ý thêm một chi tiết mới, tức là thêm một chỗ có thể vênh với luật. Áp cả loạt Gợi ý cùng lúc sửa lỗi Chặn thì lượt sau gần như chắc chắn có lỗi mới.
 2. **Lỗi đòi thêm hay đổi một luật** (cách bảo bối báo hiệu, luật nhân quả, một mục checklist): ghi luật vào file sở hữu trước, rồi soát toàn bộ kịch bản theo luật đó, không chỉ dòng bị nêu.
-3. **Tự soát trước khi chạy lại:** đi qua từng gạch Luật nhân quả và từng mục checklist của beat sheet, đối chiếu mọi dòng đã đổi; sửa beat sheet cùng lúc với kịch bản để hai file khớp nhau. Luật có nhiều mức hay nhiều trường hợp (bảo bối báo hiệu theo khoảng cách…): grep mọi dòng liên quan, lập bảng dòng → mức đúng → dòng đang viết gì, kiểm từng hàng. Sửa xong một dòng thì kiểm lại cả bảng, vì đổi một dòng có thể làm dòng khác lệch mức. Lần sửa dời chỗ đồ vật, nhân vật hay thêm một động tác (kể cả một cái gật đầu, một bước chân): lập bảng trạng thái theo thứ tự dòng cho mọi đồ vật bị đụng tới, và kiểm che, nấp, với tới theo kích thước thật của nhân vật (cách làm ở `03_CONTENT/README.md`, mục "Soát trước khi review kịch bản"). Ví dụ EP000B: sửa chỗ nấp và động tác kính ở lượt 1 sinh ra hai lỗi Chặn và ba lỗi Nên sửa mới ở lượt 2.
+3. **Tự soát trước khi chạy lại:** đi qua từng gạch Luật nhân quả và từng mục checklist của beat sheet, đối chiếu mọi dòng đã đổi; sửa beat sheet cùng lúc với kịch bản để hai file khớp nhau. Luật có nhiều mức hay nhiều trường hợp (bảo bối báo hiệu theo khoảng cách…): grep mọi dòng liên quan, lập bảng dòng → mức đúng → dòng đang viết gì, kiểm từng hàng. Sửa xong một dòng thì kiểm lại cả bảng, vì đổi một dòng có thể làm dòng khác lệch mức. Lần sửa dời chỗ đồ vật, nhân vật hay thêm một động tác (kể cả một cái gật đầu, một bước chân): lập bảng trạng thái theo thứ tự dòng cho mọi đồ vật bị đụng tới, và kiểm che, nấp, với tới theo kích thước thật của nhân vật (cách làm ở `03_CONTENT/README.md`, mục "Soát trước khi review kịch bản"). Ví dụ EP000B: sửa chỗ nấp và động tác kính ở lượt 1 sinh ra hai lỗi Chặn và ba lỗi Nên sửa mới ở lượt 2. Với previz: mỗi lỗi đã sửa phải được xem bằng ảnh tĩnh render đúng mốc của lỗi (trước, giữa, sau động tác), mở ra nhìn trên màn hình, không chỉ đo bằng số trong script; sửa máy hay dáng của một cú thì xem cả cú trước và cú sau. Ví dụ previz khối EP000A lượt 2: ngôi sao đá S4/S11 và mũi sao S23 Cảnh 4 được báo đã sửa theo số đo nhưng trên hình vẫn không đọc được; tay giữ bản đồ S10 Cảnh 5 hết với quá tầm nhưng thành đứng yên trong lúc bản đồ tự quay (lỗi Chặn mới).
 4. **Chạy lại khi nào:**
    - Lần sửa thêm hay đổi luật: chạy lại `/review` cả nhóm reviewer, gửi kèm danh sách lỗi Chặn, Nên sửa của lượt trước (bước 3 ở mục Chạy).
    - Lượt vừa rồi còn Chặn nhưng lần sửa chỉ đổi câu chữ theo luật đã có: chạy lượt xác nhận. Chỉ gọi các reviewer đã nêu lỗi được sửa (kể cả Gợi ý đã áp), giao danh sách lỗi cũ nguyên văn, các Gợi ý đã áp và số dòng đã đổi. Reviewer kiểm từng lỗi cũ, đọc các dòng đã đổi cùng vài dòng xung quanh, chỉ báo Chặn, Nên sửa mới.

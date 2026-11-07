@@ -1,14 +1,16 @@
 """Ghép nhiều ảnh thành một tấm làm ảnh tham chiếu Seedance, để mỗi tấm chỉ chiếm một suất @Image:
 - Ảnh xoay (turnaround) của một nhân vật: ảnh trước bên trái, ảnh sau bên phải, cùng chiều cao nhân vật, chân cùng một
   đường.
-- Tấm gộp nhiều món (đạo cụ, nhân vật nền…) để đoạn không quá 9 ảnh tham chiếu: thêm --hop, mỗi món co cho vừa một ô
+- Tấm gộp nhiều món (đạo cụ, nhân vật nền…) khi đoạn cần quá 30 ảnh tham chiếu (giới hạn của Seedance 2.5): thêm --hop, mỗi món co cho vừa một ô
   vuông (cạnh dài nhất bằng nhau) thay vì cùng chiều cao, nên vật dài, vật dẹt không bị phóng quá to.
+- Ảnh xếp hàng đúng cỡ (cast_lineup.png: bốn nhân vật chính cùng đường chân, cao đúng tỉ lệ Character Bible): thêm
+  --cao 1,0.85,0.7,0.8 (một số cho mỗi ảnh, theo thứ tự); mọi món một hàng, món cao nhất cao CAO_NV px.
 Nền xám trơn, không chữ. Nhiều món thì tự xếp nhiều hàng sao cho tỉ lệ rộng/cao của tấm gần 16:9 nhất trong giới hạn
 0.4–2.5 của API; cạnh dài quá 6000 px thì co lại. Quy tắc dùng: `04_PRODUCTION/SEEDANCE.md`, mục "Ảnh tham chiếu".
 
 Chạy (macOS; Windows thay đường dẫn Blender):
     /Applications/Blender.app/Contents/MacOS/Blender -b --python-exit-code 1 -P pipeline/turnaround.py -- \
-        <ảnh ra> <ảnh 1> <ảnh 2> [<ảnh 3> …] [--hop]
+        <ảnh ra> <ảnh 1> <ảnh 2> [<ảnh 3> …] [--hop | --cao h1,h2,…]
 Ảnh xoay: <ảnh 1> là ảnh trước, <ảnh 2> là ảnh sau. Tấm gộp: thứ tự ảnh là thứ tự trái sang phải, trên xuống dưới.
 
 Cách làm:
@@ -59,12 +61,12 @@ def khung_nv(px, nen):
     return hang[0], hang[-1] + 1, cot[0], cot[-1] + 1
 
 
-def chuan_bi(path, nen_chung, hop):
-    """Co giãn ảnh cho vật cao CAO_NV (hop: cạnh dài nhất CAO_NV), dời nền về nen_chung, trả về (ảnh, khung vật)."""
+def chuan_bi(path, nen_chung, hop, he_so=1.0):
+    """Co giãn ảnh cho vật cao CAO_NV × he_so (hop: cạnh dài nhất CAO_NV), dời nền về nen_chung, trả về (ảnh, khung vật)."""
     px = doc_anh(path)
     nen = mau_nen(px)
     tr, du, tra, ph = khung_nv(px, nen)
-    s = CAO_NV / (max(du - tr, ph - tra) if hop else du - tr)
+    s = CAO_NV * he_so / (max(du - tr, ph - tra) if hop else du - tr)
     H, W = px.shape[:2]
     px = doc_anh(path, max(1, round(W * s)), max(1, round(H * s)))
     px[..., :3] += nen_chung - nen
@@ -88,18 +90,30 @@ def main():
     args = sys.argv[sys.argv.index("--") + 1:]
     hop = "--hop" in args
     args = [a for a in args if a != "--hop"]
+    cao = None
+    if "--cao" in args:
+        i = args.index("--cao")
+        cao = [float(x) for x in args[i + 1].split(",")]
+        args = args[:i] + args[i + 2:]
     if len(args) < 3:
         sys.exit("Cần: <ảnh ra> <ảnh 1> <ảnh 2> [<ảnh 3> …] [--hop]")
     ra, nguon = args[0], args[1:]
 
     nen_chung = np.mean([mau_nen(doc_anh(p)) for p in nguon], axis=0)
-    manh = [chuan_bi(p, nen_chung, hop) for p in nguon]
+    if cao and len(cao) != len(nguon):
+        sys.exit("--cao cần đúng một số cho mỗi ảnh")
+    he_so = [h / max(cao) for h in cao] if cao else [1.0] * len(nguon)
+    manh = [chuan_bi(p, nen_chung, hop, k) for p, k in zip(nguon, he_so)]
 
     le_d = round(CAO_NV * LE_DOC)
     le_n = round(CAO_NV * LE_NGANG)
     rong = [k[3] - k[2] for _, k in manh]
     hang_cao = CAO_NV + 2 * le_d
-    hang, W, H = xep_hang(rong, le_n, hang_cao)
+    if cao:                                                              # xếp hàng đúng cỡ: luôn một hàng
+        hang = [list(range(len(manh)))]
+        W, H = sum(r + 2 * le_n for r in rong), hang_cao
+    else:
+        hang, W, H = xep_hang(rong, le_n, hang_cao)
     nen_anh = np.empty((H, W, 4), dtype=np.float32)
     nen_anh[..., :3] = nen_chung
     nen_anh[..., 3] = 1.0

@@ -1,6 +1,6 @@
 """
-Phế tích cổ ngoài trời của EP000A, dùng chung cho previz 2D Cảnh 2 và Cảnh 3 (canh02/build_shot.py, canh03/build_shot.py
-nạp file này từ thư mục tập). Nối tiếp bố cục cuối Cảnh 1 (canh01/build_shot.py): nền rêu Z = LOW_Z, đống lá X -7.3,
+Phế tích cổ ngoài trời của EP000A, dùng chung cho previz 2D Cảnh 2 và Cảnh 3 (scene02/build_shot.py, scene03/build_shot.py
+nạp file này từ thư mục tập). Nối tiếp bố cục cuối Cảnh 1 (scene01/build_shot.py): nền rêu Z = LOW_Z, đống lá X -7.3,
 phiến đá rêu -8.05, phiến đá có ánh vàng trên bậc đá chân tường -8.75, tường phế tích từ -9 sang trái (đầu tường ở -9 là
 mặt đứng Lumo áp tai, gõ). Tường kéo dài tới -16.6: mảng dây leo rủ che phù điêu đám mây ở RELIEF, cửa thấp ở DOOR_X
 (bên trái phù điêu, mở vào vòm đá), thảm rêu dày chân tường. Ký hiệu khắc chỉ là mây, sao hoa gió (rose), mặt la bàn;

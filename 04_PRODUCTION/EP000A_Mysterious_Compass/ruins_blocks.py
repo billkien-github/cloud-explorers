@@ -1,7 +1,7 @@
 """
 Bối cảnh khối dùng chung của tập 000A (previz khối, 04_PRODUCTION/SEEDANCE.md): mặt đất rừng mây, dốc lá khô, nền rêu,
 biển mây, đảo lơ lửng, thác, hàng cây, phế tích cổ (tường, đá đỉnh tường, cây mọc trên tường, bậc đá, phiến đá có ánh
-vàng, phiến đá rêu, đống lá), mặt trời, bầu trời; con bướm phát sáng. canh01_blocks.py và canh02_blocks.py dựng chung
+vàng, phiến đá rêu, đống lá), mặt trời, bầu trời; con bướm phát sáng. scene01_blocks.py và scene02_blocks.py dựng chung
 từ đây nên chỗ nối hai cảnh khớp nhau; phần chỉ có ở một cảnh (đường rừng, vách đá của Cảnh 1; tường kéo dài, mảng dây
 leo của Cảnh 2) nằm ở file của cảnh đó hoặc ở build_far_wall().
 Toạ độ (m): đất (mặt đường rừng) ở Z 0, máy quay phía -Y nhìn về +Y. Mép dốc lá khô -3.85, chân dốc nền rêu Z LOW_Z ở
@@ -26,6 +26,7 @@ STONE_TOP = Vector((-8.03, -0.1, LOW_Z + 0.22))
 GLOW_AT = Vector((-9.35, 0.55, LOW_Z + 0.2))
 STEP_TOP = LOW_Z + 0.16                                          # mặt bậc đá chân tường
 SLAB_SIZE = (0.42, 0.3, 0.06)                                    # phiến đá có ánh vàng, tâm (GLOW_AT.x, GLOW_AT.y, LOW_Z + 0.21)
+GLOW_SIZE = (0.36, 0.34, 0.02)    # ánh vàng "le lói": nằm gọn dưới phiến đá, chỉ ló viền 0.02 ở mép trước, mép sau (Bảng cỡ)
 WALL_END, WALL_Y, WALL_TOP = -9.0, (0.9, 1.3), LOW_Z + 1.42      # đầu tường, mặt trước và sau, đỉnh tường
 WALL_LEFT = -16.6
 RELIEF = Vector((-12.0, WALL_Y[0], -0.7))                        # tâm phù điêu đám mây sau mảng dây leo (mũi sao chỉ vào đây)
@@ -93,7 +94,7 @@ def build_ruins():
     rod("RuinTree_Root", (-10.1, 1.35, 0.1), (-9.4, 0.9, -0.8), 0.06, m.trunk, "SET")             # rễ phủ qua tường
     add_obj("Step", box_bm((1.1, 0.6, 0.16), (-9.2, 0.6, LOW_Z + 0.08)), m.step, "SET")
     slab = add_obj("Slab", box_bm(SLAB_SIZE, (GLOW_AT.x, GLOW_AT.y, LOW_Z + 0.21)), m.step, "SET")
-    glow = add_obj("GoldGlow", box_bm((0.6, 0.48, 0.02)), m.gold, "PROPS", loc=(GLOW_AT.x, GLOW_AT.y, LOW_Z + 0.165))   # dưới phiến đá
+    glow = add_obj("GoldGlow", box_bm(GLOW_SIZE), m.gold, "PROPS", loc=(GLOW_AT.x, GLOW_AT.y, LOW_Z + 0.165))   # dưới phiến đá
     add_obj("MossStone", sphere_bm(0.22, (-8.05, -0.1, LOW_Z), (1.0, 0.8, 1.0)), m.moss, "SET")
     pile = add_obj("LeafPile", sphere_bm(0.55, scale=(1.0, 0.8, 0.85)), m.litter, "SET", loc=PILE_AT)
 

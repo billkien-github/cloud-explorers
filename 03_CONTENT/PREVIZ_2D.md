@@ -9,14 +9,14 @@ Cả previz 2D lẫn previz khối đều có CC, và chuyển động phải k�
 Mỗi cảnh trong beat sheet có một previz 2D:
 
 ```
-03_CONTENT/Previz_2D/EP001_Great_Rain_Experiment/canh03/
+03_CONTENT/Previz_2D/EP001_Great_Rain_Experiment/scene03/
 ├── timing.py       Nguồn mốc thời gian của cảnh: cú máy, mốc hành động, CC
 ├── build_shot.py   Script dựng previz 2D, đọc timing.py (cùng tên với script của shot để chạy bằng run.ps1)
-├── canh03.blend    Do script tạo ra
-└── renders/        canh03_preview.mp4, canh03_preview_cc.mp4 + .srt (không lên git)
+├── scene03.blend    Do script tạo ra
+└── renders/        scene03_preview.mp4, scene03_preview_cc.mp4 + .srt (không lên git)
 ```
 
-Cảnh thử đặt ở `Previz_2D/TEST_<tên>/canhNN/`.
+Cảnh thử đặt ở `Previz_2D/TEST_<tên>/sceneNN/`.
 
 Code dùng chung giữa các cảnh của một tập (bối cảnh lặp lại qua nhiều cảnh) đặt ở thư mục tập, như `Previz_2D/EP000A_Mysterious_Compass/ruins.py`; `build_shot.py` của cảnh thêm thư mục cha vào `sys.path` để nạp. Tập khác cũng cần thì chuyển sang `pipeline/cutout.py`.
 
@@ -64,7 +64,7 @@ CC = [
 - **Bối cảnh:** mặt phẳng màu đơn giản cộng đạo cụ chính đúng chỗ. Không cần đẹp. Nhân vật phụ, đạo cụ theo hình khối, màu chính và cỡ trong ảnh của tập (bảng của tập trong `02_ASSET_LIBRARY/MODELING.md`).
 - **Key qua điểm cắt:** đổi chỗ hay tư thế tức thì thì đặt key giữ sớm hơn đúng một khung hình (`1 / FPS`); hai key cách nhau dưới một khung rơi vào cùng khung, key sau ghi đè key trước và nhân vật trượt dần qua nhiều cú. Nhân vật không có mặt trong cú thì đưa ra ngoài khung, nếu không sẽ lọt vào cú của người khác (Cảnh 2 tập 01 có sẵn `enter()`, `park()`). Mảnh nào bật tắt (`show`) thì đặt trạng thái ở giây 0 trước: trước key đầu tiên, Blender giữ đúng giá trị của key đó, nên mảnh có key ẩn đầu tiên ở giữa cảnh sẽ bị ẩn từ đầu. Góc quay đã quá 360° (sau cú lăn, xoay vòng) thì đưa về 0 ở điểm cắt (key giữ 356 rồi -4), nếu không Blender nội suy cho nhân vật quay vòng suốt quãng tới key sau. Key thưa (cách nhau trên 0.6 giây) làm mảnh trôi chậm suốt quãng giữa hai hành động: gọi `ease_gaps()` sau khi key xong để giữ tư thế tới sát key sau.
 - **Lún xuống, khuất sau vật:** phần người nằm dưới mặt đất (rơi vào đống lá, ngồi trong hố) che bằng một mảnh nền đặt trước nhân vật. Workbench vẽ viền tối quanh từng object, nên mảnh che là một mặt thêm vào mesh của nền ở độ sâu phía trước, không tách thành object riêng (Cảnh 1 tập 000A).
-- **Bộ nhân vật cutout** nằm ở `pipeline/cutout.py` (nội dung ở `pipeline/README.md`, cách dùng ở docstring): bốn nhân vật (Piko có túi đeo chéo; kính bảo hộ và Inventor Pack của Tavi là mảnh riêng để kính trượt lên xuống, hạ ba lô; Lumo có tuỳ chọn hai chân tách mảnh và áo choàng khớp ở cổ để bay trong gió), bộ mặt và biểu cảm dựng sẵn (lông mày bù góc cúi người, giữ nét tới sát lúc đổi), hàm keyframe và diễn, Wonder Compass cùng hàm diễn của nó, nhân vật nền và đạo cụ của EP000A, máy quay theo `SHOTS`, cài đặt render. `build_shot.py` của cảnh chỉ dựng bối cảnh, đạo cụ riêng và phần diễn. Cảnh cần biểu cảm khác bản chung thì ghi đè `FACES["tên"]` ngay sau `start()`. Mũi sao la bàn (`aim()`) ngắm mục tiêu theo vị trí thật của la bàn ở từng khung, nên key sau cùng, khi mọi chuyển động khác đã xong.
+- **Bộ nhân vật cutout** nằm ở `pipeline/cutout.py` (nội dung: `pipeline/README.md`; cách dùng ở docstring). `build_shot.py` của cảnh chỉ dựng bối cảnh, đạo cụ riêng và phần diễn. Cảnh cần biểu cảm khác bản chung thì ghi đè `FACES["tên"]` ngay sau `start()`. Mũi sao la bàn (`aim()`) ngắm mục tiêu theo vị trí thật của la bàn ở từng khung, nên key sau cùng, khi mọi chuyển động khác đã xong.
 - **Mảnh và lớp:** mảnh định co giãn, xoay thì dựng quanh gốc riêng (`loc=` của `part()`), nếu không scale kéo mảnh ra xa. `part()` dời mỗi hình trong mảnh về phía máy một chút, nên mảnh nhiều hình (bản đồ khắc) có thể vượt lên trước mảnh che đặt sát sau nó: đặt mảnh che ra trước cả chồng hình.
 - **Phát sáng:** Workbench vẽ viền tối quanh từng object, nên quầng sáng to hơn vật trông thành cái đĩa che mất vật. Vật phát sáng nhỏ (bướm) thì làm sáng bằng màu của chính nó; quầng chỉ bung to lúc cần đọc ra "sáng mạnh" (Cảnh 1 tập 000A).
 - **Khung hình:** chừa đáy khung (khoảng 15%) cho dải CC, đừng đặt chỗ chạm đất hay đạo cụ chính ở đó. Đạo cụ nhỏ hay nhân vật nhỏ mà một nhịp dựa vào (cái thìa, la bàn, chú chim cỡ nắm tay) thì cắt sang cú máy cận; ở cú toàn chúng không đọc được. Cú cận cần thấy quan hệ giữa các đạo cụ (la bàn chỉ vào túi chứ không vào thìa, la bàn chỉ về vòm kính) hay một thao tác nhỏ (dời cái móc) có thể dựng riêng, phóng to, ở một góc xa của scene (Cảnh 1 tập 01 dựng ở X = 20 và X = 30, Cảnh 2 ở X = 40 tới 70). Cú cận la bàn có hậu cảnh: dựng một Lumo thứ hai phóng to (gốc gắn vào một node scale khoảng 2.4), la bàn to gấp đôi tỉ lệ (coi như chìa về phía máy), hậu cảnh vẽ thu gọn khoảng cách (Cảnh 2, 3 tập 000A). Vật ở chân trời (trời, biển mây, hòn đảo) làm con một node đi theo máy, key theo từng cú; khi máy lia thì node và máy nội suy LINEAR cùng nhau, nếu không vật trôi (Cảnh 5 tập 000A).

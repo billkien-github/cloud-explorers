@@ -2,7 +2,7 @@
 
 Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng khối, chuyển động, cú máy, nhịp thời gian, tất cả dựng bằng `build_shot.py`. Seedance lo phần **hình**: lấy video previz làm khung (video-to-video), cùng ảnh nhân vật, bối cảnh và prompt viết theo từng giây, rồi vẽ lại thành clip hoàn chỉnh. Camera và timing chốt trong Blender trước khi tốn credit.
 
-Đây là quy trình **đề xuất**, đang thử, chưa có take nào dùng được.
+Quy trình đang dùng cho bản nháp: Cảnh 1 tập 000A dựng tạm bằng bản nháp 480p.
 
 ## Seedance ở đâu, giới hạn gì (tra tài liệu chính thức của BytePlus ModelArk ngày 06/11/2026)
 
@@ -27,7 +27,7 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 
 | # | Bước | Ra cái gì |
 |---|---|---|
-| 1 | Chia cảnh (previz 2D đã chốt, `03_CONTENT/PREVIZ_2D.md`) thành các đoạn theo mục "Chia cảnh thành đoạn": chạy `pipeline/chia_doan.py`, chọn cách nối theo nhịp truyện. Mỗi đoạn: ai, ở đâu, làm gì, mấy giây, cú máy; liệt kê các thứ cần ảnh tham chiếu | Mô tả ngắn ở docstring `build_shot.py` |
+| 1 | Chia cảnh (previz 2D đã chốt, `03_CONTENT/PREVIZ_2D.md`) thành các đoạn theo mục "Chia cảnh thành đoạn": chạy `pipeline/split_segments.py`, chọn cách nối theo nhịp truyện. Mỗi đoạn: ai, ở đâu, làm gì, mấy giây, cú máy; liệt kê các thứ cần ảnh tham chiếu | Mô tả ngắn ở docstring `build_shot.py` |
 | 2 | Dựng previz bằng `build_shot.py` (xem "Previz") | `sh010.blend`, `backups/` |
 | 3 | Duyệt previz: `run.ps1 stills`, `run.ps1 preview`, in CC bằng `pipeline/cc.py` (`03_CONTENT/PREVIZ_2D.md`, mục CC), rồi `/review <thư mục shot>` (hình có kể đúng kịch bản, nhịp, bố cục). **Chốt timing**: từ đây prompt bám theo từng con số | Bản previz đã chốt |
 | 4 | Render video tham chiếu: `run.ps1 ref` (1920x1080, 24 fps, MP4 không tiếng để dài đúng `SECONDS`, ít sample cho nhanh, không in CC) | `renders/sh010_ref.mp4` |
@@ -35,7 +35,7 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 | 6 | Soạn prompt theo giây (xem "Prompt theo giây"), kèm bảng số tham chiếu → file tải lên → nguồn. Trước khi sinh: `python pipeline/seedance_gen.py <thư mục shot> --dry-run` (model, giới hạn, chi phí ước tính) và `/review <thư mục shot>/seedance/prompt.md` | `seedance/prompt.md` |
 | 7 | Sinh bản nháp qua API: `python pipeline/seedance_gen.py <thư mục shot>` (mục "Sinh qua API"): Seedance 2.5, draft 480p, 16:9, `duration` bằng `SECONDS` của `build_shot.py`, watermark tắt; tải take về và ghi chi phí | `seedance/takes/sh010_take01.mp4`, một dòng trong `04_PRODUCTION/seedance_log.csv` |
 | 8 | Soát take theo bảng "Soát take": `/review <thư mục shot>/seedance/takes/<take>.mp4`. Lỗi do prompt thì sửa prompt; lỗi do previz thì sửa `build_shot.py`, render lại, sửa mốc trong prompt, sinh bản nháp mới | Bản nháp được chọn |
-| 9 | Dựng cảnh: ghi take được chọn của từng đoạn vào danh sách dựng `<tập>/canhNN_edit.py`, nối bằng `pipeline/edit.py` (cắt theo `SEGMENT`, CC theo `TIMING`) | `<tập>/renders/canhNN_edit_cc.mp4` + `.srt` |
+| 9 | Dựng cảnh: ghi take được chọn của từng đoạn vào danh sách dựng `<tập>/sceneNN_edit.py`, nối bằng `pipeline/edit.py` (cắt theo `SEGMENT`, CC theo `TIMING`) | `<tập>/renders/sceneNN_edit_cc.mp4` + `.srt` |
 | 10 | Hậu kỳ ở `05_POST_PRODUCTION/`: lồng tiếng, nhạc; tiếng động lấy từ take, thiếu hay lệch mốc thì bù | |
 
 Thư mục shot thêm `seedance/`:
@@ -54,16 +54,17 @@ sh010/
 
 Mỗi lần gọi API sinh một **đoạn**: nhiều cú máy liền nhau của một cảnh, như bài mẫu của Higgsfield (trong một lần sinh, nhân vật giữ đồng nhất qua các cú cắt). Chỗ nối hai đoạn là chỗ dễ lộ nhất, vì hai lần sinh khác nhau đôi chút về ánh sáng, màu, chi tiết nhân vật. Chia theo thứ tự:
 
-1. **Chỉ nối ở điểm cắt máy** giữa hai cú liền nhau trong `SHOTS` của `timing.py`: người xem đã chờ một cú cắt ở đó nên khác biệt nhỏ không lộ. Không bao giờ nối giữa một cú (giữa một chuyển động máy, một hành động liền). Cú nào một mình dài quá giới hạn thì thêm điểm cắt máy trong previz 2D (sửa `timing.py`, review lại), hay dùng 2.5 cho cảnh (đắt hơn, hỏi người dùng).
+1. **Chỉ nối ở điểm cắt máy** giữa hai cú liền nhau trong `SHOTS` của `timing.py`: người xem đã chờ một cú cắt ở đó nên khác biệt nhỏ không lộ. Không bao giờ nối giữa một cú (giữa một chuyển động máy, một hành động liền). Cú nào một mình dài quá giới hạn thì thêm điểm cắt máy trong previz 2D (sửa `timing.py`, review lại).
 2. **Độ dài tối đa 30 giây một đoạn (Seedance 2.5), tính cả đuôi.** **Đuôi** ít nhất 0.5 giây: cú máy cuối giữ thêm sau `SEGMENT`, lúc dựng `pipeline/edit.py` cắt bỏ, để chỗ nối không rơi vào mấy khung cuối của take (hay chững, trôi). `SECONDS` = `SEGMENT` + đuôi, làm tròn lên số nguyên, ít nhất 4.
-3. **Ít đoạn nhất** (mỗi chỗ nối là một rủi ro, mỗi đoạn tốn thêm đuôi), không có đoạn vụn, các đoạn đều nhau. `python pipeline/chia_doan.py <timing.py>` tính mọi cách thoả luật 1–3, in vài cách tốt nhất với `OFFSET`, `SEGMENT`, `SECONDS` của từng đoạn và hai cú máy hai bên mỗi chỗ nối.
+3. **Ít đoạn nhất** (mỗi chỗ nối là một rủi ro, mỗi đoạn tốn thêm đuôi), không có đoạn vụn, các đoạn đều nhau. `python pipeline/split_segments.py <timing.py>` tính mọi cách thoả luật 1–3, in vài cách tốt nhất với `OFFSET`, `SEGMENT`, `SECONDS` của từng đoạn và hai cú máy hai bên mỗi chỗ nối.
 4. **Chọn theo nhịp truyện** trong các cách script đưa ra, không lấy máy móc cách đầu: chỗ nối nên rơi vào chỗ chuyển ý, đổi địa điểm, đổi nhóm nhân vật, đổi cỡ cảnh mạnh (toàn sang cận), hoặc sau khi một câu thoại, một khoảnh khắc đã khép lại. Tránh nối giữa một cặp hành động – phản ứng (vấp và được kéo lại, hỏi và đáp, rút la bàn và kim quay), và giữa hai cú cùng góc máy, cùng cỡ cảnh (cắt nhảy, lệch lộ nhất). Ví dụ Cảnh 1 tập 01, giới hạn 30 giây: script xếp nối ở 26.4 s (đều hơn) trước 28.8 s, nhưng 28.8 s (hết cận la bàn, trước "Có gì lạ kìa!") mới là chỗ chuyển ý.
 5. **Giữ liền giữa các đoạn của một cảnh:**
    - Cùng model, cùng độ phân giải (hiện mọi đoạn đều là bản nháp 2.5, 480p).
    - Cùng ảnh tham chiếu cho cùng một thứ; khối STYLE, CHARACTERS và câu tả địa điểm, giờ, ánh sáng chép nguyên giữa các prompt, chỉ bớt nhân vật không có mặt. Mọi vật lên hình ở cả hai đoạn (bụi cây, tảng đá, đạo cụ) phải được tả bằng cùng câu ở cả hai prompt: đoạn sau bỏ câu tả thì Seedance vẽ một vật khác (bụi gai có quả ké tròn ở `sh010` thành bụi gai sẫm gai nhọn ở `sh020`, Cảnh 1 tập 000A).
    - Khối TIMELINE đầu của đoạn sau mở bằng đúng trạng thái `END` của đoạn trước: ai ở đâu, cầm gì, biểu cảm, đồ vật đã đổi (Piko đã ướt sau cú húp, cái thìa đã cong). Mốc trong prompt tính lại từ 0 của đoạn (mốc trong cảnh trừ `OFFSET`).
    - Tiếng động của mỗi take dừng ở chỗ nối; tiếng nền của cả cảnh (gió, côn trùng) trải liền ở hậu kỳ.
-6. **Soát chỗ nối:** đủ take các đoạn thì dựng cả cảnh bằng `pipeline/edit.py`, xem từng chỗ nối (ánh sáng, màu, chi tiết nhân vật, vị trí, hướng nhìn); lệch thì sửa prompt đoạn lệch rồi sinh lại đoạn đó.
+6. **Sửa `timing.py` của cảnh đã chia đoạn** (sửa previz khối theo review, kéo dài một cú): chạy `python pipeline/split_segments.py <timing.py> --check <thư mục tập>` và sửa `OFFSET`, `SEGMENT`, `SECONDS` theo kết quả, vì chỉ dời mốc vài phần mười giây cũng có thể đổi số đoạn ít nhất hay đẩy một đoạn qua 30 giây (Cảnh 5 tập 000A dài thêm 0.8 giây thì từ 2 đoạn thành ít nhất 3). Cùng lần đó: dựng và render lại previz 2D của cảnh (`03_CONTENT/PREVIZ_2D.md`) rồi xem lại hình ở các mốc đã dời; tổng thời lượng cảnh đổi thì sửa mốc phút trong beat sheet, tiêu đề cảnh trong `.fountain` và mục Trạng thái của `README.md`. Đoạn `--check` báo sát trần thì biết trước là kéo dài cú nào trong đó cũng phải chia lại.
+7. **Soát chỗ nối:** đủ take các đoạn thì dựng cả cảnh bằng `pipeline/edit.py`, xem từng chỗ nối (ánh sáng, màu, chi tiết nhân vật, vị trí, hướng nhìn); lệch thì sửa prompt đoạn lệch rồi sinh lại đoạn đó.
 
 ## Sinh qua API
 
@@ -78,7 +79,7 @@ python pipeline/seedance_gen.py <thư mục shot> --resume    # chờ tiếp tas
 Tuỳ chọn khác (`--no-audio`, `--duration`, `--wait`) ở docstring của script.
 
 - **Chỉ sinh bản nháp Seedance 2.5** (quyết định của người dùng, 07/11/2026): `draft: true` của API, chỉ ra 480p, tính tiền như video 480p thường (ví dụ đoạn 23 giây khoảng $2.83); đoạn dài tối đa 30 giây. Sửa prompt, previz rồi sinh bản nháp mới tới khi người dùng chốt; dùng bản nháp 480p để dựng trước. **Bản final đang bị chặn**, `seedance_gen.py` không còn đường sinh final (lấy lại từ git khi người dùng mở): API cho sinh bản final 1080p từ ID task của bản nháp trong 14 ngày, dùng lại prompt, tham chiếu, seed, tiếng, tỉ lệ, độ dài, tính tiền riêng theo 1080p kèm giây video tham chiếu (đoạn 23 giây khoảng $15.65; tra ngày 07/11/2026). Không còn sinh bằng dòng 2.0.
-- **So model trên một đoạn** (`sh010` Cảnh 1 tập 000A, 07/11/2026, cùng prompt, cùng previz): ba bậc 2.0 chép chiều và bố cục của ảnh tham chiếu (bản đồ cầm ngược thành xuôi, cú toàn chép bố cục ảnh bối cảnh); 2.5 bám previz ở hai chỗ đó nhưng khung chặt hơn previz ở cú trung và cú cận. Hình của cả bốn bậc đều đạt; bậc 2.0 đầy đủ giữ cỡ cảnh sát previz nhất. Thời gian sinh 14 giây: 3.5 phút (mini) tới 10 phút (2.0).
+- **So model** (`sh010` Cảnh 1 tập 000A, 07/11/2026, cùng prompt, cùng previz): dòng 2.0 chép chiều và bố cục của ảnh tham chiếu; 2.5 bám previz hơn nhưng hay kéo chặt cú trung và cú cận, nên dự án dùng 2.5.
 - **Chạy từ Claude:** chạy `--dry-run` trước và sửa hết lỗi, rồi chạy thật ở chế độ nền (một lần sinh lâu hơn giới hạn 2 phút của một lệnh). Mỗi lần chạy thật là một lần trả tiền.
 - **Biến môi trường**, người dùng tự đặt (`~/.zshrc` trên macOS, `setx` trên Windows), không ghi vào repo hay vào chat:
   - `ARK_API_KEY`: API key của ModelArk.
@@ -93,31 +94,40 @@ Tuỳ chọn khác (`--no-audio`, `--duration`, `--wait`) ở docstring của sc
 - **Chuyển động đọc được ở cỡ cảnh của shot:** đủ biên độ, có giữ tư thế. Seedance bám chuyển động của previz ("video wins"), nên một động tác previz làm quá nhỏ (tay rụt vài độ) thì take coi như không có.
 - **Cú va chạm hài** (cắm mặt vào bụi, đâm vào vật, ngã) dựng đủ ba nhịp: lấy đà (ưỡn người, hếch cằm), quán tính (sải bước, người còn trôi tới sau lúc chạm, nén lại rồi nảy), và chỗ chạm đủ sâu (đầu lút hẳn vào lá, giữ nguyên ở cú sau). Ngả cứng cả người quanh bàn chân, mặt chỉ chạm mép vật thì take ra gượng, như đang tựa (take thử `sh010` Cảnh 1 tập 000A).
 - **Vật lấy ra từ túi, hộp:** cho vật (đang gấp nhỏ) ló ra ở mép miệng túi rồi kéo lên, túi giữ nguyên chỗ và hình; cho vật phóng từ scale 0 ngay trong khối túi thì Seedance biến chính cái túi thành vật đó (túi da tan thành bản đồ, bản nháp `sh020` Cảnh 1 tập 000A).
-- **Tay cầm vật phải đi theo vật:** vật xoay, lật, đổi chỗ trong tay thì khối bàn tay làm con của vật hay key cùng nhịp; chỉ xoay vật còn tay đứng yên thì take cho tay buông, vật lơ lửng (xoay bản đồ, bản nháp `sh010`).
-- **Tay với tới đúng chỗ chạm:** khối tay dài cố định, nên chỗ bàn tay chạm (mép phiến đá đang nhấc, vật trong hốc, mặt tường lúc gõ) phải cách vai đúng một chiều dài tay ở mọi key: đổi độ chồm, chỗ đứng theo vật (chồm thấp khi mép còn thấp, ngả lên theo mép đang nhấc), tính chỗ chạm và hướng tay từ toạ độ thật trong script (vị trí vai, `matrix_world` sau khi key tư thế), cả chỗ tai áp tường, không ước bằng mắt. Tay chĩa vào điểm gần hơn chiều dài tay thì xuyên qua vật, xa hơn thì với hụt (Cảnh 2 tập 000A).
+- **Tay cầm vật phải đi theo vật:** vật xoay, lật, đổi chỗ trong tay thì khối bàn tay làm con của vật hay key cùng nhịp; chỉ xoay vật còn tay đứng yên thì take cho tay buông, vật lơ lửng (xoay bản đồ, bản nháp `sh010`). Vật xoay quá khoảng 45° (bản đồ xoay nửa vòng, cả vòng) thì tay không quay trọn theo vật, vì bàn tay sẽ ra mép xa, quá tầm với: xoay từng nấc ≤ 90° giữa hai bàn tay, giữa các nấc tay nhích về chỗ cũ như đổi tay cầm, và mỗi key vẫn theo luật "Tay với tới đúng chỗ chạm" (Cảnh 5 tập 000A, S10: bàn tay quay theo bản đồ ra cách vai 0.47 m).
+- **Tay với tới đúng chỗ chạm:** khối tay dài cố định, nên chỗ bàn tay chạm (mép phiến đá đang nhấc, vật trong hốc, mặt tường lúc gõ) phải cách vai đúng một chiều dài tay ở mọi key: đổi độ chồm, chỗ đứng theo vật (chồm thấp khi mép còn thấp, ngả lên theo mép đang nhấc), tính chỗ chạm và hướng tay từ toạ độ thật trong script (vị trí vai, `matrix_world` sau khi key tư thế), cả chỗ tai áp tường, không ước bằng mắt. Tay chĩa vào điểm gần hơn chiều dài tay thì xuyên qua vật, xa hơn thì với hụt (Cảnh 2 tập 000A). Đo đúng điểm: khối tay Lumo 0.29 m gồm cả bàn tay (cổ tay ở 0.22 m), nên chỗ chạm bằng đầu tay (gõ, đẩy, ấn) cách vai 0.29 m, còn chỗ nắm (vành la bàn, cạnh bản đồ) là tâm bàn tay, cách vai khoảng 0.25 m. Khối bàn tay dựng rời (con của vật cầm) thì kiểm tâm của nó ≤ 0.25 m, không so với 0.29 (Cảnh 5 tập 000A, S10: tâm bàn tay 0.285 m vẫn qua phép kiểm 0.29 nhưng tay đã duỗi quá khoảng 3 cm).
 - **Phản ứng nhỏ ở cú toàn bị bỏ:** nhổm lên 6 cm trong đống lá không thành hình; phản ứng ở cú toàn cần biên độ cỡ một phần tư chiều cao nhân vật.
 - **Máy di chuyển đều** (hạ máy, lia) thì key máy nội suy LINEAR trong previz; để ease thì Seedance dồn chuyển động vào giữa thành một cú vụt (cú hạ máy mở đầu Cảnh 1 tập 000A).
-- **Cú trung có toàn thân:** dựng previz rộng hơn ý muốn một chút (ống kính ngắn hơn, chừa khoảng trống dưới chân), vì dòng Seedance 2.0 hay cắt cú trung chặt lại tới ngang hông.
+- **Cú trung có toàn thân:** dựng previz rộng hơn ý muốn một chút (ống kính ngắn hơn, chừa khoảng trống dưới chân), vì Seedance hay cắt cú trung chặt lại tới ngang hông.
 - **Nhân vật dạng khối đúng chiều cao và tỉ lệ trong `01_BRAND/Character_Bible/README.md`.** Khối sai tỉ lệ thì Seedance kéo nhân vật theo.
 - **Màu khối** để Seedance biết ai là ai, quay hướng nào (bảng màu ghi vào prompt):
   - Một nhân vật: đỏ = mặt trước, đen = lưng, xanh lá = hai bên và đỉnh.
   - Từ hai nhân vật: mỗi nhân vật một màu cố định (Lumo cam, Tavi xanh lá, Nori tím nhạt, Piko xanh ngọc), mặt trước đầu có ô trắng báo hướng nhìn. Bối cảnh, đạo cụ để xám để không lẫn màu nhân vật.
 - **Khối 4 nhân vật**, máy quay, tự kiểm khung và cài đặt render ở `pipeline/blocks.py`.
-- **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/canhNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Bối cảnh dùng chung nhiều cảnh của tập (cảnh sau nối ngay cuối cảnh trước) dựng một lần trong module cấp tập, ví dụ `EP000A_Mysterious_Compass/ruins_blocks.py`, để vị trí khớp ở chỗ nối. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. Điểm nối và độ dài theo mục "Chia cảnh thành đoạn": `SEGMENT` ghi độ dài đoạn trong cảnh, `SECONDS` = `SEGMENT` + đuôi làm tròn lên: máy quay chỉ dựng các cú trong `SEGMENT`, phần dư giữ cú máy cuối (máy đang di chuyển đều thì đi tiếp cùng tốc độ qua đuôi, không dừng ở `SEGMENT`), lúc dựng `pipeline/edit.py` cắt bỏ; `check_prompt.py` đọc cả hai. Key diễn "tới hết" trong `build()` tính theo hết cảnh, không theo hết video của đoạn: với đoạn giữa, key đặt ở hết video kéo diễn cuối cảnh lên sớm (chú chim bay đi từ S10 ở `sh090` Cảnh 4 tập 000A).
-- **Vật hiện ra, biến mất** bằng key scale 0 và 1 cách nhau ít nhất một khung; hai key gần hơn một khung rơi vào cùng khung và vật lộ dần từ key trước đó. Vật chỉ được lên hình từ một mốc (ánh sáng lộ ra, nhân vật nền chỉ có ở vài cú) thì ẩn bằng scale 0 ngoài khoảng đó, đừng chỉ đặt ngoài khung: vật phát sáng hay nhân vật nhỏ lộ một đốm ở mép khung là Seedance vẽ thành thật (Cảnh 1 tập 000A, phế tích cuối cảnh). Bối cảnh dựng riêng ở xa cho một cú (hộp đen của khung đen, góc cận dựng riêng) cũng ẩn ngoài cú đó: hộp đen lộ thành ô vuông đen ở chân trời (Cảnh 5 tập 000A).
-- **Vật phát sáng giữ màu:** với view Standard, cường độ phát sáng cao làm khối cháy thành trắng (ánh xanh ngọc thành đĩa, quả cầu trắng). Giữ cường độ vừa phải (khoảng 1–3 tuỳ màu, xem trên ảnh render), cần nổi hơn thì làm khối to hơn chứ không sáng hơn (Cảnh 4–6 tập 000A).
+- **Một cảnh dài chia nhiều đoạn:** bối cảnh và diễn của cả cảnh viết một lần trong `<tập>/sceneNN_blocks.py` (hàm `build(timing, offset, seconds, out_blend)`); mỗi đoạn là một thư mục shot, `build_shot.py` chỉ khai `TIMING`, `OFFSET`, `FPS, SECONDS` rồi gọi `build`. Bối cảnh dùng chung nhiều cảnh của tập (cảnh sau nối ngay cuối cảnh trước) dựng một lần trong module cấp tập, ví dụ `EP000A_Mysterious_Compass/ruins_blocks.py`, để vị trí khớp ở chỗ nối. Danh sách cú máy của đoạn lấy từ `SHOTS` của `timing.py`. CC in bằng `pipeline/cc.py` với giây bắt đầu của đoạn. Điểm nối và độ dài theo mục "Chia cảnh thành đoạn": `SEGMENT` ghi độ dài đoạn trong cảnh, `SECONDS` = `SEGMENT` + đuôi làm tròn lên: máy quay chỉ dựng các cú trong `SEGMENT`, phần dư giữ cú máy cuối (máy đang di chuyển đều thì đi tiếp cùng tốc độ qua đuôi, không dừng ở `SEGMENT`), lúc dựng `pipeline/edit.py` cắt bỏ; `check_prompt.py` đọc cả hai. Key diễn "tới hết" trong `build()` tính theo hết cảnh, không theo hết video của đoạn: với đoạn giữa, key đặt ở hết video kéo diễn cuối cảnh lên sớm (chú chim bay đi từ S10 ở `sh090` Cảnh 4 tập 000A).
+- **Vật hiện ra, biến mất** bằng key scale 0 và 1 cách nhau ít nhất một khung; hai key gần hơn một khung rơi vào cùng khung và vật lộ dần từ key trước đó. Vật chỉ được lên hình từ một mốc (ánh sáng lộ ra, nhân vật nền chỉ có ở vài cú) thì ẩn bằng scale 0 ngoài khoảng đó, ở mọi cú trước mốc của cả tập (cảnh sau gọi lại hàm bối cảnh chung thì tự ẩn lại những thứ cảnh trước đã tắt, lấy đi), đừng chỉ đặt ngoài khung: vật phát sáng hay nhân vật nhỏ lộ một đốm ở mép khung là Seedance vẽ thành thật (Cảnh 1 tập 000A, phế tích cuối cảnh). Bối cảnh dựng riêng ở xa cho một cú (hộp đen của khung đen, góc cận dựng riêng) cũng ẩn ngoài cú đó: hộp đen lộ thành ô vuông đen ở chân trời (Cảnh 5 tập 000A). Thứ kịch bản cho "lộ ra" (lối đi sau bụi, khe sáng sau cánh cửa, phù điêu sau dây leo, bản đồ dưới phiến đá) phải bị che kín từ mọi máy của các cú trước mốc: khe hở vài mm giữa hai cánh trước một khối phát sáng, đỉnh vật nhô quá mặt nắp, dây leo ngắn hơn hốc đều thành lộ sớm. Soát bằng ảnh tĩnh mọi cú trước mốc (lượt review đầu Cảnh 2–5 tập 000A: ánh vàng dưới phiến đá sáng lại sau khi la bàn đã lấy đi, khe cửa khắc mây, lối nhỏ thấy từ cú toàn đầu, đảo khắc lòi qua phiến đá, phù điêu ló dưới dây leo).
+- **Vật phát sáng giữ màu:** với view Standard, cường độ phát sáng cao làm khối cháy thành trắng (ánh xanh ngọc thành đĩa, quả cầu trắng). Giữ cường độ vừa phải (khoảng 1–3 tuỳ màu, xem trên ảnh render), cần nổi hơn thì làm khối to hơn chứ không sáng hơn (Cảnh 4–6 tập 000A). Lóe tín hiệu nối bốn tập (bảo bối lóe cùng nhịp hòn đảo) dùng màu xanh ngọc của luật trong `03_CONTENT/README.md`, không dùng màu phát sáng thường của bảo bối (la bàn lóe vàng, Cảnh 5 tập 000A).
 - **Mặt trước khối tròn không có chấm tròn sẫm** (ô cửa trên mái vòm, lỗ trên quả cầu): trước nền sáng, chấm đó đọc thành con mắt và Seedance có thể vẽ thành mặt.
 - **Dựng lại từ previz 2D:** previz 2D vẽ theo mặt cắt, xếp vật thành lớp; dựng 3D thì đặt lại theo không gian thật, đừng đùn nguyên mặt cắt (mặt lưới dâng lên chân lối nhỏ thành một bức tường lưới chắn giữa khung, Cảnh 4 tập 000A). Cú ngang và cú nhìn từ trên cùng một nhóm đạo cụ: chọn chỗ đặt sao cho trái–phải của mọi vật và hướng chỉ cuối khớp ở cả hai cú. Máy đẩy của 2D (ortho) thành dolly có phối cảnh, vật ở chân trời không to lên theo: tính cỡ vật xa theo khung cuối (post-credit tập 000A).
 - **Nhân vật nhìn vật ở chân trời trong cùng khung:** máy nhìn theo hướng vật thì chỉ thấy lưng; dáng nghiêng của 2D không dựng lại được. Đặt nhân vật sát một mép khung, vật ở mép kia, ống kính 24–26 mm, xoay người chéo 10–15° về phía máy, chỉ quay đầu về vật (thấy nhân vật khoảng 45–55° tính từ sau lưng); ghi góc đó trong prompt (Cảnh 5 tập 000A, S6, S8, S16).
 - **Nhân vật lao ra khỏi khung:** cho chạy ngang theo bên phải hay trái của máy, không chạy về hậu cảnh (chạy xa máy thì hết cú vẫn còn trong khung); kiểm lúc ra, vào khung bằng `world_to_camera_view`.
-- **Vật vạch ra trước lối đi** (bụi cây, rèm dây leo): nửa ngả về phía máy chắn mọi máy đặt phía trước lối sau đó; cú trên lối dựng máy đi theo sau nhân vật trên chính lối (Cảnh 4 tập 000A, S16).
+- **Vật vạch ra trước lối đi** (bụi cây, rèm dây leo): nửa ngả về phía máy chắn mọi máy đặt phía trước lối sau đó; cú trên lối dựng máy đi theo sau nhân vật trên chính lối (Cảnh 4 tập 000A, S16). Vạch thì hai nửa ngả sang trái, phải trên màn hình (vuông góc trục nhìn); ngả theo trục sâu thì hai nửa chồng lên nhau, nhìn từ máy không thấy gì lộ ra (Cảnh 4 tập 000A, S12).
+- **Hai cú liền nhau khác hẳn góc hoặc cỡ cảnh**, kể cả trong một đoạn (đổi hướng máy từ khoảng 30°, hoặc toàn sang cận): gần cùng góc, cùng cỡ thì thành cắt nhảy, và Seedance dễ bỏ luôn điểm cắt. Dấu hiệu: `review.json` không bắt được điểm cắt có trong `SHOTS`. Bối cảnh cùng một tông nhạt (vòm đá, Cảnh 3 S8→S9 tập 000A) thì máy dò có thể sót cả cú cắt khác hẳn góc; khi đó mở khung hai bên điểm cắt để chốt bằng mắt. Sửa máy một cú thì soát cả cú trước và cú sau nó (Cảnh 3 S3→S4, Cảnh 5 S16→S17 tập 000A; Cảnh 4 S24→S25 do chính lần sửa máy S24 gây ra).
+- **Chuyển động nhanh bị đọc thành điểm cắt:** cú quay người khoảng 0.2 giây, cú lùi máy hay đổi ống kính gấp đôi trong dưới 0.5 giây thì `review.json` bắt thành điểm cắt, và take dễ thành cú cắt thật. Quay người từ khoảng 0.6 giây, lùi máy hay đổi ống từ khoảng 1 giây (Cảnh 2 S7, Cảnh 4 S21, Cảnh 5 S9 tập 000A).
+- **Ngồi xổm bằng khối:** khối chân thẳng không gập được, ngả cả người quanh bàn chân thì đọc thành sắp cắm đầu. Chĩa khối chân ra trước khoảng 55–65° (dạng sang hai bên nếu phía trước có vật), hạ gốc cho bàn chân chạm đất, độ ngả thân chọn theo tầm với tới chỗ bàn tay chạm (Cảnh 2 tập 000A, S1).
+- **Nhân vật chọn một lối giữa hai lối** (lối mòn thay vì dốc lá): máy nhìn dọc lối được chọn, lối chạy từ chân nhân vật vào sâu trong khung, lối bị bỏ ở một mép khung; máy đặt ngang dốc để thấy dốc đổ chéo, nhìn thẳng từ chân dốc thì dốc thành một gò nhô lên (Cảnh 5 tập 000A, S12, S17).
 - **Đầu khối cúi tối đa khoảng 25°:** khớp cổ ở đáy khối đầu, cúi sâu hơn trông như cả người chúi tới; vật ở thấp thì cúi thêm bằng thân.
 - **Vật cầm tay:** khối tay bọc lấy đầu cán như nắm tay, vật hơi chếch khỏi trục tay; đặt vật ở bên hông hay cạnh đầu, không chĩa vào mặt. Que nối thẳng từ một quả cầu tay sát mặt thì Seedance vẽ tay thành bong bóng có que xuyên qua và đưa vật vào miệng (take thử Cảnh 1 tập 01). Vật nhỏ làm to hơn cỡ thật một chút cho đọc được. Đạo cụ phẳng (bản đồ, tấm bảng) có chi tiết vẽ ở mặt trước thì chi tiết đó không được ló ra mặt sau: ở cú nhìn lưng vật, vệt sẫm trên tấm trắng thành tấm thẻ trong take (bản đồ giấy, `sh010` Cảnh 1 tập 000A).
-- **Bối cảnh:** chỉ cần đúng khối, kích thước, vật cản và đạo cụ chính. Hình thật do ảnh tham chiếu và prompt quyết định.
+- **Bối cảnh:** chỉ cần đúng khối, kích thước, vật cản và đạo cụ chính. Hình thật do ảnh tham chiếu và prompt quyết định. Vật lên hình ở nhiều cảnh (hòn đảo Wonder Hub) dựng bằng một hàm dùng chung theo ảnh tham chiếu; mỗi cảnh tự dựng thì dáng lệch nhau và Seedance vẽ thành hai vật khác (Cảnh 5 và post-credit tập 000A).
+- **Vật nhỏ mang gag** (hòn sỏi rơi, chiếc lá trượt): khác tông với nền sau nó, đủ to để thấy trên điện thoại (cỡ vài chục pixel ở khung 768), và cả đường rơi, trượt nằm trọn trong khung đủ lâu để mắt bắt kịp; nhân vật nền có cỡ trong Character Bible (chim) thì đưa máy lại gần chứ không phóng to. Vật nhỏ rơi thì làm sẫm, to hơn cỡ thật và rơi đều chậm, để phần rơi trong khung lên hình từ khoảng 0.3 giây. Vật gây ra gag (sỏi rơi khi gõ) có mặt trong khung từ trước và nhúc nhích theo từng nhịp gây ra nó, không chỉ hiện ra lúc rơi. Lượt review đầu Cảnh 2–5 tập 000A: sỏi khoảng 20 px rơi sát mép trên khung, lá khoảng 15 px trượt mất khỏi khung.
 - **Bố trí để thấy mặt:** nhân vật nhìn thẳng vào vật chính (máy, cửa) thì máy quay phía trước chỉ thấy lưng. Đặt chỗ tương tác ở hông vật để nhân vật đứng nghiêng về phía máy quay; tránh để hai, ba nhân vật thẳng hàng với máy quay (che nhau).
 - **Nhiều shot trong một previz:** mỗi shot một camera, cắt bằng timeline marker gắn camera; danh sách `SHOTS` ở đầu script ghi giây bắt đầu, kết thúc.
 - **Cú nhìn của nhân vật** (nhìn xuống vật trong tay): máy đặt ở chỗ mắt, nhìn vào vật; đầu nhân vật ẩn bằng scale 0 suốt cú đó để không che máy; tay hiện ở đáy khung (Cảnh 1 tập 000A, S2 và S6). Mọi thay đổi chỉ dành cho một cú (ẩn đầu, ẩn vật che máy) chỉ áp khi cú đó thuộc đoạn đang dựng: đuôi của đoạn trước giữ máy cú cuối nên sẽ thấy thay đổi đó (Lumo mất đầu ở đuôi `sh010`).
-- **Cú cận vật cầm trước ngực mà phải thấy cả thứ vật chỉ tới ở hậu cảnh** (la bàn chỉ về bức tường): máy đặt sát bên người thì khối tay, đầu che kín vật; dựng thành cú nhìn của nhân vật (vật giơ trước mắt, mặt vật quay về mắt, đích ở nửa trên khung), hoặc đặt máy trước mặt nhân vật sau khi quay. Cú nhìn là cú cuối của đoạn thì đầu ẩn luôn qua phần đuôi, vì máy ở chỗ mắt (Cảnh 2 tập 000A, S5).
+- **Cú cận vật cầm trước ngực mà phải thấy cả thứ vật chỉ tới ở hậu cảnh** (la bàn chỉ về bức tường): máy đặt sát bên người thì khối tay, đầu che kín vật; dựng thành cú nhìn của nhân vật (vật giơ trước mắt, mặt vật quay về mắt, đích ở nửa trên khung), hoặc đặt máy trước mặt nhân vật sau khi quay. Cú nhìn là cú cuối của đoạn thì đầu ẩn luôn qua phần đuôi, vì máy ở chỗ mắt (Cảnh 2 tập 000A, S5). Soát bằng ảnh tĩnh ở mọi điểm dừng của vật (trước và sau mỗi lần nhân vật quay, xoay): mặt vật thấy rõ, không bị tay, thân hay dải CC che; đầu chỉ trên màn hình hướng về đích trên màn hình; đích là một mặt nhìn chéo đủ to, không phải mặt tường nhìn gần song song. Lượt review đầu Cảnh 2–5 tập 000A có năm lỗi Chặn và Nên sửa cùng kiểu này (Cảnh 2 S5, S7; Cảnh 3 S11; Cảnh 4 S4, S11). Cách đã làm được:
+  - Vật chìa ra ngoài thân ở phía máy, mặt quay về máy; tâm vật đặt trước bàn tay khoảng một bán kính vật để tay chỉ nắm mép vỏ, không đè lên mặt vật. Mỗi điểm dừng giữ ít nhất 0.5 giây.
+  - Máy sau gáy cách khoảng 0.6 m, ống khoảng 40 mm, ngắm điểm giữa vật và đích (đích xa, tay ngắn); hoặc máy thấp sau vật để đích ở nửa trên khung. Ống rộng đặt trên vai thì đích nhỏ mất.
+  - Nhân vật đứng sát mặt phẳng đích (tường): máy ở chỗ mắt chỉ thấy mặt phẳng gần song song. Dựng riêng vật và khối tay trước một máy đặt xa mặt phẳng, thấy chéo từ khoảng 25°; đầu chỉ nhắm vào giao điểm của tia máy–đích với mặt vật, không nhắm thẳng đích 3D, để trên màn hình nó chỉ đúng.
+  - Nhân vật quay người khi đang cận vật: nghiêng mặt vật về phía máy ở cả hai hướng, máy ống dài đặt xa, cú quay từ khoảng 0.6 giây.
 - **Chữ** (tên phim, biển hiệu) không dựng trong previz khối, thêm ở hậu kỳ: chữ trong video dẫn sẽ lọt vào take.
 - **Tự kiểm tra trong script:** máy không ra ngoài bối cảnh, không chui xuống đất (cảnh có dốc, hố thì truyền `ground` cho `check_in_frame`), đầu nhân vật luôn trong khung. Kiểm tra này không bắt được nhân vật bị che, vẫn phải xem ảnh tĩnh từng shot.
 - Previz không có mặt: biểu cảm, mắt, miệng, tai, đuôi chỉ có trong prompt.
@@ -127,10 +137,10 @@ Tuỳ chọn khác (`--no-audio`, `--duration`, `--wait`) ở docstring của sc
 - **Chọn ảnh đầy đủ nhất về hình**, mỗi asset một ảnh để tiết kiệm suất `@Image`: ảnh xoay (trước và sau trong một ảnh) hơn ảnh một mặt, ảnh 3/4 hơn ảnh nhìn thẳng, nền trơn hơn ảnh có bối cảnh. Ảnh sinh cho từng tập: `02_ASSET_LIBRARY/MODELING.md`, mục "Ảnh cho một tập".
 - Mỗi nhân vật **một ảnh cố định cho mọi shot** để giữ nhân vật đồng nhất: ảnh xoay `02_ASSET_LIBRARY/Characters/<Tên>/concept/<tên>_turnaround.png` (nhìn trước bên trái, nhìn sau bên phải, nền trơn; ghép bằng `pipeline/turnaround.py`). Ảnh xoay của Piko ghép từ ảnh Piko đeo Pocket of Wonders. Nhân vật chưa có ảnh xoay thì dùng `<tên>_ref.png`.
   - Ghi trong ACTIVE REFERENCES: `@Image1 = Lumo turnaround sheet: left front view, right back view of ONE character. Layout, background and pose not inherited.`
-  - Chưa thử trong take nào: take đầu dùng ảnh xoay thì soát xem Seedance có vẽ hai bản của cùng một nhân vật không, và mặt sau có đúng khi nhân vật quay lưng.
+  - Đã dùng từ take đầu Cảnh 1 tập 000A: không thấy hai bản của cùng nhân vật, mặt sau đúng khi quay lưng. Chi tiết nhỏ (chỏm lông) vẫn trôi: thêm ảnh cận đúng chi tiết đó.
 - Bối cảnh: ảnh riêng của từng địa điểm, chưa có thì `01_BRAND/Brand_Guideline/world_key_art.png`. Đã có: Thung lũng Mây khô hạn (Cảnh 1 tập 01) `02_ASSET_LIBRARY/Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`; các địa điểm của EP000A (bảng "Tập 000A" trong `02_ASSET_LIBRARY/MODELING.md`).
 - Đạo cụ: `02_ASSET_LIBRARY/Props/<Tên>/concept/<tên>_ref.png` (nhìn 3/4, nền trơn). Đạo cụ tập 01 chưa có `_ref` thì dùng `_front.png` (vật dài: `_side.png`), hoặc ảnh trạng thái khi trạng thái đó lên hình (`_frost.png`). Nhân vật nền (sinh vật nhỏ của thung lũng): `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`; ghi trong prompt tư thế nào dùng cho clip.
-- **Dòng 2.0 chép chiều của ảnh tham chiếu.** Vật lên hình ở chiều khác ảnh (bản đồ cầm ngược) thì tải lên ảnh đã xoay đúng chiều đó và ghi trong ACTIVE REFERENCES là ảnh đã ở đúng chiều của cả clip; chỉ dặn bằng chữ thì không đủ (take thử `sh010` Cảnh 1 tập 000A).
+- **Seedance chép chiều của ảnh tham chiếu** (rõ nhất ở dòng 2.0). Vật lên hình ở chiều khác ảnh (bản đồ cầm ngược) thì tải lên ảnh đã xoay đúng chiều đó và ghi trong ACTIVE REFERENCES là ảnh đã ở đúng chiều của cả clip; chỉ dặn bằng chữ thì không đủ (take thử `sh010` Cảnh 1 tập 000A).
 - Chỉ đưa ảnh của thứ có trong shot. Số `@Image` theo thứ tự tải lên: mỗi số một ảnh, ghi bảng số → file trong `prompt.md` và soát lại trước khi sinh (bài mẫu của Higgsfield có chỗ hai ảnh cùng ghi `@Image 2`).
 - Bối cảnh, Piko đeo túi và sinh vật nhỏ sinh bằng ChatGPT theo các prompt dưới. Sinh lại thì đính kèm đúng ảnh ghi ở mỗi prompt, lưu đúng đường dẫn ghi kèm, soát theo Character Bible trước khi dùng.
 
@@ -160,7 +170,7 @@ Image 1 is Piko, a character of a soft stylized 3D animated film for young child
 
 How Piko wears the pouch:
 - Only the pouch itself from Image 2: purple velvet, gold drawstring with tassels, cream cloud emblem. Its mouth is gathered shut; none of the items in Image 2 (bottle, crystal, mushroom, map, compass, feather, stars) are visible.
-- The pouch is small, about the size of one of Piko's paws.
+- The pouch is small, about a quarter of Piko's height, a little bigger than an apple.
 - A thin gold cord carries it crossbody: looped over the root of Piko's RIGHT horn (the horn on the viewer's left when Piko faces us), down Piko's back, then diagonally across the front just under the mouth to Piko's LEFT hip.
 - The pouch hangs at Piko's left hip (the viewer's right when Piko faces us), at paw height, resting against the jelly body.
 
@@ -168,7 +178,7 @@ Full body, three-quarter view, Piko turned toward the viewer's left so that Piko
 ```
 Ảnh nhìn sau, nhắn tiếp: `Now the same Piko with the same pouch seen from behind, as a separate image, same rules: show the gold cord looped over the right horn and running down the back.`
 
-**Sinh vật nhỏ của thung lũng** (nhân vật nền, có mặt từ Cảnh 1 tới Cảnh 7). Đính kèm `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`. Thiết kế chọn xong thì ghi vào Character Bible.
+**Sinh vật nhỏ của thung lũng** (nhân vật nền, có mặt từ Cảnh 1 tới Cảnh 7). Đính kèm `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`.
 ```
 The attached sheet shows the four main characters of a soft stylized 3D animated film for young children; use it for style only. Design ONE new background creature species: the tiny creatures of the Valley of Clouds.
 - Tiny: about one sixth of the fox's height in the sheet. Round, soft and simple, so they never compete with the four main characters.
@@ -236,7 +246,7 @@ Create a NEW location in the same world: a gentle grassy hilltop on a floating i
 - Peaceful and full of promise. No buildings. No text, no logos, no watermark.
 ```
 
-**Hòn đảo có Wonder Hub, nhìn từ xa** (Cảnh 5: mây tách, đảo dần hiện ra, đài thiên văn lóe xanh ngọc; post-credit: đảo ở chân trời). Đính kèm theo thứ tự `sunset_hill_hero.png`, `world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Wonder_Hub/concept/wonder_hub_island_hero.png`. Dáng Wonder Hub theo previz 2D Cảnh 2 tập 01 (`03_CONTENT/Previz_2D/EP001_Great_Rain_Experiment/canh02/build_shot.py`, đoạn "cú cận: Wonder Hub"): nền tròn thấp màu kem, mái vòm tím nhạt viền vàng, ô cửa tròn khung vàng giữa vòm, khối phụ thấp bên phải.
+**Hòn đảo có Wonder Hub, nhìn từ xa** (Cảnh 5: mây tách, đảo dần hiện ra, đài thiên văn lóe xanh ngọc; post-credit: đảo ở chân trời). Đính kèm theo thứ tự `sunset_hill_hero.png`, `world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Wonder_Hub/concept/wonder_hub_island_hero.png`. Dáng Wonder Hub theo previz 2D Cảnh 2 tập 01 (`03_CONTENT/Previz_2D/EP001_Great_Rain_Experiment/scene02/build_shot.py`, đoạn "cú cận: Wonder Hub"): nền tròn thấp màu kem, mái vòm tím nhạt viền vàng, ô cửa tròn khung vàng giữa vòm, khối phụ thấp bên phải.
 ```
 Image 1 is the view from a hilltop at sunset; Image 2 is a style reference only (soft stylized 3D animated film for young children). Create a long telephoto view far across the same cloud sea, in the same sunset light as Image 1. One wide 16:9 image, no characters, no animals. Nothing from Image 1's foreground: no hilltop, no tree, no rock, no grass, no leaves; only the sky, the cloud sea and the island.
 - Center, far away and slightly hazy: a floating island emerging as the clouds part around it. On the island, a big rounded hill and, at its foot, a huge ancient observatory.
@@ -254,6 +264,124 @@ Image 1 is a style and palette reference only (soft stylized 3D animated film fo
 - Warm sunset light, quiet and a little mysterious. No text, no logos, no watermark.
 ```
 
+**Bối cảnh EP000B.** Bảng và thứ tự sinh: `02_ASSET_LIBRARY/MODELING.md`, mục "Tập 000B". Mỗi ảnh một chat. Ban ngày chân trời là một dải mây dày che hòn đảo; lúc hoàng hôn mây tách (đã có `junkyard_hero.png`). Bãi phế liệu không có cạnh sắc, kính vỡ, đinh, không đống nào cao quá đầu Tavi (beat sheet EP000B, mục "Luật nhân quả").
+
+**Xưởng của Tavi, bên trong** (Cảnh 1 lúc sáng, Cảnh 5 lúc hoàng hôn: tả bằng chữ). Đính kèm theo thứ tự `01_BRAND/Brand_Guideline/world_key_art.png`, `02_ASSET_LIBRARY/Props/Breakfast_Machine/concept/breakfast_machine_ref.png`. Lưu `02_ASSET_LIBRARY/Environments/Tavi_Workshop/concept/tavi_workshop_hero.png`.
+```
+Image 1 is a style and palette reference only (soft stylized 3D animated film for young children); do not copy its layout or its pagodas. Image 2 is a homemade breakfast machine. Create a NEW location in the same world: inside the small workshop of Tavi, a little lizard inventor, in the morning. One wide 16:9 image, eye level, no characters, no animals.
+- A cozy round room under a domed wooden roof, warm and a little messy, everything with soft rounded shapes.
+- On the back wall, a long row of pinned paper sketches of the breakfast machine, each with one big hand-drawn cross over it. Simple drawings only, no text.
+- A sturdy workbench with a few tools, a roll of paper and a pencil stub.
+- The breakfast machine from Image 2, unchanged, standing on the floor in the middle, with its plate on the spring platform beside it, and a small round trash bin a few steps behind the plate.
+- In one corner, a heap of spare parts (springs, screws, pipes, small wheels), about as high as the workbench.
+- A round window looking out on slowly turning windmills, the low vine-covered piles of a junkyard right outside, and far away a thick band of white cloud on the horizon; a wooden door with a low step.
+- Soft morning sunlight through the window. No wires, no plugs, no fire. No text, no logos, no watermark.
+```
+
+**Sân lắp máy ở bãi phế liệu, ban ngày** (Cảnh 2–4: khoảng đất trống lát đá, bức tường đá Tavi nấp sau, bậc đá trải bản vẽ). Đính kèm theo thứ tự `02_ASSET_LIBRARY/Environments/Junkyard/concept/junkyard_hero.png`, `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Junkyard/concept/junkyard_yard_hero.png`.
+```
+Image 1 is a cozy junkyard from a soft stylized 3D animated film for young children; keep exactly its look, materials and colors. Image 2 shows the characters, for scale only; do not draw them. Create the same junkyard in bright midday sunlight, another part of it: the open work area. One wide 16:9 image, eye level, no characters, no animals.
+- In the middle: a flat open area of old stone paving, swept clear, big enough for a machine twice as tall as Tavi (the small green lizard in Image 2).
+- On the left side of the area: one straight old stone wall, a little taller than Lumo the fox in Image 2, so it hides Tavi completely, cap and all. Along the foot of the wall on the yard side runs a broad flat stone step at Tavi's chest height. Both ends of the wall are open, so one can walk around behind it.
+- All around: soft low piles of old gears, springs, pipes and wheels as in Image 1, none higher than Tavi's head, covered in green vines and small flowers. No sharp edges, no broken glass, no nails.
+- At the edge of the yard, the round wall and round window of a small workshop.
+- On the far horizon: a thick, long band of soft white cloud lying across the sky. No island visible.
+- Cheerful, sunny, no text, no logos, no watermark.
+```
+
+**Đảo cối xay gió** (Cảnh 1, cảnh toàn khoảng 2 giây). Đính kèm theo thứ tự `01_BRAND/Brand_Guideline/world_key_art.png`, `02_ASSET_LIBRARY/Environments/Junkyard/concept/junkyard_yard_hero.png`, `02_ASSET_LIBRARY/Environments/Tavi_Workshop/concept/tavi_workshop_hero.png`. Lưu `02_ASSET_LIBRARY/Environments/Windmill_Island/concept/windmill_island_hero.png`.
+```
+Image 1 is a style and palette reference only (soft stylized 3D animated film for young children); do not copy its layout or its pagodas. Image 2 is a junkyard work area and Image 3 the inside of a small domed workshop; both are on this island. Create a NEW location in the same world: the windmill island seen from a distance. One wide 16:9 establishing shot, slightly above, bright morning, no characters, no animals.
+- A small round floating island of green grass and rounded rocks in a sea of soft white clouds.
+- Five or six cute windmills with soft rounded towers and four sails, turning slowly, spread over the island.
+- Nestled between the windmills: a small cozy workshop with a round domed roof and a round window, matching Image 3.
+- Right next to the workshop: the junkyard of Image 2, low piles of old parts covered in vines and flowers, with its stone wall and paved work area.
+- On the far horizon: a thick, long band of soft white cloud lying across the sky. No other island visible.
+- Soft rounded shapes, pastel colors, gentle and inviting. No text, no logos, no watermark.
+```
+
+**Bối cảnh EP000C.** Bảng và thứ tự sinh: `02_ASSET_LIBRARY/MODELING.md`, mục "Tập 000C". Mỗi ảnh một chat. Thư viện không mang dáng nơi thờ tự và trăng khuyết không đi kèm ngôi sao (beat sheet EP000C, mục "Sản xuất").
+
+**Thư viện cổ, nhìn từ ngoài** (Cảnh 1, cảnh toàn khoảng 2 giây). Đính kèm `01_BRAND/Brand_Guideline/world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Library/concept/library_exterior_hero.png`.
+```
+The attached image is a style and palette reference only: soft stylized 3D animated film for young children, warm sunlight, pastel colors, floating islands and a cloud sea. Do not copy its layout or its pagodas.
+
+Create a NEW location in the same world: the Ancient Library, an old library of stone and warm wood on a small floating island in the cloud sea. One wide 16:9 image, a wide establishing view from a little above, bright morning, no characters, no animals, no flying books.
+- A cozy, rambling library building: rounded stone walls, warm wooden beams, gabled wooden roofs with soft rounded tiles, one short round tower with a cone roof, many small round and rectangular windows, a wooden balcony on one side facing the open cloud sea.
+- Streams of glowing light pour like waterfalls from the edges of the island down into the clouds.
+- NOT a temple, church, mosque or shrine: no domes, no pagoda roofs, no spires, no bell towers, no statues, no religious symbols. No crescent or star shapes anywhere.
+- Gentle, magical and inviting. No text, no logos, no watermark.
+```
+
+**Trong thư viện** (Cảnh 1–4: giá sách cao, ô cửa trăng có bậu lót đệm, vệt nắng hình trăng cạnh bàn đọc, tủ thấp ba bình hoa ở góc, cửa ra ban công). Đính kèm theo thứ tự `library_exterior_hero.png`, `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`, `02_ASSET_LIBRARY/Props/Flower_Vases/concept/flower_vases_ref.png`. Lưu `02_ASSET_LIBRARY/Environments/Library/concept/library_interior_hero.png`.
+```
+Image 1 shows the outside of this library (soft stylized 3D animated film for young children). Image 2 shows the characters, for scale only. Image 3 shows three flower vases. Create the inside: the main reading hall. One wide 16:9 image, eye level, bright morning, no characters, no animals, no flying books (all books rest on the shelves).
+- The same warm wood and stone as Image 1. Tall wooden bookshelves rise high toward a beamed wooden ceiling, packed with books with muted covers (brown, cream, light brick red, ash gray); the top shelves are tightly full.
+- On the left side wall, at mid-height and off-center toward the far end: one window shaped like a crescent moon, with a deep sill padded with a soft cushion. Through the window only sky and soft clouds: no building, no dome, no star. No pointed arch around the window.
+- Morning sun shines straight through the crescent window as one clear beam down to the floor, printing a crescent-shaped patch of sunlight on the floor next to the reading desk, slightly stretched along the beam. Half of the window sill is in shade.
+- Near the middle: the reading desk, an ordinary wooden table with a low slanted book rest, not a lectern or a podium.
+- In the far corner on the right, next to a bookshelf and NOT under the window: a low wooden cabinet with the three vases of Image 3 on it, exactly as in Image 3 (one, two and three flowers). Nothing else on the cabinet; the arrangement is not symmetrical.
+- On the right wall: an open wooden door to a balcony, showing the cloud sea outside.
+- NOT a temple, church, mosque or shrine: no altar, no statues, no candles, no incense, no lanterns, no offerings, no religious symbols; no star shapes anywhere. No text, no logos, no watermark.
+```
+
+**Ban công thư viện lúc hoàng hôn** (Cảnh 5, lúc hòn đảo chưa hiện; hòn đảo hiện ra: đính kèm thêm `wonder_hub_island_hero.png` khi sinh Seedance). Đính kèm theo thứ tự `library_interior_hero.png`, `world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Library/concept/library_balcony_hero.png`.
+```
+Image 1 is the inside of this library; Image 2 is a style reference only (soft stylized 3D animated film for young children). Create the library's balcony at sunset, looking out over the cloud sea. One wide 16:9 image, eye level, no characters, no animals.
+- Foreground: a wooden balcony floor and a sturdy wooden railing with a flat top rail, wide enough for a small book to perch on; the same wood and stone as Image 1; the open balcony door at one edge, showing bookshelves only. No flower vases and no potted plants anywhere (the three vases belong only to the cabinet inside).
+- Beyond: a vast cloud sea glowing gold and orange under a warm gold, peach and orange sky, not purple. The sun is setting BEHIND the viewer, out of frame: its warm low light falls on the clouds ahead; the sun itself is not in the image.
+- On the horizon, a thick bank of clouds hides whatever is behind it; no island visible. No moon, no stars in the sky.
+- Calm and full of promise. No text, no logos, no watermark.
+```
+
+**Khu chợ nổi lúc hoàng hôn** (post-credit EP000C: Pocket of Wonders giữa đống hàng hoá lóe cùng nhịp hòn đảo ở chân trời; ảnh này chốt dáng chợ cho EP000D, tập Piko có rượt đuổi). Đính kèm theo thứ tự `world_key_art.png`, `wonder_hub_island_hero.png`, `02_ASSET_LIBRARY/Props/Pocket_of_Wonders/concept/pocket_of_wonders_ref.png`. Lưu `02_ASSET_LIBRARY/Environments/Floating_Market/concept/floating_market_hero.png`.
+```
+Image 1 is a style and palette reference only (soft stylized 3D animated film for young children); do not copy its layout or its pagodas. Image 2 is a far island with a domed observatory. Image 3 is a small purple pouch. Create a NEW location in the same world: a corner of a cozy floating market at sunset. One wide 16:9 image, eye level, no characters, no animals.
+- Small market stalls on little floating islands linked by rope bridges, with striped cloth awnings, wooden crates, baskets, jars, rolls of cloth and bundles of goods; soft rounded shapes, cheerful, never messy or dangerous.
+- Wide wooden walkways wind between the stalls and over the bridges, with room for a small creature to run and be chased through the market.
+- Center foreground: a pile of goods in one quiet corner; among them, partly tucked between a basket and a crate but clearly visible, the purple pouch of Image 3 with its gold rope, not glowing. The pouch is small, about a third of the height of the nearby crate, a little bigger than an apple, clearly smaller than the baskets and crates around it.
+- Far away on the horizon, behind the stalls: the island of Image 2, small and hazy, not glowing.
+- Warm sunset light, quiet and a little mysterious. No text, no letters, no signs, no logos, no watermark.
+```
+
+**Bối cảnh EP000D.** Bảng và thứ tự sinh: `02_ASSET_LIBRARY/MODELING.md`, mục "Tập 000D". Mỗi ảnh một chat. Chợ giữ dáng `floating_market_hero.png`; ban ngày chân trời là một dải mây dày, không thấy hòn đảo (beat sheet EP000D, mục "Luật nhân quả", ý "Chợ nổi"). Số đo của góc chợ theo bảng "Bố trí góc chợ" của beat sheet.
+
+**Đảo quầy bánh, buổi sáng** (Cảnh 1: lối gỗ vắng, quầy bánh của bà Gấu, mái vải sọc Piko nảy trúng; Cảnh 3: quả tròn lăn xuống lối gỗ dốc, cuộn vải đỏ bung, chuông gió reo; Cảnh 5, 5A: dọn dẹp, bà Gấu bưng khay qua cầu). Đính kèm theo thứ tự `02_ASSET_LIBRARY/Environments/Floating_Market/concept/floating_market_hero.png`, `02_ASSET_LIBRARY/Props/Bun_Steamer/concept/bun_steamer_ref.png`, `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Floating_Market/concept/floating_market_bakery_hero.png`.
+```
+Image 1 is a floating market at sunset from a soft stylized 3D animated film for young children; keep its stalls, wood, rope, striped awnings and style. Image 2 is a bun steamer on a glowing amber crystal. Image 3 shows the characters, for scale only. Create another part of the same market in the early morning. One wide 16:9 image, eye level, no characters, no animals, no fish.
+- One small floating island with four little stalls around a wooden walkway that slopes gently downhill from left to right, so round things would roll down it.
+- At the top of the slope, left: a bakery stall with a striped awning and a wooden counter; on the counter the steamer of Image 2 on its glowing crystal, lid closed, and an empty wooden tray beside it.
+- Next to it: a fruit stall with baskets full of round red and yellow fruits.
+- Further down the slope: a cloth stall with rolls of cloth stacked on its counter, one big roll bright red; and a wind chime stall with many small wind chimes of wood and bronze hanging along its awning.
+- Every awning is soft striped cloth stretched tight like a trampoline, low enough for a small jelly creature to bounce onto.
+- At the right edge, the walkway meets the end of a short, low rope bridge with net railings on both sides, leading to a neighboring little island very close by; only the edge of that island is visible.
+- Fresh soft morning light, pale blue and peach sky. The market has just opened: the walkway is empty and tidy.
+- On the horizon, a thick bank of clouds hides whatever is behind it; no island visible, no observatory.
+- No text, no letters, no signs, no logos, no watermark.
+```
+
+**Góc chợ yên tĩnh, buổi sáng** (Cảnh 2–4: đống hàng Piko lao vào, quầy lều chóp sát cột đầu cầu, cột có móc treo giỏ, cầu dây ngắn; sàn trống quanh chân lều cho gối, lò xo). Đính kèm theo thứ tự `floating_market_hero.png`, `floating_market_bakery_hero.png`, `02_ASSET_LIBRARY/Environments/Floating_Market/concept/tent_stall_ref.png`, `cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Floating_Market/concept/floating_market_corner_hero.png`. Ảnh cố ý không có giỏ, túi, gối, lò xo: khi sinh Seedance tải lên ảnh riêng của từng món.
+```
+Images 1 and 2 are parts of a floating market from a soft stylized 3D animated film for young children; keep their style, wood, rope and striped cloth. Image 3 is a tent stall with a cone roof. Image 4 shows the characters, for scale only. Create the quiet corner of the same market, on the little island next to the bakery island of Image 2, in the early morning. One wide 16:9 image, eye level, no characters, no animals, no fish.
+- Left: a short, low rope bridge, about four times as long as Piko is tall (Piko: the small clear blue jelly with two dark blue horns in Image 4), with net railings as high as Piko on both sides; its far end reaches the bakery island of Image 2, close by.
+- Where the bridge lands on this island: one sturdy wooden bridge post, one and a half times Piko's height, with one empty iron hook sticking out at the height of Piko's eyes. Nothing hangs on the hook.
+- Right next to the post, on the island side: the tent stall of Image 3 exactly as designed (glossy terracotta and cream striped cone roof, low roof edge half Piko's height, a round wooden knob on the tip at twice Piko's height); its roof edge comes close to the foot of the post.
+- Around the foot of the tent: open flat wooden deck, empty, with room for a big pillow and a spring.
+- Further in, about twice Piko's height from the bridge: a soft pile of goods in a quiet corner: baskets, wooden crates, jars, rolls of cloth, bundles. No pouch, no bag among them.
+- Fresh soft morning light. On the horizon, a thick bank of clouds hides whatever is behind it; no island visible.
+- No text, no letters, no signs, no logos, no watermark.
+```
+
+**Cửa chính Wonder Hub, ban đêm** (post-credit EP000D: bốn hốc le lói xanh ngọc một nhịp rồi tối; EP000E dùng lại cửa này, mở bằng bốn bảo bối). Đính kèm theo thứ tự `02_ASSET_LIBRARY/Environments/Wonder_Hub/concept/wonder_hub_island_hero.png`, `02_ASSET_LIBRARY/Props/Silver_Book/concept/silver_book_symbols.png`, `cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Wonder_Hub/concept/wonder_hub_door_hero.png`. Ảnh ở lúc các hốc chưa lóe; lúc lóe xanh ngọc tả bằng chữ trong prompt Seedance.
+```
+Image 1 is a far island with a huge ancient observatory, from a soft stylized 3D animated film for young children. Image 2 is a picture book page with four symbols in a ring. Image 3 shows the characters, for scale only. Create the main door of that observatory, seen from outside at night. One wide 16:9 image, eye level, close enough that the door fills the middle of the frame, no characters, no animals.
+- The cream stone wall of the observatory's round base from Image 1, with the gold lower rim of the lavender dome just visible at the top edge.
+- In the middle of the wall: a big round door of carved cream stone, about twice as tall as Lumo the fox, closed, with a gold-trimmed rim, no handle, no keyhole.
+- On the lower half of the door, within reach of the small characters of Image 3: four round sockets set into the stone in a ring, in the same places as the four symbols of Image 2: top, the eight-pointed star in compass-rose style (four long points alternating with four short points, NOT eight equal points); left, a simple gear with eight rounded teeth; right, a round hand lens with a handle; bottom, a small pouch tied at the top. Each symbol is carved in low relief inside its socket, in the same plain stone color. None of them glows.
+- Night: a deep blue starry sky, soft moonlight on the stone, grass at the foot of the wall. Calm and mysterious, never scary.
+- No text, no letters, no numbers, no religious symbols, no logos, no watermark.
+```
+
 ## Prompt theo giây
 
 Viết tiếng Anh. Dựa theo bài mẫu của Higgsfield (nguồn cuối file), gồm các khối theo thứ tự:
@@ -261,7 +389,7 @@ Viết tiếng Anh. Dựa theo bài mẫu của Higgsfield (nguồn cuối file)
 1. **Tiêu đề và tóm tắt:** shot, thời lượng, video-to-video; 1–2 câu: ai, ở đâu, làm gì, kết thúc ra sao.
 2. **ACTIVE REFERENCES:** mỗi `@Video`, `@Image` một dòng, nói nó **quyết định gì** và **không lấy gì** (nền, tư thế, ánh sáng của ảnh nhân vật; vật liệu, màu, ánh sáng của previz). Có bảng màu khối → nhân vật.
 3. **STYLE:** khối chuẩn bên dưới, giống nhau ở mọi shot. Địa điểm, giờ trong ngày, ánh sáng riêng của cảnh viết ở tóm tắt và TIMELINE, không sửa khối chuẩn.
-4. **CHARACTERS:** đặc điểm phải giữ của từng nhân vật lấy từ Character Bible (tỉ lệ, giới hạn khi diễn, đồ mang theo); đúng bao nhiêu nhân vật trong khung. **Cỡ tương đối:** mọi nhân vật, đạo cụ và vật bối cảnh đứng cạnh nhân vật (bụi cây, tảng đá, bệ, vách) ghi cỡ so với Lumo cao 1.00 m, bằng tỉ lệ chiều cao và một phép so dễ hình dung ("about one tenth of Lumo's height, the size of Lumo's fist"; "waist-high to Lumo"). Số lấy từ Character Bible và kích thước khối trong previz, không ước bằng mắt. Chỉ ghi "cỡ nắm tay" thì chú chim ra cao gần một phần ba Lumo (take thử `sh010` Cảnh 1 tập 000A).
+4. **CHARACTERS:** đặc điểm phải giữ của từng nhân vật lấy từ Character Bible (tỉ lệ, giới hạn khi diễn, đồ mang theo); đúng bao nhiêu nhân vật trong khung. **Cỡ tương đối:** mọi nhân vật, đạo cụ và vật bối cảnh đứng cạnh nhân vật (bụi cây, tảng đá, bệ, vách) ghi cỡ so với Lumo cao 1.00 m, bằng tỉ lệ chiều cao và một phép so dễ hình dung ("about one tenth of Lumo's height, the size of Lumo's fist"; "waist-high to Lumo"). Số lấy từ `02_ASSET_LIBRARY/MODELING.md`, mục "Bảng cỡ" (đơn vị L = chiều cao Lumo = 1.00 m) và kích thước khối trong previz, không ước bằng mắt; previz lệch bảng thì sửa previz hay bảng trước khi viết prompt. Chỉ ghi "cỡ nắm tay" thì chú chim ra cao gần một phần ba Lumo (take thử `sh010` Cảnh 1 tập 000A).
 5. **CAMERA:** bám `@Video1` 1:1, khớp từng khung; một cú liền hay cắt ở giây nào.
 6. **RULES:** luật đánh số. Đếm được thì ghi số (bao nhiêu nhân vật, đạo cụ nào ở đâu); không chữ, không logo; không có gì đáng sợ, bạo lực.
 7. **TIMELINE:** chia khối 2–5 giây theo cú máy hoặc hành động (cảnh cắt nhanh thì mỗi shot một khối). Mỗi khối:
@@ -291,12 +419,12 @@ Quy tắc viết:
   - Hướng chỉ của một vật đối xứng (mũi sao tám cánh) không đọc ra: cho một dấu hiệu nhìn thấy, ví dụ tia sáng từ mũi tới vật được chỉ.
   - Vật cầm tay có thể đè lên mặt nhân vật: ghi vật ở đâu so với mặt.
   - Thêm "no spoken words" vào từng khoảng nói; không viết lời trong ngoặc kép (ví dụ "aha") ở chỗ nhân vật mở miệng.
-  - **Seedance 2.5 vẫn sinh nhạc** dù AUDIO, HOLD ghi "no music" (bản nháp `sh010`, `sh020` Cảnh 1 tập 000A: giai điệu và hợp âm ở cú toàn mở đầu, cú toàn cuối). Ghi thêm ngay trong dòng TIMELINE của các cú toàn "only natural sounds, no musical tones, no melody, no song"; hậu kỳ kiểm nhạc bằng đo cao độ (reviewer `audio`) và thay tiếng ở chỗ có nhạc. Dặn thêm trong TIMELINE ("only natural sounds, no musical tones") cũng không tác dụng (bản nháp lần hai): coi việc thay tiếng ở các cú toàn mở và kết là việc hậu kỳ thường lệ, không sinh lại vì nhạc. Tiếng kêu không lời của nhân vật ("ậm ừ", "wheee") được giữ; trong khoảng nói chỉ bỏ tiếng nào nghe ra thành lời.
+  - **Seedance 2.5 vẫn sinh nhạc** dù AUDIO, HOLD, TIMELINE đều dặn "no music" (bản nháp `sh010`, `sh020` Cảnh 1 tập 000A: giai điệu ở cú toàn mở đầu, cú toàn cuối). Vẫn dặn trong prompt, nhưng coi việc thay tiếng ở các cú toàn mở và kết là việc hậu kỳ thường lệ (reviewer `audio` chỉ chỗ có nhạc); không sinh lại vì nhạc.
   - **Miệng không mấp máy trong khoảng nói** khi prompt chỉ ghi "talks, mouth moving, no voice" (cả hai bản nháp Cảnh 1 tập 000A: miệng khép, cười mỉm suốt câu): ghi "mouth clearly opening and closing on every syllable, about 4 times per second, for the whole <khoảng nói>", và tả nét mặt hợp câu nói thay vì cảm xúc của khoảng trước.
   - **Phản ứng tới trước nguyên nhân** (mặt hoảng, tay hất lên trước khi chân vấp): ghi rõ khoảng trước mốc là chưa phản ứng ("no surprise yet, not before 8.42s") rồi mới tả phản ứng ở mốc.
   - **Vật phẳng xoay trong cú nhìn** (xoay bản đồ) thành lật mặt, lộ mặt sau, tay buông: ghi "both paws never let go, spin it flat in its own plane like a steering wheel, it never flips over, its back is never seen".
   - **Hai cú cùng chỗ khác cỡ cảnh** mà prompt tả bằng chữ gần giống nhau thì take cho cùng cỡ (cú S7 chặt như S3): tả từng cú bằng số đo (nhân vật cao bao nhiêu phần khung, nằm bên nào, thấy những vật gì) và ghi cú nào rộng hơn cú nào.
-  - **Luật phủ định đẩy mốc trễ:** "no golden light before 23.7s" làm ánh sáng hiện trễ gần 2 giây; viết thành mốc khẳng định "appears exactly at 23.7s and stays". Lần sau, dù đã viết khẳng định và làm khối sáng trong previz sáng hơn, ánh vàng vẫn trễ khoảng 1.5 giây và nhân vật phản ứng trước khi có ánh sáng: hiệu ứng sáng xuất hiện ở một mốc nhấn thì ghép ở hậu kỳ, prompt chỉ giữ chỗ (vật phát sáng nằm đó) và cho nhân vật nhìn vật khác tới đúng mốc.
+  - **Hiệu ứng sáng ở một mốc nhấn thì ghép ở hậu kỳ:** viết luật phủ định ("no golden light before 23.7s") làm ánh sáng trễ gần 2 giây; viết mốc khẳng định và làm khối sáng hơn vẫn trễ khoảng 1.5 giây, nhân vật phản ứng trước. Prompt chỉ giữ chỗ (vật phát sáng nằm đó, mép sáng mỏng) và cho nhân vật nhìn vật khác tới đúng mốc.
   - **Câu cho phép gọi ra thứ không muốn:** "only the cheeks may blush", "cheeks blush only in this moment" làm má đỏ suốt cú. Đừng nhắc tới nét không muốn kể cả để cho phép; tả nét muốn có ("cream cheeks as in @Image1") và tả cảm xúc bằng động tác (cụp tai, rụt vai).
   - **Nhân vật trôi thiết kế giữa các đoạn** (chỏm lông kem thành nơ hồng, lông nhạt màu): câu chữ ("one tall cream swoosh of fur, never a bow or knot") không giữ được qua hai lần sinh; chi tiết nhỏ dễ trôi thì thêm một ảnh tham chiếu cận đúng chi tiết đó (cận đầu Lumo thấy rõ chỏm lông).
   - **Vật phẳng có hình vẽ xoay nhanh trộn hai ảnh tham chiếu** (bản đồ trước và sau khi xoay thành một tấm có hai rương, hai mũi tên): cú xoay ngắn mà cần đọc ra chiều thì ghép mặt vật ở hậu kỳ, hoặc sinh riêng cú đó với khung đầu, khung cuối; đừng đưa hai ảnh hai chiều của cùng vật vào một lần sinh.
@@ -349,6 +477,7 @@ HOLD
 | Cú máy, cỡ cảnh, chỗ cắt khớp previz từng giây | Nhấn mạnh CAMERA, HOLD; nếu vẫn lệch thì làm previz rõ hơn (khối to hơn, ít vật thừa) |
 | Đúng số nhân vật, không người thừa | Thêm số vào RULES, HOLD |
 | Nhân vật giống ảnh tham chiếu, đúng tỉ lệ | Sửa tỉ lệ khối trong previz; thêm ý vào CHARACTERS |
+| Cỡ đạo cụ, nhân vật nền, vật bối cảnh so với Lumo đúng `02_ASSET_LIBRARY/MODELING.md`, mục "Bảng cỡ" (đo bằng đầu, mắt Lumo trong cùng khung) | Sửa cỡ khối trong previz trước (take thường còn to hơn previz); trong CHARACTERS, SIZES so với bộ phận thấy trong cùng khung ("wingspan as wide as Lumo's nose"); ảnh tham chiếu ghi "size not inherited" |
 | Màu khối không lọt vào hình | Nhấn "do not take color from @Video1" |
 | Hành động, biểu cảm, khoảng nói đúng mốc giây | Tách khối TIMELINE nhỏ hơn, mỗi mốc một việc |
 | Không chữ, logo, cảnh đáng sợ | Thêm vào RULES |

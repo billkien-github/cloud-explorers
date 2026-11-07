@@ -904,7 +904,7 @@ def map_obs_glow(col=TEAL, light=TEAL_L):
 
 def hub_shapes(cx, cz, s):
     """Wonder Hub nhìn từ xa (đài thiên văn mái vòm): dáng Hub_House ở previz 2D Cảnh 2 tập 01
-    (Previz_2D/EP001_Great_Rain_Experiment/canh02/build_shot.py) thu theo s, gốc ở tâm nền nhà; nan hoa vàng trong ô cửa
+    (Previz_2D/EP001_Great_Rain_Experiment/scene02/build_shot.py) thu theo s, gốc ở tâm nền nhà; nan hoa vàng trong ô cửa
     tròn như ảnh wonder_hub_island_hero.png."""
     gold = "#E8B33A"
     w = (cx, cz + 0.28 * s)

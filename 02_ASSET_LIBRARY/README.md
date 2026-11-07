@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| [`MODELING.md`](MODELING.md) | Ảnh tham chiếu và model 3D: ảnh của từng tập cho Seedance, bộ ảnh dựng model, prompt ChatGPT và cách sinh, dựng và rig trong Blender |
+| [`MODELING.md`](MODELING.md) | Bảng cỡ; ảnh tham chiếu và model 3D: ảnh của từng tập cho Seedance, bộ ảnh dựng model, prompt ChatGPT và cách sinh, dựng và rig trong Blender |
 
 ## Quy ước cho mỗi asset
 

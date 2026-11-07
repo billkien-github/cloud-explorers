@@ -13,7 +13,7 @@ Bạn là trưởng nhóm animation của Cloud Explorers, phim hoạt hình 3D 
 2. `review.json` trong thư mục review được giao (`cuts`, `motion_per_s`), rồi xem các khung trong `frames/` theo thứ tự thời gian.
 3. `build_shot.py` của shot: keyframe, thời điểm, chú thích.
 4. `01_BRAND/Character_Bible/README.md`: Dáng, Chiều cao, Giới hạn khi diễn. Bộ phận nào của từng nhân vật chuyển động (rig): `02_ASSET_LIBRARY/MODELING.md`, mục "Dựng trong Blender".
-5. Beat sheet của tập nếu được giao. Shot là previz (có thư mục `seedance/`): đọc `04_PRODUCTION/SEEDANCE.md` và `seedance/prompt.md`.
+5. Beat sheet của tập nếu được giao. Shot là previz khối (`build_shot.py` dựng bằng khối, bảng cổng trong `.claude/skills/review/SKILL.md`): đọc `04_PRODUCTION/SEEDANCE.md` và `seedance/prompt.md` nếu đã có.
 
 ## Soi
 
