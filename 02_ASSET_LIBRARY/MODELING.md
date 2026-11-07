@@ -141,7 +141,7 @@ Làm khi kịch bản của tập đã chốt qua `/review`, trước previz 2D 
    - **Đạo cụ** có thiết kế riêng mà truyện dựa vào (máy Rain-O-Matic, bánh răng vàng): một ảnh `<tên>_ref.png` nhìn 3/4. Thêm ảnh trạng thái chỉ khi trạng thái đó lên hình và khó tả bằng chữ (`_frost`).
    - **Không sinh:** đồ quen thuộc tả được bằng chữ trong prompt Seedance (thìa, ô, cuộn dây), hiệu ứng dựng trong Blender (mây bé), vật nhỏ đã có trong ảnh bối cảnh, thứ đã có ảnh từ tập trước.
 2. **Thêm mục "Tập NN"** vào "Ảnh của từng tập", đúng thứ tự phát hành, theo khuôn các tập có sẵn: bảng ảnh trước, mỗi asset một dòng gồm thư mục, tên file ảnh, cột Có để ❌; dưới bảng ghi những thứ không sinh ảnh và vì sao. Tên file theo [`README.md`](README.md).
-3. **Viết prompt vào file trước khi sinh:** nhân vật phụ, đạo cụ thành hai mục con "Nhân vật phụ", "Đạo cụ" trong mục "Tập NN", theo thứ tự sinh; bối cảnh ở `04_PRODUCTION/SEEDANCE.md`, mục "Prompt sinh ảnh tham chiếu bằng ChatGPT". Theo khuôn các prompt có sẵn:
+3. **Viết prompt vào file trước khi sinh:** nhân vật phụ, đạo cụ thành hai mục con "Nhân vật phụ", "Đạo cụ" trong mục "Tập NN", theo thứ tự sinh; bối cảnh ở mục con "Bối cảnh". Theo khuôn các prompt có sẵn:
    - Đầu mỗi asset ghi vai của nó trong phim (thấy gì, diễn gì), để biết ảnh cần cho thấy những gì.
    - Đính kèm `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png` (bối cảnh: `01_BRAND/Brand_Guideline/world_key_art.png`), ghi rõ chỉ lấy phong cách. Cần so cỡ với nhân vật thì đính kèm thêm `01_BRAND/Character_Bible/cast_lineup.png` (bốn nhân vật cùng đường chân, cao đúng tỉ lệ) và ghi lấy cỡ từ ảnh đó: băng nhóm trên character sheet vẽ Nori, Piko chỉ khoảng nửa Lumo. Các prompt đã có còn ghi "style and scale" với character sheet: sinh lại ảnh nào thì đổi theo luật này.
    - Tả đúng những gì kịch bản cần: bộ phận được dùng tới, đếm được thì ghi số. Nhân vật phụ tránh màu riêng của bốn nhân vật chính.
@@ -173,11 +173,11 @@ Làm khi kịch bản của tập đã chốt qua `/review`, trước previz 2D 
 
 ## Ảnh của từng tập
 
-Mỗi tập: bảng ảnh (sinh theo thứ tự bảng), những thứ không sinh ảnh, rồi prompt nhân vật phụ và đạo cụ. Prompt bối cảnh nằm ở `04_PRODUCTION/SEEDANCE.md`, mục "Prompt sinh ảnh tham chiếu bằng ChatGPT". Cỡ: "Bảng cỡ", mục "Cỡ tập NN".
+Mỗi tập: bảng ảnh (sinh theo thứ tự bảng), những thứ không sinh ảnh, rồi prompt nhân vật phụ, đạo cụ và bối cảnh. Bối cảnh ở mục con "Bối cảnh" của mỗi tập. Cỡ: "Bảng cỡ", mục "Cỡ tập NN".
 
 ### Tập 000A
 
-Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000A_mysterious_compass.md`, mục "Sản xuất", đã soát với kịch bản. Sinh theo thứ tự bảng, vì ảnh sau đính kèm ảnh trước. Prompt: nhân vật phụ, đạo cụ ở mục con dưới đây; bối cảnh ở `04_PRODUCTION/SEEDANCE.md`, mục "Prompt sinh ảnh tham chiếu bằng ChatGPT".
+Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000A_mysterious_compass.md`, mục "Sản xuất", đã soát với kịch bản. Sinh theo thứ tự bảng, vì ảnh sau đính kèm ảnh trước. Prompt: nhân vật phụ, đạo cụ ở mục con dưới đây; bối cảnh ở mục con "Bối cảnh".
 
 | Asset | Thư mục | Ảnh | Có |
 |---|---|---|---|
@@ -221,7 +221,7 @@ A design sheet with the same butterfly in three poses: 1) wings fully open, seen
 #### Đạo cụ
 
 - Mỗi món một chat, lưu ảnh vào `concept/` của thư mục ghi ở bảng "Tập 000A".
-- Bản đồ giấy làm đầu tiên; bệ đá làm sau ảnh cầu ván và ảnh hòn đảo (`04_PRODUCTION/SEEDANCE.md`), vì bệ đá đính kèm cả ba.
+- Bản đồ giấy làm đầu tiên; bệ đá làm sau ảnh cầu ván và ảnh hòn đảo (mục con "Bối cảnh"), vì bệ đá đính kèm cả ba.
 
 **Bản đồ giấy** (Cảnh 1, 4, 5: Lumo cầm ngược, xoay qua xoay lại; Cảnh 4 đặt cạnh bản đồ khắc trên bệ đá). Đính kèm `cloud_explorers_character_sheet.png`, lưu `paper_map_ref.png`. Ảnh vẽ bản đồ đúng chiều; cầm ngược là xoay nửa vòng. Soát ảnh bằng cách xoay 180°: mọi hình phải nhìn ra là đang lộn ngược. Ảnh hiện tại chưa đạt: chiếc rương vẽ gần đối xứng nên xoay rồi vẫn trông đứng thẳng, mặt đá dưới các đảo lật lên trông như núi (bản nháp `sh010` Cảnh 1 tập 000A); chỉ mũi tên đọc ra chiều.
 ```
@@ -244,9 +244,87 @@ Image 1 shows an old stone plinth on the far side of a vine bridge, Image 2 is L
 - Square 1:1, centered with some margin. Plain flat light-gray background, soft even lighting, no ground shadow.
 ```
 
+#### Bối cảnh
+
+Mỗi ảnh một chat; thứ tự sinh theo bảng ảnh của tập. Phế tích, vòm đá, bệ đá không mang dáng nơi thờ tự (ghi chú Cảnh 2 của kịch bản); cầu ván không có khung nhìn xuống khe sâu (ghi chú Cảnh 4).
+
+**Rừng Mây** (Cảnh 1). Đính kèm `01_BRAND/Brand_Guideline/world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Cloud_Forest/concept/cloud_forest_hero.png`.
+```
+The attached image is a style and palette reference only: soft stylized 3D animated film for young children, warm sunlight, pastel colors, floating islands and a cloud sea. Do not copy its layout or its pagodas.
+
+Create a NEW location in the same world: the Cloud Forest, a lush forest on a floating island. One wide 16:9 image, eye level, bright morning, no characters, no animals.
+- A wide forest path of soft earth runs from the foreground into the distance on the right, open and inviting.
+- Left: the path is blocked by a tall smooth rock wall; right in front of it grows a round bush covered with small fuzzy round burrs (soft-looking, like burdock burrs, no sharp thorns).
+- Right side: the path edge drops into a gentle slope covered with a thick layer of dry orange-brown leaves that clearly goes DOWN, away from the viewer, to a lower mossy clearing with a soft pile of leaves at its foot. We look down the slope from the path and see its grassy, mossy bottom clearly; it is gentle, never a cliff. No raised mound of leaves.
+- Background: big round tree canopies, and beyond the island's edge other floating islands with waterfalls pouring into the cloud sea.
+- Soft rounded shapes, gentle and cheerful. No buildings, no ruins. No text, no logos, no watermark.
+```
+
+**Phế tích cổ** (Cảnh 2–3, ngoài trời). Đính kèm `world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Ancient_Ruins/concept/ancient_ruins_hero.png`.
+```
+The attached image is a style and palette reference only: soft stylized 3D animated film for young children, warm sunlight, pastel colors. Do not copy its layout or its pagodas.
+
+Create a NEW location in the same world: the forgotten ruins of an unknown ancient people who watched the sky, almost swallowed by the Cloud Forest. One wide 16:9 image, eye level, soft daylight, no characters, no animals.
+- A mossy clearing with a thick soft carpet of moss and a few flat stone slabs lying on the ground.
+- Behind it, a long old stone wall of big rounded weathered blocks with moss and small ferns.
+- Along the wall to the right, a thick curtain of hanging vines; through a small gap in the vines, part of a large stone relief carved in the shape of a cloud is visible.
+- The only carved symbols are clouds, compass faces and compass-rose stars (four long points alternating with four short points). No eight equal points, no five- or six-pointed stars.
+- NOT a temple or shrine: no pagoda roofs, no statues, no altars, no incense, no candles, no lanterns, no religious symbols.
+- Big round tree canopies all around. Warm and mysterious, never scary. No text, no logos, no watermark.
+```
+
+**Vòm đá** (Cảnh 3, trong vòm). Đính kèm theo thứ tự `ancient_ruins_hero.png`, `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Ancient_Ruins/concept/stone_vault_hero.png`.
+```
+Image 1 shows the outside of these ruins (soft stylized 3D animated film for young children). Image 2 shows the characters, for scale only. Create the inside: a small old stone vault behind the ruin wall. One wide 16:9 image, eye level, no characters, no animals.
+- The same weathered stone and moss as Image 1. A rounded vault ceiling with a few small round openings; daylight spreads softly and evenly through the whole room, with no light beam falling on anything.
+- Center: a slim round stone pillar only about as wide as Lumo's shoulders in Image 2, its flat top at Lumo's chest height, so the small compass recess in the middle of the top is within reach of his very short arms. The top is carved like a big compass face, with a shallow round recess the size of a pocket compass in the middle, plain stone, not glowing; clouds and compass-rose stars (four long points alternating with four short points) are carved around its sides.
+- Far end: a closed stone door carved all over with cloud shapes.
+- Quiet, dusty, a little magical. NOT a temple or shrine: no altar, no statue, no lotus base, no candles, no incense, no offerings, no religious symbols. No text, no logos, no watermark.
+```
+
+**Cầu ván cổ qua khe núi** (Cảnh 4; lối nhỏ, lưới dây leo, bệ đá bên kia khe). Đính kèm theo thứ tự `ancient_ruins_hero.png`, `cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Ancient_Ruins/concept/vine_bridge_hero.png`.
+```
+Image 1 shows the ruins (soft stylized 3D animated film for young children). Image 2 shows the characters, for scale only. Create a NEW location behind the ruins: an old wooden bridge across a narrow mountain gorge, seen from a stone doorway on this side. One wide 16:9 image, eye level, soft daylight, no characters, no animals.
+- The same weathered stone and moss as Image 1.
+- An old plank bridge crosses the gorge straight ahead. Its low side rails, wrapped in green vines, reach the chest of Lumo the fox in Image 2. The planks are weathered and a few look loose.
+- Just under the bridge, about one fox-height below it, a thick net of woven green vines stretches like a hammock across the whole gorge from cliff to cliff, hiding everything below. The bottom of the gorge is never visible, no dark drop.
+- On the far side: a square stone plinth with a raised eight-pointed compass-rose star on its top like a button (four long points alternating with four short points).
+- To the left of the doorway, half hidden behind leafy bushes: a narrow path of wide stone steps set back into the cliff, with a low stone lip on the outer edge and a thick vine handrail at the fox's chest height. It runs along the cliff to the head of the gorge, where the gorge narrows, and around to the plinth. The vine net reaches right up to the foot of this path.
+- Calm and adventurous, never scary. No text, no logos, no watermark.
+```
+
+**Đỉnh đồi lúc hoàng hôn** (Cảnh 5, lúc hòn đảo chưa hiện). Đính kèm `world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Sunset_Hill/concept/sunset_hill_hero.png`.
+```
+The attached image is a style and palette reference only: soft stylized 3D animated film for young children, pastel colors, floating islands and a cloud sea. Do not copy its layout or its pagodas.
+
+Create a NEW location in the same world: a gentle grassy hilltop on a floating island at sunset, looking out over a vast cloud sea. One wide 16:9 image, eye level, no characters, no animals.
+- Foreground: the soft rounded top of the hill, short grass, a flat smooth rock in the middle, wide enough to lay a map on.
+- The hilltop ends a few steps beyond the rock in a soft rounded edge, and from there a wide gentle slope covered with a thick layer of dry orange-brown leaves goes DOWN away from us, so we look down along it and clearly see its grassy bottom with a few bushes. On the right, a stone footpath winds gently down beside the leaf slope. No cliff, no drop.
+- Beyond: a vast golden-pink cloud sea under a warm sunset sky. On the horizon a thick bank of clouds hides whatever is behind it; no island visible.
+- Peaceful and full of promise. No buildings. No text, no logos, no watermark.
+```
+
+**Hòn đảo có Wonder Hub, nhìn từ xa** (Cảnh 5: mây tách, đảo dần hiện ra, đài thiên văn lóe xanh ngọc; post-credit: đảo ở chân trời). Đính kèm theo thứ tự `sunset_hill_hero.png`, `world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Wonder_Hub/concept/wonder_hub_island_hero.png`. Dáng Wonder Hub theo previz 2D Cảnh 2 tập 01 (`03_CONTENT/Previz_2D/EP001_Great_Rain_Experiment/scene02/build_shot.py`, đoạn "cú cận: Wonder Hub"): nền tròn thấp màu kem, mái vòm tím nhạt viền vàng, ô cửa tròn khung vàng giữa vòm, khối phụ thấp bên phải.
+```
+Image 1 is the view from a hilltop at sunset; Image 2 is a style reference only (soft stylized 3D animated film for young children). Create a long telephoto view far across the same cloud sea, in the same sunset light as Image 1. One wide 16:9 image, no characters, no animals. Nothing from Image 1's foreground: no hilltop, no tree, no rock, no grass, no leaves; only the sky, the cloud sea and the island.
+- Center, far away and slightly hazy: a floating island emerging as the clouds part around it. On the island, a big rounded hill and, at its foot, a huge ancient observatory.
+- The observatory: a wide low round base of cream stone, topped by a big round dome in soft pale lavender with a gold band along its lower rim; one large round window in the front of the dome with a gold frame; a small low cream wing on its right side. Its silhouette reads clearly against the sky.
+- The observatory is not glowing in this image; only warm sunset light on the dome.
+- Wisps of cloud still drift around the island. Magical, calm and inviting. No text, no logos, no watermark.
+```
+
+**Bãi phế liệu** (post-credit EP000A: hộp kim loại, Inventor Pack lóe qua khe nắp cùng nhịp hòn đảo ở chân trời). Đính kèm theo thứ tự `world_key_art.png`, `wonder_hub_island_hero.png`, `02_ASSET_LIBRARY/Props/Inventor_Pack/concept/inventor_pack_ref.png`. Lưu `02_ASSET_LIBRARY/Environments/Junkyard/concept/junkyard_hero.png`.
+```
+Image 1 is a style and palette reference only (soft stylized 3D animated film for young children); do not copy its layout or its pagodas. Image 2 is a far island with a domed observatory. Image 3 is a backpack, only for the look of its strap. Create a NEW location in the same world: a cozy junkyard of old machine parts at sunset. One wide 16:9 image, eye level, no characters, no animals.
+- Soft rounded piles of old gears, springs, pipes, wheels and copper scraps, a little rusty but cute and never dangerous: no sharp edges, no broken glass.
+- Center foreground: a dusty old metal box with its lid slightly open; through the gap only one brown leather strap with a gold buckle from Image 3 is visible, nothing else of the backpack.
+- Far away on the horizon, behind the piles: the island from Image 2, small and hazy, not glowing.
+- Warm sunset light, quiet and a little mysterious. No text, no logos, no watermark.
+```
+
 ### Tập 000B
 
-Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000B_impossible_invention.md`, mục "Sản xuất", đã soát với kịch bản. Sinh theo thứ tự bảng, vì ảnh sau đính kèm ảnh trước. Prompt: đạo cụ ở mục con dưới đây (tập không có nhân vật phụ mới); bối cảnh ở `04_PRODUCTION/SEEDANCE.md`, mục "Prompt sinh ảnh tham chiếu bằng ChatGPT".
+Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000B_impossible_invention.md`, mục "Sản xuất", đã soát với kịch bản. Sinh theo thứ tự bảng, vì ảnh sau đính kèm ảnh trước. Prompt: đạo cụ ở mục con dưới đây (tập không có nhân vật phụ mới); bối cảnh ở mục con "Bối cảnh".
 
 | Asset | Thư mục | Ảnh | Có |
 |---|---|---|---|
@@ -262,7 +340,7 @@ Không sinh ảnh riêng: Tavi, Inventor Pack, hộp kim loại, hòn đảo có
 #### Đạo cụ
 
 - Mỗi món một chat, lưu ảnh vào `concept/` của thư mục ghi ở bảng "Tập 000B".
-- Máy làm bữa sáng làm trước ảnh xưởng; máy phân loại làm trước ảnh bản vẽ (cả hai ảnh sau đính kèm ảnh trước). Bối cảnh ở `04_PRODUCTION/SEEDANCE.md`.
+- Máy làm bữa sáng làm trước ảnh xưởng; máy phân loại làm trước ảnh bản vẽ (cả hai ảnh sau đính kèm ảnh trước). Bối cảnh ở mục con "Bối cảnh".
 - Máy của tập này không mang màu riêng của Tavi (xanh lá) và không có ánh xanh ngọc (màu tín hiệu của bảo bối, hòn đảo), trừ nét vẽ trên cuộn bản vẽ.
 
 **Máy làm bữa sáng** (Cảnh 1, 5: Tavi gật cho kính xuống, kéo cần gạt; lõi tinh thể sáng khi chạy, tắt khi dừng; cánh tay phết mứt quay lệch hất mứt lên kính; ống bắn hất lát bánh qua đĩa vào thùng rác; Tavi mở nắp hông lấy bánh răng nhỏ nứt đôi; phiên bản 28: bệ lò xo dưới đĩa hất lát bánh dính trần). Đính kèm `cloud_explorers_character_sheet.png`, lưu `breakfast_machine_ref.png`. Ảnh ở trạng thái dừng, lõi tắt; lúc chạy tả bằng chữ.
@@ -300,9 +378,47 @@ Image 1 is Tavi's backpack, Image 2 is a parts sorting machine; both from a soft
 - Wide 16:9, centered with some margin. Plain flat light-gray background, soft even lighting, no ground shadow.
 ```
 
+#### Bối cảnh
+
+Mỗi ảnh một chat; thứ tự sinh theo bảng ảnh của tập. Ban ngày chân trời là một dải mây dày che hòn đảo; lúc hoàng hôn mây tách (đã có `junkyard_hero.png`). Bãi phế liệu không có cạnh sắc, kính vỡ, đinh, không đống nào cao quá đầu Tavi (beat sheet EP000B, mục "Luật nhân quả").
+
+**Xưởng của Tavi, bên trong** (Cảnh 1 lúc sáng, Cảnh 5 lúc hoàng hôn: tả bằng chữ). Đính kèm theo thứ tự `01_BRAND/Brand_Guideline/world_key_art.png`, `02_ASSET_LIBRARY/Props/Breakfast_Machine/concept/breakfast_machine_ref.png`. Lưu `02_ASSET_LIBRARY/Environments/Tavi_Workshop/concept/tavi_workshop_hero.png`.
+```
+Image 1 is a style and palette reference only (soft stylized 3D animated film for young children); do not copy its layout or its pagodas. Image 2 is a homemade breakfast machine. Create a NEW location in the same world: inside the small workshop of Tavi, a little lizard inventor, in the morning. One wide 16:9 image, eye level, no characters, no animals.
+- A cozy round room under a domed wooden roof, warm and a little messy, everything with soft rounded shapes.
+- On the back wall, a long row of pinned paper sketches of the breakfast machine, each with one big hand-drawn cross over it. Simple drawings only, no text.
+- A sturdy workbench with a few tools, a roll of paper and a pencil stub.
+- The breakfast machine from Image 2, unchanged, standing on the floor in the middle, with its plate on the spring platform beside it, and a small round trash bin a few steps behind the plate.
+- In one corner, a heap of spare parts (springs, screws, pipes, small wheels), about as high as the workbench.
+- A round window looking out on slowly turning windmills, the low vine-covered piles of a junkyard right outside, and far away a thick band of white cloud on the horizon; a wooden door with a low step.
+- Soft morning sunlight through the window. No wires, no plugs, no fire. No text, no logos, no watermark.
+```
+
+**Sân lắp máy ở bãi phế liệu, ban ngày** (Cảnh 2–4: khoảng đất trống lát đá, bức tường đá Tavi nấp sau, bậc đá trải bản vẽ). Đính kèm theo thứ tự `02_ASSET_LIBRARY/Environments/Junkyard/concept/junkyard_hero.png`, `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Junkyard/concept/junkyard_yard_hero.png`.
+```
+Image 1 is a cozy junkyard from a soft stylized 3D animated film for young children; keep exactly its look, materials and colors. Image 2 shows the characters, for scale only; do not draw them. Create the same junkyard in bright midday sunlight, another part of it: the open work area. One wide 16:9 image, eye level, no characters, no animals.
+- In the middle: a flat open area of old stone paving, swept clear, big enough for a machine twice as tall as Tavi (the small green lizard in Image 2).
+- On the left side of the area: one straight old stone wall, a little taller than Lumo the fox in Image 2, so it hides Tavi completely, cap and all. Along the foot of the wall on the yard side runs a broad flat stone step at Tavi's chest height. Both ends of the wall are open, so one can walk around behind it.
+- All around: soft low piles of old gears, springs, pipes and wheels as in Image 1, none higher than Tavi's head, covered in green vines and small flowers. No sharp edges, no broken glass, no nails.
+- At the edge of the yard, the round wall and round window of a small workshop.
+- On the far horizon: a thick, long band of soft white cloud lying across the sky. No island visible.
+- Cheerful, sunny, no text, no logos, no watermark.
+```
+
+**Đảo cối xay gió** (Cảnh 1, cảnh toàn khoảng 2 giây). Đính kèm theo thứ tự `01_BRAND/Brand_Guideline/world_key_art.png`, `02_ASSET_LIBRARY/Environments/Junkyard/concept/junkyard_yard_hero.png`, `02_ASSET_LIBRARY/Environments/Tavi_Workshop/concept/tavi_workshop_hero.png`. Lưu `02_ASSET_LIBRARY/Environments/Windmill_Island/concept/windmill_island_hero.png`.
+```
+Image 1 is a style and palette reference only (soft stylized 3D animated film for young children); do not copy its layout or its pagodas. Image 2 is a junkyard work area and Image 3 the inside of a small domed workshop; both are on this island. Create a NEW location in the same world: the windmill island seen from a distance. One wide 16:9 establishing shot, slightly above, bright morning, no characters, no animals.
+- A small round floating island of green grass and rounded rocks in a sea of soft white clouds.
+- Five or six cute windmills with soft rounded towers and four sails, turning slowly, spread over the island.
+- Nestled between the windmills: a small cozy workshop with a round domed roof and a round window, matching Image 3.
+- Right next to the workshop: the junkyard of Image 2, low piles of old parts covered in vines and flowers, with its stone wall and paved work area.
+- On the far horizon: a thick, long band of soft white cloud lying across the sky. No other island visible.
+- Soft rounded shapes, pastel colors, gentle and inviting. No text, no logos, no watermark.
+```
+
 ### Tập 000C
 
-Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000C_forgotten_story.md`, mục "Sản xuất", đã soát với kịch bản. Sinh theo thứ tự bảng, vì ảnh sau đính kèm ảnh trước. Prompt: nhân vật phụ, đạo cụ ở mục con dưới đây; bối cảnh ở `04_PRODUCTION/SEEDANCE.md`, mục "Prompt sinh ảnh tham chiếu bằng ChatGPT". Ảnh thư viện, sách giữ đúng ràng buộc "không mang dáng nơi thờ tự" ở mục "Sản xuất" của beat sheet.
+Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000C_forgotten_story.md`, mục "Sản xuất", đã soát với kịch bản. Sinh theo thứ tự bảng, vì ảnh sau đính kèm ảnh trước. Prompt: nhân vật phụ, đạo cụ ở mục con dưới đây; bối cảnh ở mục con "Bối cảnh". Ảnh thư viện, sách giữ đúng ràng buộc "không mang dáng nơi thờ tự" ở mục "Sản xuất" của beat sheet.
 
 | Asset | Thư mục | Ảnh | Có |
 |---|---|---|---|
@@ -344,7 +460,7 @@ A design sheet: about six books in different flying poses (covers spread like wi
 #### Đạo cụ
 
 - Mỗi món một chat, lưu ảnh vào `concept/` của thư mục ghi ở bảng "Tập 000C".
-- Ba bình hoa làm trước ảnh trong thư viện (`04_PRODUCTION/SEEDANCE.md`), vì ảnh đó đính kèm ảnh bình hoa.
+- Ba bình hoa làm trước ảnh trong thư viện (mục con "Bối cảnh"), vì ảnh đó đính kèm ảnh bình hoa.
 
 **Ba bình hoa** (Cảnh 1: quyển sách nhỏ trốn sau bình ba bông; Cảnh 3: hình trong kính là bình ba bông, Nori đếm hoa chọn đúng bình, sau bình có một cánh hoa rơi). Đính kèm `cloud_explorers_character_sheet.png`, lưu `flower_vases_ref.png`.
 ```
@@ -374,9 +490,55 @@ Image 1 is the open Silver Book from this chat. Image 2 is a far island with a d
 - No moon anywhere. No text, no letters, no numbers. Plain flat light-gray background, soft even lighting, no ground shadow.
 ```
 
+#### Bối cảnh
+
+Mỗi ảnh một chat; thứ tự sinh theo bảng ảnh của tập. Thư viện không mang dáng nơi thờ tự và trăng khuyết không đi kèm ngôi sao (beat sheet EP000C, mục "Sản xuất").
+
+**Thư viện cổ, nhìn từ ngoài** (Cảnh 1, cảnh toàn khoảng 2 giây). Đính kèm `01_BRAND/Brand_Guideline/world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Library/concept/library_exterior_hero.png`.
+```
+The attached image is a style and palette reference only: soft stylized 3D animated film for young children, warm sunlight, pastel colors, floating islands and a cloud sea. Do not copy its layout or its pagodas.
+
+Create a NEW location in the same world: the Ancient Library, an old library of stone and warm wood on a small floating island in the cloud sea. One wide 16:9 image, a wide establishing view from a little above, bright morning, no characters, no animals, no flying books.
+- A cozy, rambling library building: rounded stone walls, warm wooden beams, gabled wooden roofs with soft rounded tiles, one short round tower with a cone roof, many small round and rectangular windows, a wooden balcony on one side facing the open cloud sea.
+- Streams of glowing light pour like waterfalls from the edges of the island down into the clouds.
+- NOT a temple, church, mosque or shrine: no domes, no pagoda roofs, no spires, no bell towers, no statues, no religious symbols. No crescent or star shapes anywhere.
+- Gentle, magical and inviting. No text, no logos, no watermark.
+```
+
+**Trong thư viện** (Cảnh 1–4: giá sách cao, ô cửa trăng có bậu lót đệm, vệt nắng hình trăng cạnh bàn đọc, tủ thấp ba bình hoa ở góc, cửa ra ban công). Đính kèm theo thứ tự `library_exterior_hero.png`, `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`, `02_ASSET_LIBRARY/Props/Flower_Vases/concept/flower_vases_ref.png`. Lưu `02_ASSET_LIBRARY/Environments/Library/concept/library_interior_hero.png`.
+```
+Image 1 shows the outside of this library (soft stylized 3D animated film for young children). Image 2 shows the characters, for scale only. Image 3 shows three flower vases. Create the inside: the main reading hall. One wide 16:9 image, eye level, bright morning, no characters, no animals, no flying books (all books rest on the shelves).
+- The same warm wood and stone as Image 1. Tall wooden bookshelves rise high toward a beamed wooden ceiling, packed with books with muted covers (brown, cream, light brick red, ash gray); the top shelves are tightly full.
+- On the left side wall, at mid-height and off-center toward the far end: one window shaped like a crescent moon, with a deep sill padded with a soft cushion. Through the window only sky and soft clouds: no building, no dome, no star. No pointed arch around the window.
+- Morning sun shines straight through the crescent window as one clear beam down to the floor, printing a crescent-shaped patch of sunlight on the floor next to the reading desk, slightly stretched along the beam. Half of the window sill is in shade.
+- Near the middle: the reading desk, an ordinary wooden table with a low slanted book rest, not a lectern or a podium.
+- In the far corner on the right, next to a bookshelf and NOT under the window: a low wooden cabinet with the three vases of Image 3 on it, exactly as in Image 3 (one, two and three flowers). Nothing else on the cabinet; the arrangement is not symmetrical.
+- On the right wall: an open wooden door to a balcony, showing the cloud sea outside.
+- NOT a temple, church, mosque or shrine: no altar, no statues, no candles, no incense, no lanterns, no offerings, no religious symbols; no star shapes anywhere. No text, no logos, no watermark.
+```
+
+**Ban công thư viện lúc hoàng hôn** (Cảnh 5, lúc hòn đảo chưa hiện; hòn đảo hiện ra: đính kèm thêm `wonder_hub_island_hero.png` khi sinh Seedance). Đính kèm theo thứ tự `library_interior_hero.png`, `world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Library/concept/library_balcony_hero.png`.
+```
+Image 1 is the inside of this library; Image 2 is a style reference only (soft stylized 3D animated film for young children). Create the library's balcony at sunset, looking out over the cloud sea. One wide 16:9 image, eye level, no characters, no animals.
+- Foreground: a wooden balcony floor and a sturdy wooden railing with a flat top rail, wide enough for a small book to perch on; the same wood and stone as Image 1; the open balcony door at one edge, showing bookshelves only. No flower vases and no potted plants anywhere (the three vases belong only to the cabinet inside).
+- Beyond: a vast cloud sea glowing gold and orange under a warm gold, peach and orange sky, not purple. The sun is setting BEHIND the viewer, out of frame: its warm low light falls on the clouds ahead; the sun itself is not in the image.
+- On the horizon, a thick bank of clouds hides whatever is behind it; no island visible. No moon, no stars in the sky.
+- Calm and full of promise. No text, no logos, no watermark.
+```
+
+**Khu chợ nổi lúc hoàng hôn** (post-credit EP000C: Pocket of Wonders giữa đống hàng hoá lóe cùng nhịp hòn đảo ở chân trời; ảnh này chốt dáng chợ cho EP000D, tập Piko có rượt đuổi). Đính kèm theo thứ tự `world_key_art.png`, `wonder_hub_island_hero.png`, `02_ASSET_LIBRARY/Props/Pocket_of_Wonders/concept/pocket_of_wonders_ref.png`. Lưu `02_ASSET_LIBRARY/Environments/Floating_Market/concept/floating_market_hero.png`.
+```
+Image 1 is a style and palette reference only (soft stylized 3D animated film for young children); do not copy its layout or its pagodas. Image 2 is a far island with a domed observatory. Image 3 is a small purple pouch. Create a NEW location in the same world: a corner of a cozy floating market at sunset. One wide 16:9 image, eye level, no characters, no animals.
+- Small market stalls on little floating islands linked by rope bridges, with striped cloth awnings, wooden crates, baskets, jars, rolls of cloth and bundles of goods; soft rounded shapes, cheerful, never messy or dangerous.
+- Wide wooden walkways wind between the stalls and over the bridges, with room for a small creature to run and be chased through the market.
+- Center foreground: a pile of goods in one quiet corner; among them, partly tucked between a basket and a crate but clearly visible, the purple pouch of Image 3 with its gold rope, not glowing. The pouch is small, about a third of the height of the nearby crate, a little bigger than an apple, clearly smaller than the baskets and crates around it.
+- Far away on the horizon, behind the stalls: the island of Image 2, small and hazy, not glowing.
+- Warm sunset light, quiet and a little mysterious. No text, no letters, no signs, no logos, no watermark.
+```
+
 ### Tập 000D
 
-Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000D_magic_pocket.md`, mục "Sản xuất" và bảng "Bố trí góc chợ", đã soát với kịch bản. Sinh theo thứ tự bảng, vì ảnh sau đính kèm ảnh trước. Prompt: nhân vật phụ, đạo cụ ở mục con dưới đây; bối cảnh ở `04_PRODUCTION/SEEDANCE.md`, mục "Prompt sinh ảnh tham chiếu bằng ChatGPT". Cỡ trong prompt lấy từ bảng "Bố trí góc chợ", tính theo chiều cao Piko (P = 0.8 Lumo).
+Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000D_magic_pocket.md`, mục "Sản xuất" và bảng "Bố trí góc chợ", đã soát với kịch bản. Sinh theo thứ tự bảng, vì ảnh sau đính kèm ảnh trước. Prompt: nhân vật phụ, đạo cụ ở mục con dưới đây; bối cảnh ở mục con "Bối cảnh". Cỡ trong prompt lấy từ bảng "Bố trí góc chợ", tính theo chiều cao Piko (P = 0.8 Lumo).
 
 | Asset | Thư mục | Ảnh | Có |
 |---|---|---|---|
@@ -432,7 +594,7 @@ Now one separate image of the same mother fish with her three babies, to show th
 #### Đạo cụ
 
 - Mỗi món một chat, lưu ảnh vào `concept/` của thư mục ghi ở bảng "Tập 000D".
-- Cá mây (mục trên) làm trước giỏ tổ; xửng hấp làm trước ảnh đảo quầy bánh, quầy lều chóp trước ảnh góc chợ (`04_PRODUCTION/SEEDANCE.md`), vì ảnh sau đính kèm ảnh trước.
+- Cá mây (mục trên) làm trước giỏ tổ; xửng hấp làm trước ảnh đảo quầy bánh, quầy lều chóp trước ảnh góc chợ (mục con "Bối cảnh"), vì ảnh sau đính kèm ảnh trước.
 
 **Xửng hấp trên viên đá tinh thể** (Cảnh 1: bà Gấu mở nắp, nhấc ra chiếc bánh bao mật ong cuối cùng, khay trống; Cảnh 5A: mẻ mới, hơi bốc nghi ngút). Đính kèm `cloud_explorers_character_sheet.png`, lưu `bun_steamer_ref.png`.
 ```
@@ -480,6 +642,46 @@ Image 1 is a floating market from a soft stylized 3D animated film for young chi
 - On the very tip: one round wooden knob like a ball, the size of Lumo's fist.
 - Under the low roof edge only a narrow wooden counter rim shows. No goods hanging outside.
 - No text, no letters, no signs. Square 1:1, centered with some margin. Plain flat light-gray background around the deck patch, soft even lighting.
+```
+
+#### Bối cảnh
+
+Mỗi ảnh một chat; thứ tự sinh theo bảng ảnh của tập. Chợ giữ dáng `floating_market_hero.png`; ban ngày chân trời là một dải mây dày, không thấy hòn đảo (beat sheet EP000D, mục "Luật nhân quả", ý "Chợ nổi"). Số đo của góc chợ theo bảng "Bố trí góc chợ" của beat sheet.
+
+**Đảo quầy bánh, buổi sáng** (Cảnh 1: lối gỗ vắng, quầy bánh của bà Gấu, mái vải sọc Piko nảy trúng; Cảnh 3: quả tròn lăn xuống lối gỗ dốc, cuộn vải đỏ bung, chuông gió reo; Cảnh 5, 5A: dọn dẹp, bà Gấu bưng khay qua cầu). Đính kèm theo thứ tự `02_ASSET_LIBRARY/Environments/Floating_Market/concept/floating_market_hero.png`, `02_ASSET_LIBRARY/Props/Bun_Steamer/concept/bun_steamer_ref.png`, `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Floating_Market/concept/floating_market_bakery_hero.png`.
+```
+Image 1 is a floating market at sunset from a soft stylized 3D animated film for young children; keep its stalls, wood, rope, striped awnings and style. Image 2 is a bun steamer on a glowing amber crystal. Image 3 shows the characters, for scale only. Create another part of the same market in the early morning. One wide 16:9 image, eye level, no characters, no animals, no fish.
+- One small floating island with four little stalls around a wooden walkway that slopes gently downhill from left to right, so round things would roll down it.
+- At the top of the slope, left: a bakery stall with a striped awning and a wooden counter; on the counter the steamer of Image 2 on its glowing crystal, lid closed, and an empty wooden tray beside it.
+- Next to it: a fruit stall with baskets full of round red and yellow fruits.
+- Further down the slope: a cloth stall with rolls of cloth stacked on its counter, one big roll bright red; and a wind chime stall with many small wind chimes of wood and bronze hanging along its awning.
+- Every awning is soft striped cloth stretched tight like a trampoline, low enough for a small jelly creature to bounce onto.
+- At the right edge, the walkway meets the end of a short, low rope bridge with net railings on both sides, leading to a neighboring little island very close by; only the edge of that island is visible.
+- Fresh soft morning light, pale blue and peach sky. The market has just opened: the walkway is empty and tidy.
+- On the horizon, a thick bank of clouds hides whatever is behind it; no island visible, no observatory.
+- No text, no letters, no signs, no logos, no watermark.
+```
+
+**Góc chợ yên tĩnh, buổi sáng** (Cảnh 2–4: đống hàng Piko lao vào, quầy lều chóp sát cột đầu cầu, cột có móc treo giỏ, cầu dây ngắn; sàn trống quanh chân lều cho gối, lò xo). Đính kèm theo thứ tự `floating_market_hero.png`, `floating_market_bakery_hero.png`, `02_ASSET_LIBRARY/Environments/Floating_Market/concept/tent_stall_ref.png`, `cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Floating_Market/concept/floating_market_corner_hero.png`. Ảnh cố ý không có giỏ, túi, gối, lò xo: khi sinh Seedance tải lên ảnh riêng của từng món.
+```
+Images 1 and 2 are parts of a floating market from a soft stylized 3D animated film for young children; keep their style, wood, rope and striped cloth. Image 3 is a tent stall with a cone roof. Image 4 shows the characters, for scale only. Create the quiet corner of the same market, on the little island next to the bakery island of Image 2, in the early morning. One wide 16:9 image, eye level, no characters, no animals, no fish.
+- Left: a short, low rope bridge, about four times as long as Piko is tall (Piko: the small clear blue jelly with two dark blue horns in Image 4), with net railings as high as Piko on both sides; its far end reaches the bakery island of Image 2, close by.
+- Where the bridge lands on this island: one sturdy wooden bridge post, one and a half times Piko's height, with one empty iron hook sticking out at the height of Piko's eyes. Nothing hangs on the hook.
+- Right next to the post, on the island side: the tent stall of Image 3 exactly as designed (glossy terracotta and cream striped cone roof, low roof edge half Piko's height, a round wooden knob on the tip at twice Piko's height); its roof edge comes close to the foot of the post.
+- Around the foot of the tent: open flat wooden deck, empty, with room for a big pillow and a spring.
+- Further in, about twice Piko's height from the bridge: a soft pile of goods in a quiet corner: baskets, wooden crates, jars, rolls of cloth, bundles. No pouch, no bag among them.
+- Fresh soft morning light. On the horizon, a thick bank of clouds hides whatever is behind it; no island visible.
+- No text, no letters, no signs, no logos, no watermark.
+```
+
+**Cửa chính Wonder Hub, ban đêm** (post-credit EP000D: bốn hốc le lói xanh ngọc một nhịp rồi tối; EP000E dùng lại cửa này, mở bằng bốn bảo bối). Đính kèm theo thứ tự `02_ASSET_LIBRARY/Environments/Wonder_Hub/concept/wonder_hub_island_hero.png`, `02_ASSET_LIBRARY/Props/Silver_Book/concept/silver_book_symbols.png`, `cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Environments/Wonder_Hub/concept/wonder_hub_door_hero.png`. Ảnh ở lúc các hốc chưa lóe; lúc lóe xanh ngọc tả bằng chữ trong prompt Seedance.
+```
+Image 1 is a far island with a huge ancient observatory, from a soft stylized 3D animated film for young children. Image 2 is a picture book page with four symbols in a ring. Image 3 shows the characters, for scale only. Create the main door of that observatory, seen from outside at night. One wide 16:9 image, eye level, close enough that the door fills the middle of the frame, no characters, no animals.
+- The cream stone wall of the observatory's round base from Image 1, with the gold lower rim of the lavender dome just visible at the top edge.
+- In the middle of the wall: a big round door of carved cream stone, about twice as tall as Lumo the fox, closed, with a gold-trimmed rim, no handle, no keyhole.
+- On the lower half of the door, within reach of the small characters of Image 3: four round sockets set into the stone in a ring, in the same places as the four symbols of Image 2: top, the eight-pointed star in compass-rose style (four long points alternating with four short points, NOT eight equal points); left, a simple gear with eight rounded teeth; right, a round hand lens with a handle; bottom, a small pouch tied at the top. Each symbol is carved in low relief inside its socket, in the same plain stone color. None of them glows.
+- Night: a deep blue starry sky, soft moonlight on the stone, grass at the foot of the wall. Calm and mysterious, never scary.
+- No text, no letters, no numbers, no religious symbols, no logos, no watermark.
 ```
 
 ### Tập 01
@@ -695,6 +897,46 @@ The attached image is a style reference only (soft stylized 3D animated film for
 ```
 ```
 Now the same ramp seen straight from above, orthographic, same scale, as one separate image, with the eight cleats clearly visible. Plain flat light-gray background, soft even lighting, no ground shadow, no text.
+```
+
+#### Bối cảnh và ảnh cho Seedance
+
+**Thung lũng Mây khô hạn** (bối cảnh Cảnh 1 tập 01). Đính kèm `01_BRAND/Brand_Guideline/world_key_art.png`. Lưu `02_ASSET_LIBRARY/Environments/Cloud_Valley/concept/cloud_valley_dry_hero.png`.
+```
+The attached image is a style and palette reference only: soft stylized 3D animated film for young children, warm sunlight, pastel blue sky, floating islands with pagodas and a cloud sea far away. Do not copy its layout, its lush green ground or its waterfalls.
+
+Create a NEW location in the same world: the Valley of Clouds during a long drought. One wide 16:9 image, eye level, sunny afternoon, no characters, no animals.
+- Valley floor: pale beige earth with a network of dry cracks, patches of dry yellowed grass, a few smooth pale rocks.
+- Center left: a small rectangular garden bed of darker brown soil edged with flat stones, a few thin pale seedlings drooping; next to it a dry curled twig holding one curled dry leaf, and a small wilted flower with its head bent down.
+- Right: a big rounded hill of dry yellow grass rising above the garden; a thin band of soft white cloud clings to its summit like a scarf.
+- Far background, small and hazy: floating islands with tiny pagodas and the cloud sea from the reference.
+- No water anywhere in the valley: no river, no pond, no waterfall. No buildings in the valley or on the hill.
+- Thirsty but gentle and cute, never bleak or scary. Soft rounded shapes, pastel colors, soft shadows.
+- No text, no logos, no watermark.
+```
+
+**Piko đeo Pocket of Wonders.** Đính kèm theo thứ tự `02_ASSET_LIBRARY/Characters/Piko/concept/piko_apose_body.png`, `02_ASSET_LIBRARY/Props/Pocket_of_Wonders/concept/pocket_of_wonders_ref.png`. Lưu `02_ASSET_LIBRARY/Characters/Piko/concept/piko_pouch_ref.png`; ảnh nhìn sau `piko_pouch_ref_back.png`.
+```
+Image 1 is Piko, a character of a soft stylized 3D animated film for young children. Image 2 is Piko's pouch. Draw Piko wearing the pouch. Keep Piko exactly as in Image 1: same translucent aqua jelly body, two dark-blue horns, eyes, mouth, tiny paws, proportions; no legs.
+
+How Piko wears the pouch:
+- Only the pouch itself from Image 2: purple velvet, gold drawstring with tassels, cream cloud emblem. Its mouth is gathered shut; none of the items in Image 2 (bottle, crystal, mushroom, map, compass, feather, stars) are visible.
+- The pouch is small, about a quarter of Piko's height, a little bigger than an apple.
+- A thin gold cord carries it crossbody: looped over the root of Piko's RIGHT horn (the horn on the viewer's left when Piko faces us), down Piko's back, then diagonally across the front just under the mouth to Piko's LEFT hip.
+- The pouch hangs at Piko's left hip (the viewer's right when Piko faces us), at paw height, resting against the jelly body.
+
+Full body, three-quarter view, Piko turned toward the viewer's left so that Piko's left side and the pouch face us. Happy expression. Plain flat light-grey background, soft even studio light. No text, no logos, no watermark.
+```
+Ảnh nhìn sau, nhắn tiếp: `Now the same Piko with the same pouch seen from behind, as a separate image, same rules: show the gold cord looped over the right horn and running down the back.`
+
+**Sinh vật nhỏ của thung lũng** (nhân vật nền, có mặt từ Cảnh 1 tới Cảnh 7). Đính kèm `01_BRAND/Character_Bible/cloud_explorers_character_sheet.png`. Lưu `02_ASSET_LIBRARY/Characters/Valley_Critters/concept/valley_critters_ref.png`.
+```
+The attached sheet shows the four main characters of a soft stylized 3D animated film for young children; use it for style only. Design ONE new background creature species: the tiny creatures of the Valley of Clouds.
+- Tiny: about one sixth of the fox's height in the sheet. Round, soft and simple, so they never compete with the four main characters.
+- A small rounded bean-shaped body in a soft pastel color that is not orange, green, lavender or aqua (for example pale peach-beige), a slightly lighter belly, two small dot eyes, tiny stubby arms and feet. No horns, no wings, no tail. Not a fox, not a reptile, not a jelly blob.
+- Each one wears a single dry leaf on its head like a hat.
+
+A design sheet on a plain light-grey background with the same creature in four poses: 1) sitting droopy and sad under its dry leaf; 2) sighing, the leaf sliding down over its eyes; 3) running, holding a big green leaf over its head like an umbrella; 4) splashing happily in a small puddle. No text, no labels, no logos, no watermark.
 ```
 
 ## Bộ ảnh dựng model
