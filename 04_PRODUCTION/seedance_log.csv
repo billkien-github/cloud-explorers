@@ -8,3 +8,5 @@ time,shot,take,model,task_id,status,resolution,ratio,duration_s,images,videos,vi
 2026-11-07T07:53:21+07:00,04_PRODUCTION/EP000A_Mysterious_Compass/sh010,sh010_take06.mp4,dreamina-seedance-2-0-fast-260128,cgt-20261107084709-ua831,succeeded,720p,16:9,14,5,1,14.0,True,605700,3.3,1.999,1.996,,
 2026-11-07T13:03:03+07:00,04_PRODUCTION/EP000A_Mysterious_Compass/sh010,sh010_take07.mp4,dreamina-seedance-2-5-260628,cgt-20261107140056-ki9qa,succeeded,480p,16:9,23,6,1,23.0,True,442345,6.4,2.831,2.828,,draft
 2026-11-07T13:03:19+07:00,04_PRODUCTION/EP000A_Mysterious_Compass/sh020,sh020_take01.mp4,dreamina-seedance-2-5-260628,cgt-20261107140055-dge0y,succeeded,480p,16:9,28,6,1,28.0,True,538420,6.4,3.446,3.443,,draft
+2026-11-07T13:37:43+07:00,04_PRODUCTION/EP000A_Mysterious_Compass/sh010,sh010_take08.mp4,dreamina-seedance-2-5-260628,cgt-20261107143536-ym775,succeeded,480p,16:9,23,6,1,23.0,True,442345,6.4,2.831,2.828,,draft
+2026-11-07T13:37:44+07:00,04_PRODUCTION/EP000A_Mysterious_Compass/sh020,sh020_take02.mp4,dreamina-seedance-2-5-260628,cgt-20261107143536-1k872,succeeded,480p,16:9,28,6,1,28.0,True,538420,6.4,3.446,3.443,,draft

@@ -6,7 +6,7 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 
 ## Seedance ở đâu, giới hạn gì (tra tài liệu chính thức của BytePlus ModelArk ngày 06/11/2026)
 
-- **Nơi chạy:** BytePlus ModelArk, sinh qua API bằng `pipeline/seedance_gen.py` (mục "Sinh qua API"). Clip 16:9, bản nháp 480p, bản final 1080p, watermark tắt; `duration` là số nguyên giây; `generate_audio` bật tắt tiếng động.
+- **Nơi chạy:** BytePlus ModelArk, sinh qua API bằng `pipeline/seedance_gen.py` (mục "Sinh qua API"). Clip 16:9, bản nháp 480p (hiện chỉ sinh bản nháp), watermark tắt; `duration` là số nguyên giây; `generate_audio` bật tắt tiếng động.
 - **Hai dòng model**; dự án dùng 2.5 (mục "Sinh qua API"), dòng 2.0 chỉ để so:
 
 | | Seedance 2.5 | Seedance 2.0 mini | Seedance 2.0 fast | Seedance 2.0 |
@@ -35,7 +35,6 @@ Blender lo phần **đạo diễn**: bối cảnh khối, nhân vật dạng kh�
 | 6 | Soạn prompt theo giây (xem "Prompt theo giây"), kèm bảng số tham chiếu → file tải lên → nguồn. Trước khi sinh: `python pipeline/seedance_gen.py <thư mục shot> --dry-run` (model, giới hạn, chi phí ước tính) và `/review <thư mục shot>/seedance/prompt.md` | `seedance/prompt.md` |
 | 7 | Sinh bản nháp qua API: `python pipeline/seedance_gen.py <thư mục shot>` (mục "Sinh qua API"): Seedance 2.5, draft 480p, 16:9, `duration` bằng `SECONDS` của `build_shot.py`, watermark tắt; tải take về và ghi chi phí | `seedance/takes/sh010_take01.mp4`, một dòng trong `04_PRODUCTION/seedance_log.csv` |
 | 8 | Soát take theo bảng "Soát take": `/review <thư mục shot>/seedance/takes/<take>.mp4`. Lỗi do prompt thì sửa prompt; lỗi do previz thì sửa `build_shot.py`, render lại, sửa mốc trong prompt, sinh bản nháp mới | Bản nháp được chọn |
-| 8b | Người dùng chốt bản nháp thì sinh bản final 1080p từ bản nháp đó: `python pipeline/seedance_gen.py <thư mục shot> --final <take>` (trong 14 ngày kể từ lúc sinh bản nháp) | `seedance/takes/sh010_take07_final.mp4` |
 | 9 | Dựng cảnh: ghi take được chọn của từng đoạn vào danh sách dựng `<tập>/canhNN_edit.py`, nối bằng `pipeline/edit.py` (cắt theo `SEGMENT`, CC theo `TIMING`) | `<tập>/renders/canhNN_edit_cc.mp4` + `.srt` |
 | 10 | Hậu kỳ ở `05_POST_PRODUCTION/`: lồng tiếng, nhạc; tiếng động lấy từ take, thiếu hay lệch mốc thì bù | |
 
@@ -47,7 +46,7 @@ sh010/
 ├── renders/seedance_upload/  chỉ khi sinh tay trên console: video1_previz.mp4, image1_<tên>.png…, prompt.txt đúng thứ tự tải lên, do pipeline/seedance_upload.py tạo (không lên git)
 └── seedance/
     ├── prompt.md            prompt đã gửi (tiếng Anh) + file tham chiếu theo số @Image + ghi nhận từng take
-    └── takes/               clip Seedance trả về (sh010_take01.mp4, sh010_take07_final.mp4…), giữ nguyên, không sửa; không lên git
+    └── takes/               clip Seedance trả về (sh010_take01.mp4…), giữ nguyên, không sửa; không lên git
                              (sinh lại được từ prompt.md, mã task và chi phí ở 04_PRODUCTION/seedance_log.csv)
 ```
 
@@ -60,7 +59,7 @@ Mỗi lần gọi API sinh một **đoạn**: nhiều cú máy liền nhau của
 3. **Ít đoạn nhất** (mỗi chỗ nối là một rủi ro, mỗi đoạn tốn thêm đuôi), không có đoạn vụn, các đoạn đều nhau. `python pipeline/chia_doan.py <timing.py>` tính mọi cách thoả luật 1–3, in vài cách tốt nhất với `OFFSET`, `SEGMENT`, `SECONDS` của từng đoạn và hai cú máy hai bên mỗi chỗ nối.
 4. **Chọn theo nhịp truyện** trong các cách script đưa ra, không lấy máy móc cách đầu: chỗ nối nên rơi vào chỗ chuyển ý, đổi địa điểm, đổi nhóm nhân vật, đổi cỡ cảnh mạnh (toàn sang cận), hoặc sau khi một câu thoại, một khoảnh khắc đã khép lại. Tránh nối giữa một cặp hành động – phản ứng (vấp và được kéo lại, hỏi và đáp, rút la bàn và kim quay), và giữa hai cú cùng góc máy, cùng cỡ cảnh (cắt nhảy, lệch lộ nhất). Ví dụ Cảnh 1 tập 01, giới hạn 30 giây: script xếp nối ở 26.4 s (đều hơn) trước 28.8 s, nhưng 28.8 s (hết cận la bàn, trước "Có gì lạ kìa!") mới là chỗ chuyển ý.
 5. **Giữ liền giữa các đoạn của một cảnh:**
-   - Cùng model, cùng độ phân giải: bản nháp nối với bản nháp, bản final nối với bản final.
+   - Cùng model, cùng độ phân giải (hiện mọi đoạn đều là bản nháp 2.5, 480p).
    - Cùng ảnh tham chiếu cho cùng một thứ; khối STYLE, CHARACTERS và câu tả địa điểm, giờ, ánh sáng chép nguyên giữa các prompt, chỉ bớt nhân vật không có mặt. Mọi vật lên hình ở cả hai đoạn (bụi cây, tảng đá, đạo cụ) phải được tả bằng cùng câu ở cả hai prompt: đoạn sau bỏ câu tả thì Seedance vẽ một vật khác (bụi gai có quả ké tròn ở `sh010` thành bụi gai sẫm gai nhọn ở `sh020`, Cảnh 1 tập 000A).
    - Khối TIMELINE đầu của đoạn sau mở bằng đúng trạng thái `END` của đoạn trước: ai ở đâu, cầm gì, biểu cảm, đồ vật đã đổi (Piko đã ướt sau cú húp, cái thìa đã cong). Mốc trong prompt tính lại từ 0 của đoạn (mốc trong cảnh trừ `OFFSET`).
    - Tiếng động của mỗi take dừng ở chỗ nối; tiếng nền của cả cảnh (gió, côn trùng) trải liền ở hậu kỳ.
@@ -71,15 +70,14 @@ Mỗi lần gọi API sinh một **đoạn**: nhiều cú máy liền nhau của
 Claude chạy `pipeline/seedance_gen.py`, không cần mở console: script đọc `seedance/prompt.md` (bảng số tham chiếu và khối prompt), gửi ảnh và video, chờ, tải take về `seedance/takes/<shot>_takeNN.mp4` (số take tự tăng) và ghi chi phí.
 
 ```bash
-python pipeline/seedance_gen.py <thư mục shot> --dry-run   # in model, tham chiếu, chi phí ước tính (cả bản final), lỗi; không gửi
+python pipeline/seedance_gen.py <thư mục shot> --dry-run   # in model, tham chiếu, chi phí ước tính, lỗi; không gửi
 python pipeline/seedance_gen.py <thư mục shot>             # bản nháp 2.5 draft 480p, chờ tới khi xong (vài phút)
-python pipeline/seedance_gen.py <thư mục shot> --final sh010_take07.mp4   # bản final 1080p từ bản nháp đó, chỉ khi người dùng chốt
 python pipeline/seedance_gen.py <thư mục shot> --resume    # chờ tiếp task đã gửi (hết giờ chờ, mất mạng lúc tải take)
 ```
 
-Tuỳ chọn khác (`--model`, `--no-draft`, `--resolution`, `--no-audio`, `--duration`, `--wait`) ở docstring của script.
+Tuỳ chọn khác (`--no-audio`, `--duration`, `--wait`) ở docstring của script.
 
-- **Luôn sinh bản nháp bằng Seedance 2.5** (quyết định của người dùng, 07/11/2026): `draft: true` của API, chỉ ra 480p, tính tiền như video 480p thường; đoạn dài tối đa 30 giây. Sửa prompt, previz rồi sinh bản nháp mới tới khi người dùng chốt. **Bản final** chỉ chạy khi người dùng chốt một bản nháp: gửi ID task của bản nháp, API dùng lại prompt, tham chiếu, seed, tiếng, tỉ lệ, độ dài, nên hình giữ như bản nháp (cùng nội dung, nét hơn, không bảo đảm giống từng khung); hiện chỉ ra 1080p, tính tiền riêng theo 1080p kèm giây video tham chiếu của bản nháp; ID bản nháp sống 14 ngày (tra ngày 07/11/2026). Dry-run in giá cả hai, ví dụ đoạn 14 giây: bản nháp khoảng $1.72, bản final khoảng $9.53. Dòng 2.0 (`--model 2.0…`, không có chế độ draft) chỉ dùng khi cần so model.
+- **Chỉ sinh bản nháp Seedance 2.5** (quyết định của người dùng, 07/11/2026): `draft: true` của API, chỉ ra 480p, tính tiền như video 480p thường (ví dụ đoạn 23 giây khoảng $2.83); đoạn dài tối đa 30 giây. Sửa prompt, previz rồi sinh bản nháp mới tới khi người dùng chốt; dùng bản nháp 480p để dựng trước. **Bản final đang bị chặn**, `seedance_gen.py` không còn đường sinh final (lấy lại từ git khi người dùng mở): API cho sinh bản final 1080p từ ID task của bản nháp trong 14 ngày, dùng lại prompt, tham chiếu, seed, tiếng, tỉ lệ, độ dài, tính tiền riêng theo 1080p kèm giây video tham chiếu (đoạn 23 giây khoảng $15.65; tra ngày 07/11/2026). Không còn sinh bằng dòng 2.0.
 - **So model trên một đoạn** (`sh010` Cảnh 1 tập 000A, 07/11/2026, cùng prompt, cùng previz): ba bậc 2.0 chép chiều và bố cục của ảnh tham chiếu (bản đồ cầm ngược thành xuôi, cú toàn chép bố cục ảnh bối cảnh); 2.5 bám previz ở hai chỗ đó nhưng khung chặt hơn previz ở cú trung và cú cận. Hình của cả bốn bậc đều đạt; bậc 2.0 đầy đủ giữ cỡ cảnh sát previz nhất. Thời gian sinh 14 giây: 3.5 phút (mini) tới 10 phút (2.0).
 - **Chạy từ Claude:** chạy `--dry-run` trước và sửa hết lỗi, rồi chạy thật ở chế độ nền (một lần sinh lâu hơn giới hạn 2 phút của một lệnh). Mỗi lần chạy thật là một lần trả tiền.
 - **Biến môi trường**, người dùng tự đặt (`~/.zshrc` trên macOS, `setx` trên Windows), không ghi vào repo hay vào chat:
@@ -97,6 +95,7 @@ Tuỳ chọn khác (`--model`, `--no-draft`, `--resolution`, `--no-audio`, `--du
 - **Vật lấy ra từ túi, hộp:** cho vật (đang gấp nhỏ) ló ra ở mép miệng túi rồi kéo lên, túi giữ nguyên chỗ và hình; cho vật phóng từ scale 0 ngay trong khối túi thì Seedance biến chính cái túi thành vật đó (túi da tan thành bản đồ, bản nháp `sh020` Cảnh 1 tập 000A).
 - **Tay cầm vật phải đi theo vật:** vật xoay, lật, đổi chỗ trong tay thì khối bàn tay làm con của vật hay key cùng nhịp; chỉ xoay vật còn tay đứng yên thì take cho tay buông, vật lơ lửng (xoay bản đồ, bản nháp `sh010`).
 - **Phản ứng nhỏ ở cú toàn bị bỏ:** nhổm lên 6 cm trong đống lá không thành hình; phản ứng ở cú toàn cần biên độ cỡ một phần tư chiều cao nhân vật.
+- **Máy di chuyển đều** (hạ máy, lia) thì key máy nội suy LINEAR trong previz; để ease thì Seedance dồn chuyển động vào giữa thành một cú vụt (cú hạ máy mở đầu Cảnh 1 tập 000A).
 - **Cú trung có toàn thân:** dựng previz rộng hơn ý muốn một chút (ống kính ngắn hơn, chừa khoảng trống dưới chân), vì dòng Seedance 2.0 hay cắt cú trung chặt lại tới ngang hông.
 - **Nhân vật dạng khối đúng chiều cao và tỉ lệ trong `01_BRAND/Character_Bible/README.md`.** Khối sai tỉ lệ thì Seedance kéo nhân vật theo.
 - **Màu khối** để Seedance biết ai là ai, quay hướng nào (bảng màu ghi vào prompt):
@@ -283,13 +282,16 @@ Quy tắc viết:
   - Hướng chỉ của một vật đối xứng (mũi sao tám cánh) không đọc ra: cho một dấu hiệu nhìn thấy, ví dụ tia sáng từ mũi tới vật được chỉ.
   - Vật cầm tay có thể đè lên mặt nhân vật: ghi vật ở đâu so với mặt.
   - Thêm "no spoken words" vào từng khoảng nói; không viết lời trong ngoặc kép (ví dụ "aha") ở chỗ nhân vật mở miệng.
-  - **Seedance 2.5 vẫn sinh nhạc** dù AUDIO, HOLD ghi "no music" (bản nháp `sh010`, `sh020` Cảnh 1 tập 000A: giai điệu và hợp âm ở cú toàn mở đầu, cú toàn cuối). Ghi thêm ngay trong dòng TIMELINE của các cú toàn "only natural sounds, no musical tones, no melody, no song"; hậu kỳ kiểm nhạc bằng đo cao độ (reviewer `audio`) và thay tiếng ở chỗ có nhạc. Tiếng kêu không lời của nhân vật ("ậm ừ", "wheee") được giữ; trong khoảng nói chỉ bỏ tiếng nào nghe ra thành lời.
+  - **Seedance 2.5 vẫn sinh nhạc** dù AUDIO, HOLD ghi "no music" (bản nháp `sh010`, `sh020` Cảnh 1 tập 000A: giai điệu và hợp âm ở cú toàn mở đầu, cú toàn cuối). Ghi thêm ngay trong dòng TIMELINE của các cú toàn "only natural sounds, no musical tones, no melody, no song"; hậu kỳ kiểm nhạc bằng đo cao độ (reviewer `audio`) và thay tiếng ở chỗ có nhạc. Dặn thêm trong TIMELINE ("only natural sounds, no musical tones") cũng không tác dụng (bản nháp lần hai): coi việc thay tiếng ở các cú toàn mở và kết là việc hậu kỳ thường lệ, không sinh lại vì nhạc. Tiếng kêu không lời của nhân vật ("ậm ừ", "wheee") được giữ; trong khoảng nói chỉ bỏ tiếng nào nghe ra thành lời.
   - **Miệng không mấp máy trong khoảng nói** khi prompt chỉ ghi "talks, mouth moving, no voice" (cả hai bản nháp Cảnh 1 tập 000A: miệng khép, cười mỉm suốt câu): ghi "mouth clearly opening and closing on every syllable, about 4 times per second, for the whole <khoảng nói>", và tả nét mặt hợp câu nói thay vì cảm xúc của khoảng trước.
   - **Phản ứng tới trước nguyên nhân** (mặt hoảng, tay hất lên trước khi chân vấp): ghi rõ khoảng trước mốc là chưa phản ứng ("no surprise yet, not before 8.42s") rồi mới tả phản ứng ở mốc.
   - **Vật phẳng xoay trong cú nhìn** (xoay bản đồ) thành lật mặt, lộ mặt sau, tay buông: ghi "both paws never let go, spin it flat in its own plane like a steering wheel, it never flips over, its back is never seen".
   - **Hai cú cùng chỗ khác cỡ cảnh** mà prompt tả bằng chữ gần giống nhau thì take cho cùng cỡ (cú S7 chặt như S3): tả từng cú bằng số đo (nhân vật cao bao nhiêu phần khung, nằm bên nào, thấy những vật gì) và ghi cú nào rộng hơn cú nào.
-  - **Luật phủ định đẩy mốc trễ:** "no golden light before 23.7s" làm ánh sáng hiện trễ gần 2 giây; viết thành mốc khẳng định "appears exactly at 23.7s and stays".
-  - **Nhân vật trôi thiết kế giữa các đoạn** (chỏm lông kem thành nơ hồng, lông nhạt màu): ghi chi tiết dễ trôi bằng câu phủ định cụ thể ("one tall cream swoosh of fur, never a bow or knot") và "same saturated orange as @Image1 and as the previous segment".
+  - **Luật phủ định đẩy mốc trễ:** "no golden light before 23.7s" làm ánh sáng hiện trễ gần 2 giây; viết thành mốc khẳng định "appears exactly at 23.7s and stays". Lần sau, dù đã viết khẳng định và làm khối sáng trong previz sáng hơn, ánh vàng vẫn trễ khoảng 1.5 giây và nhân vật phản ứng trước khi có ánh sáng: hiệu ứng sáng xuất hiện ở một mốc nhấn thì ghép ở hậu kỳ, prompt chỉ giữ chỗ (vật phát sáng nằm đó) và cho nhân vật nhìn vật khác tới đúng mốc.
+  - **Câu cho phép gọi ra thứ không muốn:** "only the cheeks may blush", "cheeks blush only in this moment" làm má đỏ suốt cú. Đừng nhắc tới nét không muốn kể cả để cho phép; tả nét muốn có ("cream cheeks as in @Image1") và tả cảm xúc bằng động tác (cụp tai, rụt vai).
+  - **Nhân vật trôi thiết kế giữa các đoạn** (chỏm lông kem thành nơ hồng, lông nhạt màu): câu chữ ("one tall cream swoosh of fur, never a bow or knot") không giữ được qua hai lần sinh; chi tiết nhỏ dễ trôi thì thêm một ảnh tham chiếu cận đúng chi tiết đó (cận đầu Lumo thấy rõ chỏm lông).
+  - **Vật phẳng có hình vẽ xoay nhanh trộn hai ảnh tham chiếu** (bản đồ trước và sau khi xoay thành một tấm có hai rương, hai mũi tên): cú xoay ngắn mà cần đọc ra chiều thì ghép mặt vật ở hậu kỳ, hoặc sinh riêng cú đó với khung đầu, khung cuối; đừng đưa hai ảnh hai chiều của cùng vật vào một lần sinh.
+  - **Hướng quay đầu viết theo màn hình và theo vật**, không theo trái phải của nhân vật: "muzzle points to screen left, at the sunny path; pupils in the left corners of the eyes; the bush is behind the head". "Over the LEFT shoulder" bị hiểu thành quay mặt ra máy, liếc sang bụi. Previz quay đầu quá tay một chút (Seedance kéo mặt về phía máy).
   - **Cỡ tương đối so với bộ phận thấy được trong cùng khung:** "the size of Lumo's finger" vẫn ra bướm to bằng hai phần ba đầu; viết "wingspan no wider than Lumo's eye".
 
 **STYLE chuẩn:**

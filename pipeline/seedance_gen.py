@@ -1,25 +1,20 @@
 """
-Sinh clip Seedance của một shot qua API BytePlus ModelArk: đọc prompt và ảnh, gửi, chờ, tải take về, ghi chi phí.
+Sinh bản nháp Seedance của một shot qua API BytePlus ModelArk: Seedance 2.5, chế độ draft (chỉ 480p), đọc prompt và ảnh,
+gửi, chờ, tải take về, ghi chi phí. Hiện chỉ sinh bản nháp: bản final bị chặn theo quyết định của người dùng (07/11/2026).
     python pipeline/seedance_gen.py <thư mục shot> --dry-run    # kiểm giới hạn, ước tính chi phí; không gửi
-    python pipeline/seedance_gen.py <thư mục shot>              # bản nháp: Seedance 2.5, draft 480p -> seedance/takes/<shot>_takeNN.mp4
-    python pipeline/seedance_gen.py <thư mục shot> --final sh010_take07.mp4   # bản final 1080p từ bản nháp đó (người dùng chốt)
+    python pipeline/seedance_gen.py <thư mục shot>              # bản nháp -> seedance/takes/<shot>_takeNN.mp4
     python pipeline/seedance_gen.py <thư mục shot> --resume     # chờ tiếp task đã gửi mà chưa tải về (hết giờ chờ, mất mạng)
-Tuỳ chọn: --model 2.5|2.0|2.0-fast|2.0-mini (mặc định 2.5), --no-draft (sinh thường, không qua bản nháp; dòng 2.0 luôn
-thế), --resolution 480p|720p|1080p (chỉ cho --no-draft, mặc định 720p), --no-audio (mặc định có tiếng), --duration <giây>
-(mặc định SECONDS của build_shot.py), --wait <phút> (mặc định 60).
+Tuỳ chọn: --no-audio (mặc định có tiếng), --duration <giây> (mặc định SECONDS của build_shot.py), --wait <phút> (mặc định 60).
 
 - Đầu vào: bảng số tham chiếu và khối ```text của seedance/prompt.md, đọc bằng load() của pipeline/seedance_upload.py.
-  @Video, @Image gửi theo đúng số; ratio 16:9, watermark tắt.
-- Bản nháp (mặc định): Seedance 2.5 với draft=true, API chỉ cho 480p, tính tiền như video 480p thường. Bản final gửi ID
-  task của bản nháp (content.draft_task): API tự dùng lại prompt, tham chiếu, seed, tiếng, tỉ lệ, độ dài; hiện chỉ ra 1080p,
-  tính tiền 1080p kèm giây video tham chiếu của bản nháp. ID bản nháp sống 14 ngày. Chỉ chạy --final khi người dùng chốt.
+  @Video, @Image gửi theo đúng số; ratio 16:9, watermark tắt, draft=true, tính tiền như video 480p thường.
 - Ảnh gửi dạng base64. Video tham chiếu API chỉ nhận URL: script tải video lên một bucket riêng tư chuẩn S3 (đang dùng
   Cloudflare R2), đưa ModelArk link ký sẵn có hạn, task kết thúc thì xoá hẳn file.
 - Biến môi trường (người dùng tự đặt, không ghi vào repo): ARK_API_KEY; có video tham chiếu thì thêm S3_ENDPOINT
   (<ACCOUNT_ID>.r2.cloudflarestorage.com), S3_BUCKET, S3_ACCESS_KEY và S3_SECRET_KEY (Access Key ID và Secret Access
   Key của R2 API token); dịch vụ chuẩn S3 khác thì có thể cần thêm S3_REGION.
-- Task kết thúc (xong hay lỗi) thì ghi một dòng vào 04_PRODUCTION/seedance_log.csv (cột mode: draft, final hay trống
-  là sinh thường). API chỉ trả số token (usage.completion_tokens), không trả tiền: chi phí = token x đơn giá trong MODELS.
+- Task kết thúc (xong hay lỗi) thì ghi một dòng vào 04_PRODUCTION/seedance_log.csv (cột mode: draft; take cũ sinh thường
+  để trống). API chỉ trả số token (usage.completion_tokens), không trả tiền: chi phí = token x đơn giá trong MODELS.
   Task đang chờ ghi ở renders/seedance_pending.json của shot.
 Chỉ dùng thư viện chuẩn của Python. Quy trình: 04_PRODUCTION/SEEDANCE.md.
 """
@@ -46,7 +41,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from seedance_upload import load  # noqa: E402
 
 API = "https://ark.ap-southeast.bytepluses.com/api/v3/contents/generations/tasks"
-NHAP_NGAY = 14  # ID task bản nháp còn dùng được để sinh final trong ngần này ngày (tra ngày 07/11/2026)
+MODEL = "2.5"  # dự án chỉ sinh bản nháp Seedance 2.5 (draft, 480p)
 
 # Tra trang "Create a video generation task" và "Pricing" của ModelArk ngày 06/11/2026; đổi model hay giá thì sửa ở đây.
 # anh, video: số tham chiếu tối đa; video_s: tổng giây video tham chiếu tối đa (mỗi video từ 2 giây); ra: giây ra (min, max);
@@ -303,12 +298,10 @@ def chuan_bi(shot, a):
                  for s in video_giay if s and abs(s - duration) > 0.5]
 
     goi_y = []
-    key = a.model
+    key = MODEL
     m = MODELS[key]
-    draft = key == "2.5" and not a.no_draft
-    res = "480p" if draft else a.resolution
-    ly_do = ("bản nháp (draft 480p); bản final 1080p chỉ khi người dùng chốt: --final <take>" if draft
-             else "sinh thường, không qua bản nháp")
+    draft, res = True, "480p"
+    ly_do = "bản nháp (draft 480p); bản final đang bị chặn"
     if len(images) > m["anh"] or len(videos) > m["video"]:
         loi.append(f"Seedance {key} nhận tối đa {m['anh']} ảnh và {m['video']} video tham chiếu "
                    f"(đang có {len(images)} ảnh, {len(videos)} video)")
@@ -332,10 +325,6 @@ def chuan_bi(shot, a):
     est_tokens = (vin + duration) * w * h * FPS / 1024
     gia = m["gia"].get(res, (0, 0))[1 if videos else 0]
     est = est_tokens * gia / 1e6
-    if draft:
-        fw, fh = khung(key, "1080p")
-        tien_final = (vin + duration) * fw * fh * FPS / 1024 * m["gia"]["1080p"][1 if videos else 0] / 1e6
-        goi_y.append(f"Bản final 1080p từ bản nháp này: khoảng ${tien_final:.2f}, chỉ khi người dùng chốt")
 
     print(f"Shot: {shot.relative_to(root).as_posix()}")
     print(f"Model: Seedance {key} ({m['id']}) — {ly_do}")
@@ -361,54 +350,6 @@ def chuan_bi(shot, a):
 
 def khung(key, res):
     return (854, 480) if key == "2.5" and res == "480p" else KHUNG[res]
-
-
-def chuan_bi_final(shot, a):
-    """Tìm bản nháp a.final của shot trong log (task 2.5, mode draft, xong, còn hạn); in chi phí bản final 1080p."""
-    root = next(p for p in [shot, *shot.parents] if (p / "CLAUDE.md").exists())
-    f = root / "04_PRODUCTION" / "seedance_log.csv"
-    take = pathlib.Path(a.final).name
-    rel = shot.relative_to(root).as_posix()
-    with open(f, newline="", encoding="utf-8") as fh:
-        rows = [r for r in csv.DictReader(fh) if r["shot"] == rel and r["take"] == take and r["status"] == "succeeded"]
-    if not rows:
-        sys.exit(f"Không thấy {take} của {rel} trong {f.name}")
-    r = rows[-1]
-    if r.get("mode") != "draft" or r["model"] != MODELS["2.5"]["id"]:
-        sys.exit(f"{take} không phải bản nháp Seedance 2.5 (mode {r.get('mode') or 'thường'}, model {r['model']})")
-    tuoi = datetime.datetime.now().astimezone() - datetime.datetime.fromisoformat(r["time"])
-    if tuoi.days >= NHAP_NGAY:
-        sys.exit(f"Bản nháp {take} đã {tuoi.days} ngày, quá hạn {NHAP_NGAY} ngày của ID task: sinh lại bản nháp")
-    vin, duration, videos = float(r["video_in_s"]), int(float(r["duration_s"])), int(r["videos"])
-    w, h = khung("2.5", "1080p")
-    gia = MODELS["2.5"]["gia"]["1080p"][1 if videos else 0]
-    est_tokens = (vin + duration) * w * h * FPS / 1024
-    est = est_tokens * gia / 1e6
-    print(f"Shot: {rel}")
-    print(f"Bản final Seedance 2.5 1080p từ bản nháp {take} (task {r['task_id']}, {tuoi.days} ngày tuổi); API dùng lại "
-          "prompt, tham chiếu, seed, tiếng, tỉ lệ, độ dài của bản nháp")
-    print(f"Ước tính: ({vin:.1f} s video vào + {duration} s ra) x {w}x{h} x {FPS} fps / 1024 = {est_tokens:,.0f} token")
-    print(f"          {est_tokens:,.0f} token x ${gia} / 1 triệu token = ${est:.2f} (số thật lấy từ usage.completion_tokens)")
-    return dict(root=root, draft_id=r["task_id"], out=pathlib.Path(take).stem + "_final.mp4", duration=duration,
-                images=int(r["images"]), videos=videos, vin=vin, audio=r["audio"] == "True", est=est)
-
-
-def gui_final(shot, p):
-    root = p["root"]
-    e = dict(shot=shot.relative_to(root).as_posix(), model="2.5", resolution="1080p", duration=p["duration"],
-             images=p["images"], videos=p["videos"], video_in_s=round(p["vin"], 2), audio=p["audio"],
-             est_usd=round(p["est"], 3), uploads=[], mode="final", out=p["out"])
-    body = {"model": MODELS["2.5"]["id"], "content": [{"type": "draft_task", "draft_task": {"id": p["draft_id"]}}],
-            "resolution": "1080p", "watermark": False}
-    try:
-        task = ark("POST", "", body)
-    except (LoiAPI, OSError) as x:
-        ghi_log(root, dong_log(e, status="rejected", error=str(x)))
-        sys.exit(f"ModelArk từ chối task: {x}")
-    e.update(task_id=task["id"], submitted=bay_gio())
-    ghi_cho(shot, doc_cho(shot) + [e])
-    print(f"Đã gửi: task {task['id']}")
-    return e
 
 
 def gui(shot, a, p):
@@ -507,10 +448,6 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description="Sinh clip Seedance của một shot qua API BytePlus ModelArk")
     ap.add_argument("shot")
-    ap.add_argument("--model", default="2.5", choices=list(MODELS))
-    ap.add_argument("--no-draft", action="store_true", help="sinh thường, không qua bản nháp")
-    ap.add_argument("--final", help="tên take bản nháp 2.5 để sinh bản final 1080p (chỉ khi người dùng chốt)")
-    ap.add_argument("--resolution", default="720p", choices=list(KHUNG))
     ap.add_argument("--duration", type=int)
     ap.add_argument("--no-audio", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
@@ -525,16 +462,16 @@ def main():
         if not entries:
             sys.exit("Shot này không có task nào đang chờ")
     else:
-        p = chuan_bi_final(shot, a) if a.final else chuan_bi(shot, a)
+        p = chuan_bi(shot, a)
         if a.dry_run:
             return
-    can_s3 = any(e.get("uploads") for e in entries) if a.resume else bool(p["videos"]) and not a.final
+    can_s3 = any(e.get("uploads") for e in entries) if a.resume else bool(p["videos"])
     thieu = [k for k in ("ARK_API_KEY",) + (("S3_ENDPOINT", "S3_BUCKET", "S3_ACCESS_KEY", "S3_SECRET_KEY")
                                              if can_s3 else ()) if not os.environ.get(k)]
     if thieu:
         sys.exit(f"Chưa đặt biến môi trường: {', '.join(thieu)} (04_PRODUCTION/SEEDANCE.md, mục Sinh qua API)")
     if not a.resume:
-        entries = [gui_final(shot, p) if a.final else gui(shot, a, p)]
+        entries = [gui(shot, a, p)]
     sys.exit(1 if cho(shot, root, entries, a.wait) else 0)
 
 

@@ -141,7 +141,7 @@ def build(timing, offset, seconds, out_blend, segment=None):
     fall_m = material("M_Waterfall", (0.85, 0.88, 0.92), 0.5, emit=((0.9, 0.93, 0.96), 0.4))
     prop = material("M_Prop", (0.78, 0.78, 0.78), 0.6)
     prop_dark = material("M_PropDark", (0.12, 0.12, 0.13), 0.6)
-    gold_m = material("M_GoldGlow", (1.0, 0.75, 0.15), 0.3, emit=((1.0, 0.7, 0.1), 3.0))
+    gold_m = material("M_GoldGlow", (1.0, 0.75, 0.15), 0.3, emit=((1.0, 0.7, 0.1), 5.0))
     step_m = material("M_StepDark", (0.33, 0.32, 0.3), 0.9)       # bậc đá, phiến đá sẫm để viền vàng nổi lên
     bfly_m = material("M_Butterfly", (1.0, 0.55, 0.45), 0.4, emit=((1.0, 0.5, 0.4), 1.3))
     bird_m = material("M_Bird_Brown", (0.32, 0.15, 0.06), 0.6)
@@ -186,7 +186,7 @@ def build(timing, offset, seconds, out_blend, segment=None):
     for cx, cy, cz, r in ((2.5, 0.0, 0.38, 0.42), (2.32, 0.05, 0.5, 0.3), (2.62, -0.1, 0.62, 0.28), (2.45, 0.1, 0.75, 0.22)):
         bm = sphere_bm(r, (cx, cy, cz), bm=bm, segs=16)
     bush = add_obj("Bush", bm, bush_m, "SET")
-    add_obj("TripStone", sphere_bm(0.1, (1.72, -0.02, 0.0), scale=(1.0, 0.9, 0.6), segs=12), moss_m, "SET")   # hòn đá Lumo vấp: sẫm, đủ to để thấy trên mặt đường sáng
+    add_obj("TripStone", sphere_bm(0.1, (1.8, -0.02, 0.0), scale=(1.0, 0.9, 0.6), segs=12), moss_m, "SET")   # hòn đá Lumo vấp: sẫm, đủ to để thấy trên mặt đường sáng
     # phế tích cổ dưới chân dốc, cây cối phủ; bậc đá, phiến đá có ánh vàng, phiến đá rêu, đống lá
     add_obj("Ruins_Wall", box_bm((3.6, 0.4, 1.42), (-10.8, 1.1, LOW_Z + 0.71)), stone_m, "SET")
     bm = None
@@ -295,6 +295,7 @@ def build(timing, offset, seconds, out_blend, segment=None):
     BELLY = ((0, -0.3, 0.36), (-35, 0, 0))
     RAISE = ((0, -0.26, 0.72), (-85, 0, 0))                         # giơ lên, thấp hơn tai
     BAG = Vector((-0.2, -0.16, 0.3))                                # túi da ở hông
+    BAG_TOP = BAG + Vector((0, -0.03, 0.1))                         # miệng túi: bản đồ ló ra, chui vào ở đây, túi giữ nguyên
 
     def hold(t, pose, arm=None):
         loc, r = pose
@@ -305,6 +306,17 @@ def build(timing, offset, seconds, out_blend, segment=None):
 
     def map_flip(t, deg):
         rot(map_spin, [(t, (0, 0, deg))])
+
+    # bàn tay đi theo bản đồ khi xoay (cú nhìn S6): chỉ xoay bản đồ còn tay đứng yên thì take cho tay buông, bản đồ lơ lửng
+    turn_paws = [add_obj(f"Lumo_TurnPaw{s:+d}", box_bm((0.07, 0.06, 0.05), (s * 0.17, -0.07, 0.02)), cast_materials()["lumo"],
+                         "CAST", parent=map_spin) for s in (-1, 1)]
+    for ob in turn_paws:
+        key(ob, "scale", -1.0, Vector((0, 0, 0)))
+        if S["S6"][0] >= offset - 1e-6 and S["S6"][0] < offset + segment:
+            key(ob, "scale", S["S6"][0] - HOLD, Vector((0, 0, 0)))
+            key(ob, "scale", S["S6"][0], Vector((1, 1, 1)))
+            key(ob, "scale", S["S6"][1] - HOLD, Vector((1, 1, 1)))
+            key(ob, "scale", S["S6"][1], Vector((0, 0, 0)))
 
     def flap(wings, t0, t1, period=0.14, lo=-50, hi=50):
         t, i = t0, 0
@@ -569,7 +581,7 @@ def build(timing, offset, seconds, out_blend, segment=None):
     m0, m1 = tm.MAP_STOW                                            # gấp bản đồ nhét vào túi da
     hold(m0, BELLY)
     keys(map_hold, "scale", [(m0, Vector((1, 1, 1))), (m0 + 0.35, Vector((0.5, 0.5, 0.5))), (m0 + 0.6, Vector((0.3, 0.3, 0.3)))])
-    key(map_hold, "location", m0 + 0.65, BAG)                       # tới túi ở hông
+    key(map_hold, "location", m0 + 0.65, BAG_TOP)                   # tới miệng túi ở hông
     rot(L.arm_r, [(m0 + 0.65, (-25, 0, 0))])
     rot(L.arm_l, [(m0 + 0.35, (-6, 0, 0))])
     keys(map_hold, "scale", [(m0 + 0.7 - HOLD, Vector((0.3, 0.3, 0.3))), (m0 + 0.7, Vector((0, 0, 0)))])
@@ -593,7 +605,8 @@ def build(timing, offset, seconds, out_blend, segment=None):
     head(o0, -38, -75)
     head(o1, 22, 0)                                                 # cắm mặt vào bản đồ
     rot(L.arm_r, [(o0, (6, 0, 0)), (o0 + 0.15, (-25, 0, 0))])
-    key(map_hold, "location", o0 + 0.18, BAG)                       # rút từ túi ra, mở bản đồ
+    key(map_hold, "location", o0 + 0.18, BAG_TOP)                   # ló ra ở miệng túi (túi giữ nguyên), kéo lên, mở bản đồ;
+                                                                    # phóng bản đồ ngay trong khối túi thì Seedance biến túi thành bản đồ
     keys(map_hold, "scale", [(o0 + 0.18 - HOLD, Vector((0, 0, 0))), (o0 + 0.18, Vector((0.3, 0.3, 0.3))), (o1, Vector((1, 1, 1)))])
     hold(o1, READ)
     ears(o1, -30)
@@ -609,7 +622,8 @@ def build(timing, offset, seconds, out_blend, segment=None):
     wag(L.tail, o1, st1, 0.4, 18, base=(28, 0, 0))
     x0, ed = -3.92, tm.EDGE                                         # hụt chân: WHOOSH! bản đồ tuột tay
     lumo.pose(ed, lean=-3)
-    lumo.pose(ed + 0.12, lean=24)                                   # chúi về trước, chân hụt
+    lumo.pose(ed + 0.12, lean=18)                                   # chúi về trước, chân hụt
+    lumo.pose(ed + 0.24, lean=10)                                   # chới với ở mép một nhịp rồi mới ngã ngồi
     lumo.go(ed + 0.12, x0 - 0.18, -0.03)
     head(ed + 0.12, 10)
     ears(ed + 0.05, 25)
@@ -763,12 +777,12 @@ def build(timing, offset, seconds, out_blend, segment=None):
     head(tm.CAM_REVEAL[0], 14)
     head(tm.CAM_REVEAL[0] + 0.4, 2, -10)                            # nhìn qua con bướm, về phía phế tích
     wo = tm.LUMO_WONDER
-    ears(wo - 0.05, 4)
-    ears(wo + 0.12, 16)
-    ears(wo + 0.3, 8)
+    ears(wo - 0.05, -20)
+    ears(wo + 0.12, 30)                                             # tai bật dựng
+    ears(wo + 0.3, 16)
     lumo.go(wo - 0.05, PILE_AT.x, POP_Z)
-    lumo.go(wo + 0.25, PILE_AT.x, POP_Z + 0.06)                    # nhổm lên trong đống lá
-    head(wo + 0.25, -6, -10)
+    lumo.go(wo + 0.25, PILE_AT.x, POP_Z + 0.22)                    # nhổm hẳn lên khỏi đống lá (tới ngực): đủ to cho cú toàn
+    head(wo + 0.25, -6, -30)                                        # quay đầu về phía ánh vàng
     key(glow, "scale", 0.0, Vector((0, 0, 0)))                     # la bàn dưới phiến đá: ẩn tới GOLD_GLOW (máy đang lùi ra),
     key(glow, "scale", tm.GOLD_GLOW[0] - HOLD, Vector((0, 0, 0)))  # nếu không đốm vàng lộ ở mép khung S13, đầu S14
     t, i = tm.GOLD_GLOW[0], 0
@@ -807,7 +821,7 @@ def build(timing, offset, seconds, out_blend, segment=None):
         "S4": [(S["S4"][0], (2.4, -4.3, 1.15), (2.5, 0.0, 1.0), 35)],                       # mặt trong bụi gai, vách đá cao
         "S5": [(S["S5"][0], (1.95, -1.75, 0.78), (1.95, 0.0, 0.72), 35)],                   # cận: quả gai trên mũi
         "S6": pov("S6", 0.5),                                                               # xoay bản đồ nửa vòng
-        "S7": [(S["S7"][0], (1.1, -3.0, 0.95), (1.3, 0.0, 0.6), 30)],                       # rộng hơn S5: thấy con đường sau lưng
+        "S7": [(S["S7"][0], (1.1, -3.6, 1.0), (1.3, 0.0, 0.6), 26)],                       # rộng hơn S5: thấy con đường sau lưng
         "S8": [(S["S8"][0], (0.5, -4.5, 1.4), (-0.5, 1.5, 0.5), 26)],                       # con đường rừng rộng mở trước mặt Lumo
         "S9": [(S["S9"][0], (1.65, -0.9, 1.28), tuple(BIRD_AT + Vector((0, 0, 0.07))), 50)],   # cận chú chim cười, thấy bụng
         "S10": [(S["S10"][0], (1.5, -2.4, 0.85), (1.5, 0.0, 0.76), 35)],                     # Lumo ngượng, chống chế, chim bay

@@ -55,4 +55,4 @@ Làm trước khi báo xong việc, không cần người dùng nhắc:
 Quy ước chung (dựng bằng script, file gốc, đặt tên, shot, git LFS) và công cụ nằm ở `README.md`, lưu ý API Blender 5.2 ở `pipeline/README.md`. Thêm:
 - Chỉ commit, push khi người dùng yêu cầu. Commit message tiếng Việt.
 - Không ghi API key (BytePlus…) vào repo hay vào chat; người dùng tự đặt biến môi trường.
-- Sinh Seedance tốn tiền thật: chỉ sinh bản nháp (Seedance 2.5 draft 480p); bản final 1080p chỉ chạy khi người dùng chốt bản nháp đó (`04_PRODUCTION/SEEDANCE.md`, mục "Sinh qua API"). Báo chi phí ước tính trước mỗi lần sinh.
+- Sinh Seedance tốn tiền thật: chỉ sinh bản nháp (Seedance 2.5 draft 480p); bản final đang bị chặn, không sinh (`04_PRODUCTION/SEEDANCE.md`, mục "Sinh qua API"). Báo chi phí ước tính trước mỗi lần sinh.
