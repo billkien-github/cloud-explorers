@@ -6,7 +6,7 @@ cảnh và xuất .srt. Chạy bằng Blender, máy không cần ffmpeg:
 
 Danh sách dựng là một file .py, đường dẫn tính từ chính file đó:
     CLIPS = [
-        "sh010/seedance/sh010_take01.mp4",                    # video của shot: cắt và CC theo build_shot.py của shot
+        "sh010/seedance/takes/sh010_take01.mp4",              # video của shot: cắt và CC theo build_shot.py của shot
         ("khac.mp4", 1.5, 6.0),                                # (video, giây vào, giây ra); giây ra None = tới hết
         ("khac.mp4", 0, None, ("canh03/timing.py", 12.0)),     # kèm CC: (timing.py, giây trong cảnh ứng với giây vào)
     ]
@@ -15,7 +15,7 @@ Danh sách dựng là một file .py, đường dẫn tính từ chính file đ�
     SIZE = (1920, 1080)                      # tuỳ chọn: mặc định theo video đầu tiên; video khác cỡ co giãn vừa khung
     OUT = "renders/canh01.mp4"               # tuỳ chọn: mặc định renders/<tên danh sách>.mp4 cạnh danh sách
 
-Video nằm trong <shot>/seedance/ hay <shot>/renders/: đọc build_shot.py của shot (không chạy), cắt từ 0 tới SEGMENT
+Video nằm trong <shot>/seedance/takes/ hay <shot>/renders/: đọc build_shot.py của shot (không chạy), cắt từ 0 tới SEGMENT
 (không có SEGMENT thì giữ nguyên), CC lấy từ TIMING dời theo OFFSET. Thư mục cảnh previz 2D có timing.py cạnh
 build_shot.py thì lấy CC từ đó. Video chưa có file thì thay bằng khung tối ghi tên file, dài bằng giây ra, SEGMENT hay
 SECONDS, để các đoạn sau và CC không lệch. Mọi video phải cùng fps.
@@ -75,8 +75,9 @@ def shot_consts(build_py):
 
 
 def shot_clip(video):
-    """Video trong <shot>/seedance/ hay <shot>/renders/: cắt và CC theo build_shot.py của shot."""
-    for d in (os.path.dirname(video), os.path.dirname(os.path.dirname(video))):
+    """Video trong <shot>/seedance/takes/ hay <shot>/renders/: cắt và CC theo build_shot.py của shot."""
+    up1 = os.path.dirname(video)
+    for d in (up1, os.path.dirname(up1), os.path.dirname(os.path.dirname(up1))):
         if os.path.isfile(os.path.join(d, "build_shot.py")):
             break
     else:

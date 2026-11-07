@@ -4,7 +4,7 @@ FPS, SECONDS = 24, 48.6
 SHOTS = [
     ("S1", 0.0, 3.4),     # toàn rừng mây: đảo lơ lửng, thác đổ xuống biển mây, bướm qua tán cây; Lumo bước vào khung
     ("S2", 3.4, 5.2),     # cận bản đồ (Lumo nhìn xuống): rương lộn ngược, mũi tên chỉ lên, về phía trước
-    ("S3", 5.2, 8.75),    # Lumo dựng tai, chìa bản đồ, bụi gai ngay phía trước; câu hô lần 1; bước thêm, SỘT
+    ("S3", 5.2, 8.75),    # Lumo dựng tai, chìa bản đồ, bụi gai ngay phía trước; câu hô lần 1; bước tới, vấp hòn đá, ngã vào bụi: SỘT
     ("S4", 8.75, 10.4),   # toàn hơn: mặt cắm trong bụi gai, vách đá cao chắn lối phía sau; lùi ra
     ("S5", 10.4, 13.4),   # cận: quả gai trên chóp mũi, lắc đầu, gai văng; nhìn bụi gai, nhìn bản đồ
     ("S6", 13.4, 15.3),   # cận bản đồ: xoay nửa vòng, rương đứng thẳng, mũi tên chỉ xuống (về phía Lumo)
@@ -22,8 +22,9 @@ SHOTS = [
 LUMO_WALK_IN = (1.4, 5.5)       # Lumo bước vào khung, cắm mặt vào bản đồ, sải bước tự tin, dừng trước bụi gai
 LUMO_POSE = (5.5, 5.9)          # dựng thẳng hai tai, chìa bản đồ thẳng ra trước ngang ngực
 LUMO_LINE1 = (6.4, 8.3)         # LUMO: Kho báu cổ đại… ngay phía trước!
-LUMO_STEP = (8.35, 8.6)         # bước thêm một bước
-SOT = 8.6                       # mặt cắm vào bụi gai: SỘT!
+LUMO_STEP = (8.1, 8.42)         # vừa hô dứt câu vừa sải một bước tự tin, mũi chân vướng hòn đá
+TRIP = 8.42                     # vấp hòn đá, chúi người ngã tới
+SOT = 8.6                       # ngã cắm mặt vào bụi gai: SỘT!
 BACK_OUT = (10.0, 10.35)        # lùi ra, quả gai dính trên chóp mũi
 BURR_LOOK = (10.5, 11.2)        # nhìn quả gai trên mũi
 HEAD_SHAKE = (11.4, 11.9)       # lắc đầu
@@ -74,7 +75,7 @@ CC = [
     (3.4, 5.2, "[rương lộn ngược, mũi tên chỉ lên]"),
     (5.2, LUMO_LINE1[0], "[dựng tai, chìa bản đồ]"),
     (LUMO_LINE1[0], LUMO_LINE1[1], "LUMO: Kho báu cổ đại… ngay phía trước!"),
-    (SOT, SOT + 0.8, "[bụi gai: SỘT!]"),
+    (TRIP, SOT + 0.8, "[vấp đá: SỘT!]"),
     (SOT + 0.8, BACK_OUT[1] + 0.1, "[vách đá chắn lối]"),
     (BACK_OUT[1] + 0.1, HEAD_SHAKE[0], "[gai dính chóp mũi]"),
     (HEAD_SHAKE[0], LOOK_BUSH[0], "[lắc đầu: gai văng]"),

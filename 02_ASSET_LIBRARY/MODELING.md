@@ -53,7 +53,7 @@ Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000A_mysterious_compass.md`, 
 |---|---|---|---|
 | Chú chim nhỏ | `Characters/Little_Bird/` | `little_bird_ref.png`, `little_bird_ref_back.png`, ghép `little_bird_turnaround.png` | ✅ |
 | Bướm phát sáng | `Characters/Glow_Butterflies/` | `glow_butterflies_ref.png` (thiết kế, ba tư thế) | ✅ |
-| Bản đồ giấy | `Props/Paper_Map/` | `paper_map_ref.png` | ✅ |
+| Bản đồ giấy | `Props/Paper_Map/` | `paper_map_ref.png`; `paper_map_upside_down.png` (xoay 180°, cho đoạn Lumo cầm ngược: dòng Seedance 2.0 chép chiều của ảnh tham chiếu) | ✅ |
 | Rừng Mây | `Environments/Cloud_Forest/` | `cloud_forest_hero.png` | ✅ |
 | Phế tích cổ | `Environments/Ancient_Ruins/` | `ancient_ruins_hero.png` | ✅ |
 | Vòm đá | `Environments/Ancient_Ruins/` | `stone_vault_hero.png` | ✅ |
@@ -63,7 +63,7 @@ Danh sách asset: beat sheet `03_CONTENT/Scripts/EP000A_mysterious_compass.md`, 
 | Bệ đá có ngôi sao và bản đồ khắc | `Props/Star_Plinth/` | `star_plinth_ref.png` | ✅ |
 | Bãi phế liệu | `Environments/Junkyard/` | `junkyard_hero.png` | ✅ |
 
-Không sinh ảnh riêng: Lumo, Wonder Compass, Inventor Pack (đã có `lumo_turnaround.png`, `wonder_compass_ref.png`, `inventor_pack_ref.png`); hộp kim loại, bụi gai, sườn dốc lá khô, phiến đá, phù điêu mây (có trong ảnh bối cảnh); cầu sập, phù điêu ánh lên, cửa thấp mở, đài thiên văn lóe xanh ngọc (trạng thái, tả bằng chữ trong prompt Seedance, hình theo previz); hòn sỏi, quả gai, chiếc lá, đống lá (vật nhỏ tả bằng chữ). `wonder_hub_island_hero.png` chốt dáng ngoài của Wonder Hub: ảnh Wonder Hub của tập 01 và các tập sau đính kèm ảnh này.
+Không sinh ảnh riêng: Lumo, Wonder Compass, Inventor Pack (đã có `lumo_turnaround.png`, `wonder_compass_ref.png`, `inventor_pack_ref.png`); hộp kim loại, bụi gai, sườn dốc lá khô, phiến đá, phù điêu mây (có trong ảnh bối cảnh); cầu sập, phù điêu ánh lên, cửa thấp mở, đài thiên văn lóe xanh ngọc (trạng thái, tả bằng chữ trong prompt Seedance, hình theo previz); hòn sỏi, hòn đá Lumo vấp (Cảnh 1), quả gai, chiếc lá, đống lá (vật nhỏ tả bằng chữ). `wonder_hub_island_hero.png` chốt dáng ngoài của Wonder Hub: ảnh Wonder Hub của tập 01 và các tập sau đính kèm ảnh này.
 
 ## Bộ ảnh dựng model
 
@@ -565,7 +565,7 @@ A design sheet: each animal in a three-quarter view, waving. Plain flat light-gr
 - Mỗi món một chat, lưu ảnh vào `concept/` của thư mục ghi ở bảng "Tập 000A".
 - Bản đồ giấy làm đầu tiên; bệ đá làm sau ảnh cầu ván và ảnh hòn đảo (`04_PRODUCTION/SEEDANCE.md`), vì bệ đá đính kèm cả ba.
 
-**Bản đồ giấy** (Cảnh 1, 4, 5: Lumo cầm ngược, xoay qua xoay lại; Cảnh 4 đặt cạnh bản đồ khắc trên bệ đá). Đính kèm `cloud_explorers_character_sheet.png`, lưu `paper_map_ref.png`. Ảnh vẽ bản đồ đúng chiều; cầm ngược là xoay nửa vòng.
+**Bản đồ giấy** (Cảnh 1, 4, 5: Lumo cầm ngược, xoay qua xoay lại; Cảnh 4 đặt cạnh bản đồ khắc trên bệ đá). Đính kèm `cloud_explorers_character_sheet.png`, lưu `paper_map_ref.png`. Ảnh vẽ bản đồ đúng chiều; cầm ngược là xoay nửa vòng. Soát ảnh bằng cách xoay 180°: mọi hình phải nhìn ra là đang lộn ngược. Ảnh hiện tại chưa đạt: chiếc rương vẽ gần đối xứng nên xoay rồi vẫn trông đứng thẳng, mặt đá dưới các đảo lật lên trông như núi (bản nháp `sh010` Cảnh 1 tập 000A); chỉ mũi tên đọc ra chiều.
 ```
 The attached sheet shows the style of a soft stylized 3D animated film for young children; use it for style and scale only. Design Lumo the fox's homemade treasure map. ONE image: the map lying flat, seen straight from above, orthographic, no perspective, the right way up, isolated.
 - A sheet of warm cream parchment with soft worn edges and two faint fold lines (it folds into a small shoulder bag). About as wide as Lumo's head.
@@ -606,7 +606,7 @@ The attached sheet shows the four main characters of a soft stylized 3D animated
 - Tiny: about the size of one of Lumo the fox's fingers. A small soft round body, two short curled antennae, rounded wings.
 - The wings are pale peach-pink and glow softly from within, with a gentle halo of light. No purple, no lavender, no yellow or gold, no aqua or turquoise.
 - Simple and cute, never creepy.
-A design sheet with the same butterfly in three poses: 1) wings fully open, seen from above; 2) flying, seen from the side; 3) resting with wings folded up, seen from the side. Plain flat light-gray background, soft even lighting. No text, no labels, no logos, no watermark.
+A design sheet with the same butterfly in three poses: 1) wings fully open, seen from above; 2) flying, seen from the side; 3) resting with wings folded up, seen from the side. Landscape 16:9 canvas. Plain flat light-gray background, soft even lighting. No text, no labels, no logos, no watermark.
 ```
 
 ## Dựng trong Blender

@@ -14,7 +14,7 @@ Tám reviewer trong `.claude/agents/<tên>-reviewer.md`. Mỗi cổng gọi mộ
 | Previz 2D | Thư mục cảnh trong `03_CONTENT/Previz_2D/` | `story`, `character`, `audience`, `pacing` |
 | Previz khối | Thư mục shot có `seedance/` | `story`, `audience`, `pacing`, `visual`, `character` |
 | Prompt | `<shot>/seedance/prompt.md` | `check_prompt.py`, rồi `pacing`, `character` |
-| Take | File video trong `<shot>/seedance/` | `character`, `visual`, `animation`, `pacing`, `safety`; thêm `audio` nếu take có tiếng |
+| Take | File video trong `<shot>/seedance/takes/` | `character`, `visual`, `animation`, `pacing`, `safety`; thêm `audio` nếu take có tiếng |
 | Shot dựng 3D | Thư mục shot không có `seedance/`, hoặc một video trong `renders/` của nó | `character`, `visual`, `animation`, `pacing`; thêm `audio` nếu có tiếng |
 
 Cả tập đã ghép chưa có quy trình review.
@@ -68,7 +68,13 @@ Phần lớn lỗi của các lượt sau sinh ra từ chính lần sửa trư�
    - Lượt vừa rồi còn Chặn nhưng lần sửa chỉ đổi câu chữ theo luật đã có: chạy lượt xác nhận. Chỉ gọi các reviewer đã nêu lỗi được sửa (kể cả Gợi ý đã áp), giao danh sách lỗi cũ nguyên văn, các Gợi ý đã áp và số dòng đã đổi. Reviewer kiểm từng lỗi cũ, đọc các dòng đã đổi cùng vài dòng xung quanh, chỉ báo Chặn, Nên sửa mới.
    - Chỉ còn Nên sửa và lần sửa không đổi luật: sửa, tự soát, rồi khoá; không cần chạy lại cả nhóm reviewer.
    - Gợi ý mới ở lượt review lại không chặn khoá. Khoá khi không còn Chặn và Nên sửa.
-5. **Rút kinh nghiệm:** một đầu vào phải review từ lượt thứ ba trở lên thì tìm vì sao lỗi cứ xuất hiện (thiếu thước đo, lần sửa gây lỗi mới, reviewer thiếu căn cứ…) và cập nhật vào skill này, file vai reviewer hoặc file chuẩn. Không ghi file báo cáo.
+5. **Rút kinh nghiệm sau mỗi lượt review có lỗi Chặn hay Nên sửa**, làm cùng lúc với lần sửa, trước khi báo xong: lỗi nào có thể lặp lại ở cảnh, đoạn, tập khác thì viết thành một quy tắc chung (không phải lời sửa riêng cho chỗ đó) vào file sở hữu cách làm ra đầu vào ấy, kèm ví dụ ngắn chỉ ra chỗ đã sai:
+   - kịch bản, beat sheet: `03_CONTENT/README.md`;
+   - previz 2D, CC: `03_CONTENT/PREVIZ_2D.md`;
+   - previz khối, chia đoạn, ảnh tham chiếu, prompt, take: `04_PRODUCTION/SEEDANCE.md` (lỗi của Seedance ghi ở danh sách "Những chỗ Seedance hay làm sai" trong mục "Prompt theo giây");
+   - ảnh sinh bằng ChatGPT: `02_ASSET_LIBRARY/MODELING.md`.
+
+   Quy tắc đã có mà vẫn sai thì sửa cho rõ hơn, đưa lên chỗ dễ thấy, hoặc thêm vào script kiểm (`check_prompt.py`…) nếu đo được, thay vì ghi lặp. Một đầu vào phải review từ lượt thứ ba trở lên thì tìm thêm vì sao lỗi cứ xuất hiện (thiếu thước đo, lần sửa gây lỗi mới, reviewer thiếu căn cứ…) và cập nhật vào skill này hay file vai reviewer. Không ghi file báo cáo.
 
 ## Kết quả của reviewer
 

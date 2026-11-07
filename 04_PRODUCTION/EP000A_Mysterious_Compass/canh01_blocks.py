@@ -2,17 +2,16 @@
 Previz khối Cảnh 1 tập 000A (Nhà thám hiểm nhỏ) dẫn Seedance (04_PRODUCTION/SEEDANCE.md): bối cảnh, đạo cụ, Lumo và
 chú chim dạng khối (pipeline/blocks.py), máy quay từng cú. Mọi mốc lấy từ timing.py của previz 2D (TIMING trong
 build_shot.py của đoạn), không gõ lại số. Diễn theo previz 2D đã chốt: 03_CONTENT/Previz_2D/EP000A_Mysterious_Compass/canh01/.
-Bốn đoạn gọi build() với giây bắt đầu và độ dài của đoạn:
-    sh010: 0–13.4 s của cảnh (S1–S5: rừng mây, bản đồ cầm ngược, câu hô lần 1, SỘT, quả gai trên mũi)
-    sh020: 13.4–21.9 s (S6–S8: xoay bản đồ, "À… phía trước là phía sau.", quay ngoắt lại, đường rừng)
-    sh030: 21.9–34.1 s (S9–S11: chú chim cười, Lumo ngượng rồi chống chế, chim bay đi, lại cắm mặt vào bản đồ)
-    sh040: 34.1–48.6 s (S12–S14: hụt chân ở mép dốc lá khô, trượt, đống lá, chiếc lá trên trán, bướm, phế tích, ánh vàng)
+Hai đoạn (Seedance 2.5, tối đa 30 giây) gọi build() với giây bắt đầu và độ dài của đoạn:
+    sh010: 0–21.9 s của cảnh (S1–S8: rừng mây, bản đồ cầm ngược, câu hô lần 1, vấp hòn đá ngã vào bụi gai, quả gai
+           trên mũi, xoay bản đồ, "À… phía trước là phía sau.", quay ngoắt lại, đường rừng)
+    sh020: 21.9–48.6 s (S9–S14: chú chim cười, Lumo chống chế, chim bay đi, dốc lá khô, đống lá, bướm, phế tích, ánh vàng)
 Diễn dựng cho cả cảnh để các đoạn nối liền; khung 1 của đoạn = giây bắt đầu (blocks.T0), chỉ dựng máy quay của các cú
 trong đoạn. Tên phim không dựng (thêm ở hậu kỳ; chữ lọt vào video dẫn sẽ lọt vào take).
 Toạ độ (m): đất (mặt đường rừng) ở Z 0, máy quay phía -Y nhìn về +Y, trục X theo previz 2D: Lumo đi ra từ lối rẽ trong rừng (-2.62, Y 2.8), rẽ phải, dừng 1.68
 trước bụi gai (2.5), vách đá từ 2.75; chú chim trên cành ngay trên đường (1.3, -0.15, cao 1.2), trước mặt Lumo khi Lumo
 quay lại; đường rẽ vào rừng (về +Y) ở -3.5…-2.6; mép dốc lá khô -3.85, chân dốc nền rêu Z -1.3 ở -7.2; đống lá -7.3;
-phiến đá rêu con bướm đậu -8.05 (phía trước, Y -0.1); phiến đá có ánh vàng -9.35 trên bậc đá chân tường (Y 0.55; ngoài khung S12, S13 và đầu S14); tường
+phiến đá rêu con bướm đậu -8.05 (phía trước, Y -0.1); phiến đá có ánh vàng -9.35 trên bậc đá chân tường (Y 0.55; ẩn tới GOLD_GLOW); tường
 phế tích từ -9 sang trái (Y 0.9–1.3). Hướng nhìn phải 62°, trái -62°: quay giữa hai hướng luôn đi qua mặt trước.
 Hai cú cận bản đồ (S2, S6) là cú nhìn của Lumo: máy đặt ở chỗ mắt, đầu Lumo ẩn trong hai cú này.
 Màu: Lumo cam, chú chim nâu (mỗi nhân vật một màu, ô trắng = hướng mặt); bối cảnh, đạo cụ xám; bướm, ánh vàng phát sáng.
@@ -187,6 +186,7 @@ def build(timing, offset, seconds, out_blend, segment=None):
     for cx, cy, cz, r in ((2.5, 0.0, 0.38, 0.42), (2.32, 0.05, 0.5, 0.3), (2.62, -0.1, 0.62, 0.28), (2.45, 0.1, 0.75, 0.22)):
         bm = sphere_bm(r, (cx, cy, cz), bm=bm, segs=16)
     bush = add_obj("Bush", bm, bush_m, "SET")
+    add_obj("TripStone", sphere_bm(0.1, (1.72, -0.02, 0.0), scale=(1.0, 0.9, 0.6), segs=12), moss_m, "SET")   # hòn đá Lumo vấp: sẫm, đủ to để thấy trên mặt đường sáng
     # phế tích cổ dưới chân dốc, cây cối phủ; bậc đá, phiến đá có ánh vàng, phiến đá rêu, đống lá
     add_obj("Ruins_Wall", box_bm((3.6, 0.4, 1.42), (-10.8, 1.1, LOW_Z + 0.71)), stone_m, "SET")
     bm = None
@@ -226,7 +226,8 @@ def build(timing, offset, seconds, out_blend, segment=None):
         bm = box_bm((0.04, 0.08, 0.01), (0, -0.03, 0.006))           # thân mũi tên
         bm = tri_bm(0.1, 0.07, 0.01, (0, 0.045, 0.006), bm=bm)      # đầu mũi tên chỉ về +Y
         bm = box_bm((0.09, 0.05, 0.014), (0, 0.115, 0.008), bm=bm)  # rương
-        bm = cyl_bm(0.026, 0.09, (0, 0.09, 0.008), axis="X", bm=bm, segs=12)   # nắp vòm, ở phía mũi tên (trên rương)
+        bm = cyl_bm(0.026, 0.09, (0, 0.09, 0.03), axis="X", bm=bm, segs=12)    # nắp vòm, ở phía mũi tên (trên rương); nằm trọn
+        # trước mặt giấy: ló ra mặt sau thì ở cú nhìn lưng bản đồ thành vệt sẫm trên tấm trắng, Seedance vẽ thành tấm thẻ
         add_obj(f"Map{tag}_Marks", bm, prop_dark, "PROPS", parent=parent)
 
     map_shapes(map_spin, "")
@@ -332,7 +333,8 @@ def build(timing, offset, seconds, out_blend, segment=None):
     for i in range(6):
         lumo.go(S["S2"][0] + (S["S3"][0] - S["S2"][0]) * (i + 1) / 6, -1.4 + 2.7 * (i + 1) / 6, 0.04 if i % 2 == 0 else 0.0)
     lumo.go(S["S3"][0] + 0.15, 1.52, 0.03)
-    STOP_X, SOT_X = 1.68, 1.86
+    STOP_X, SOT_X = 1.5, 1.96                                        # dừng cách bụi gai một bước, hòn đá ở giữa; SOT_X: đầu lút hẳn
+                                                                    # vào bụi gai (mép bụi ở khoảng 2.05)
     lumo.go(w1, STOP_X)
     steps(L.legs, 0.0, w1, 20, 28)
     wag(L.tail, 0.0, w1, 0.5, 18, base=(30, 0, 0))
@@ -364,22 +366,36 @@ def build(timing, offset, seconds, out_blend, segment=None):
     lumo.pose(l0 + 1.15, lean=2)
     head(l0 + 0.9, 2)
     head(l0 + 1.15, -8)
-    # bước thêm một bước: SỘT! mõm lút trong bụi gai
-    s0 = tm.LUMO_STEP[0]
+    # vừa hô dứt câu vừa sải một bước tự tin (ưỡn ngực, hếch cằm, không nhìn đường), mũi chân vướng hòn đá, chúi người
+    # ngã tới, đầu lút vào bụi gai, người còn trôi tới thêm rồi nén lại, giữ. SỘT! Ngả cứng cả người quanh bàn chân trông
+    # như tấm ván đổ: cần đà, cú vấp làm nguyên nhân, quán tính và độ nảy.
+    s0, trip = tm.LUMO_STEP[0], tm.TRIP
     lumo.go(s0, STOP_X)
-    lumo.go(s0 + 0.13, (STOP_X + SOT_X) / 2, 0.04)
-    lumo.go(tm.SOT, SOT_X)
-    lumo.pose(s0, lean=2)
-    lumo.pose(tm.SOT, lean=12)
-    head(tm.SOT - 0.05, -8)
-    head(tm.SOT + 0.05, 6)
-    ears(tm.SOT - 0.05, 0)
+    lumo.go(s0 + 0.16, STOP_X + 0.08, 0.05)                         # sải bước, nhổm lên
+    lumo.go(trip, STOP_X + 0.14, 0.02)                              # chân trước vướng hòn đá
+    lumo.go(tm.SOT, SOT_X - 0.04)
+    lumo.go(tm.SOT + 0.1, SOT_X)                                    # quán tính: người còn trôi tới sau lúc chạm
+    lumo.pose(s0, lean=-6)                                          # ưỡn ngực tự hào
+    lumo.pose(trip, lean=2)
+    lumo.pose(trip + 0.08, lean=14)                                 # vấp: chúi người tới
+    lumo.pose(tm.SOT, lean=20)
+    lumo.pose(tm.SOT + 0.1, lean=26)
+    lumo.pose(tm.SOT + 0.25, lean=22)                               # nảy lại chút rồi giữ
+    head(s0, -12)                                                   # hếch cằm, không nhìn phía trước
+    head(trip, -14)                                                 # giật mình khi vấp
+    head(tm.SOT, 4)
+    head(tm.SOT + 0.1, 12)                                          # đầu chúi vào lá
+    ears(trip, 20)                                                  # vấp: tai dựng ngược
     ears(tm.SOT + 0.05, -40)
-    tail(tm.SOT - 0.05, 30)
+    tail(trip, 50)
     tail(tm.SOT + 0.05, 55)                                         # đuôi dựng đứng
-    squash(tm.SOT, 1.05, 0.95)
-    squash(tm.SOT + 0.15, 1, 1)
-    hold(tm.SOT, PUSH)
+    squash(tm.SOT, 1, 1)
+    squash(tm.SOT + 0.08, 1.08, 0.92)                               # nén lại khi va
+    squash(tm.SOT + 0.2, 0.97, 1.03)
+    squash(tm.SOT + 0.3, 1, 1)
+    hold(trip, PUSH)
+    hold(trip + 0.06, RAISE)                                        # hai tay hất lên theo cú vấp (thấp hơn tai)
+    hold(tm.SOT + 0.15, BELLY)                                      # tay buông xuống, bản đồ thõng thấp
     for k in range(8):                                              # bụi gai rung
         key(bush, "location", tm.SOT + 0.05 * k, Vector((0.012 if k % 2 else -0.012, 0, 0)))
     key(bush, "location", tm.SOT + 0.4, Vector((0, 0, 0)))
@@ -392,15 +408,16 @@ def build(timing, offset, seconds, out_blend, segment=None):
             rot(ob, [(tm.SOT + (0.9 + 0.1 * i) * u, (0, 220 * u, 90 * u))])
         show(ob, tm.SOT + 1.2 + 0.1 * i, False)
     for i, t in enumerate([tm.SOT + 0.3 + 0.3 * k for k in range(int((tm.BACK_OUT[0] - 0.1 - tm.SOT - 0.3) / 0.3) + 1)]):
-        lumo.pose(t, lean=12 if i % 2 else 8)                       # kẹt trong bụi gai, ngọ nguậy
-        ears(t, -40 if i % 2 else -28)
-    wag(L.tail, tm.SOT + 0.2, tm.BACK_OUT[0], 0.25, 14, base=(48, 0, 0))
+        lumo.pose(t, lean=26 if i % 2 else 17, roll=8 if i % 2 else -8)  # kẹt trong bụi gai, ngọ nguậy cả người, đầu vẫn trong lá
+        ears(t, -50 if i % 2 else -10)
+    wag(L.tail, tm.SOT + 0.2, tm.BACK_OUT[0], 0.25, 30, base=(48, 0, 0))
+    lumo.pose(tm.BACK_OUT[0], roll=0)
     # lùi ra, quả gai dính trên chóp mũi
     b0, b1 = tm.BACK_OUT
     lumo.go(b0, SOT_X)
     lumo.go(b0 + 0.18, 1.73, 0.03)
     lumo.go(b1, 1.7)
-    lumo.pose(b0, lean=10)
+    lumo.pose(b0, lean=20)
     lumo.pose(b0 + 0.18, lean=-8)
     lumo.pose(b1, lean=0)
     show(burr, b0 + 0.05, True)
@@ -424,10 +441,12 @@ def build(timing, offset, seconds, out_blend, segment=None):
     show(burr_fly, tm.BURR_FLY, True)
     for k in range(5):
         u = k / 4
-        key(burr_fly, "location", tm.BURR_FLY + 0.55 * u,
+        key(burr_fly, "location", tm.BURR_FLY + 0.8 * u,               # bay đủ lâu để đọc ra
             bp.lerp(Vector((2.2, -0.35, 0.03)), u) + Vector((0, 0, 0.3 * math.sin(math.pi * u))))
     # nhìn bụi gai, nhìn bản đồ
     head(tm.LOOK_BUSH[0], 0)
+    head(tm.LOOK_BUSH[0] + 0.15, -14)                               # ngẩng nhìn ngọn bụi gai, vách đá
+    head(tm.LOOK_BUSH[1], -14)
     head(tm.LOOK_MAP[0], 0)
     head(tm.LOOK_MAP[1], 22)
     hold(tm.LOOK_MAP[0], CHEST)
@@ -725,6 +744,9 @@ def build(timing, offset, seconds, out_blend, segment=None):
     drift(*bflies[0], 0.0, T_END, -0.4, -3.5, 2.4, 1.6, 0.35, 0.3)       # bay qua trước máy cú toàn mở đầu
     drift(*bflies[1], 0.0, T_END, -1.9, 1.6, 1.35, 0.6, 0.2, 0.5, 2.0)
     drift(*bflies[2], 0.0, T_END, -0.6, 0.6, 0.8, 1.6, 0.18, 0.25, 4.0)
+    for root, _ in bflies[:3]:                                      # từ S12 chỉ còn con bướm dẫn mắt
+        key(root, "scale", S["S12"][0] - HOLD, Vector((1.5, 1.5, 1.5)))
+        key(root, "scale", S["S12"][0], Vector((0, 0, 0)))
     hero, hero_w = bflies[3]
     hero.scale = (1.6, 1.6, 1.6)                                    # con bướm dẫn mắt: to hơn một chút để đọc được ở S14
     l0b, l1b = tm.BFLY_LAND
@@ -747,7 +769,9 @@ def build(timing, offset, seconds, out_blend, segment=None):
     lumo.go(wo - 0.05, PILE_AT.x, POP_Z)
     lumo.go(wo + 0.25, PILE_AT.x, POP_Z + 0.06)                    # nhổm lên trong đống lá
     head(wo + 0.25, -6, -10)
-    t, i = 0.0, 0                                                   # la bàn dưới phiến đá le lói sẵn; lộ ra khi máy lùi ra
+    key(glow, "scale", 0.0, Vector((0, 0, 0)))                     # la bàn dưới phiến đá: ẩn tới GOLD_GLOW (máy đang lùi ra),
+    key(glow, "scale", tm.GOLD_GLOW[0] - HOLD, Vector((0, 0, 0)))  # nếu không đốm vàng lộ ở mép khung S13, đầu S14
+    t, i = tm.GOLD_GLOW[0], 0
     while t < T_END:
         key(glow, "scale", t, Vector((1.2, 1.2, 1.0)) if i % 2 else Vector((0.9, 0.9, 1.0)))
         t, i = t + 0.6, i + 1
@@ -779,7 +803,7 @@ def build(timing, offset, seconds, out_blend, segment=None):
                (tm.LUMO_WALK_IN[0] - 0.2, (0.2, -8.0, 1.5), (0.0, 6.0, 8.0), 26),
                (tm.LUMO_WALK_IN[0] + 0.9, (0.2, -8.0, 1.5), (0.3, 2.0, 1.7), 26)],          # …hạ xuống: Lumo ra từ lối rẽ
         "S2": pov("S2"),                                                                    # bản đồ cầm ngược, Lumo nhìn xuống
-        "S3": [(S["S3"][0], (1.85, -2.7, 0.75), (2.0, 0.0, 0.52), 35)],                     # Lumo, bản đồ, bụi gai
+        "S3": [(S["S3"][0], (1.85, -2.7, 0.75), (2.0, 0.0, 0.52), 30)],                     # Lumo, bản đồ, bụi gai; rộng hơn cần: Seedance hay cắt chặt cú trung
         "S4": [(S["S4"][0], (2.4, -4.3, 1.15), (2.5, 0.0, 1.0), 35)],                       # mặt trong bụi gai, vách đá cao
         "S5": [(S["S5"][0], (1.95, -1.75, 0.78), (1.95, 0.0, 0.72), 35)],                   # cận: quả gai trên mũi
         "S6": pov("S6", 0.5),                                                               # xoay bản đồ nửa vòng

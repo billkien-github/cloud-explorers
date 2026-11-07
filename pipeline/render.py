@@ -73,6 +73,7 @@ elif mode == "ref":                               # video tham chiếu cho Seeda
     ee.taa_render_samples = 8
     r.use_motion_blur = False
     video(os.path.join(out_dir, f"{stem}_ref.mp4"))
+    r.ffmpeg.audio_codec = "NONE"                 # không kèm tiếng: rãnh AAC dài hơn hình vài phần trăm giây, đoạn 15 s vượt giới hạn video của Seedance
     bpy.ops.render.render(animation=True)
 
 else:

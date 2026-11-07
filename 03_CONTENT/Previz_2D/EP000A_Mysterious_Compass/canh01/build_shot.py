@@ -132,6 +132,8 @@ part("Cliff", None, [(CLIFF, "#BFA88F")]
      + [(band([(2.66, 2.7), (2.72, 2.2), (2.65, 1.7)], 0.05), "#6E9E3C"), (ell(0.3, 0.12, 2.9, 3.35), "#8DB04F"),
         (band([(2.85, 3.3), (2.9, 2.6), (2.84, 2.1)], 0.04), "#6E9E3C")], 1.3)
 bush = node("Bush", None, (2.5, 0.0), -0.5)
+part("TripStone", None, [(ell(0.075, 0.05, 1.68, 0.01), "#9C968A"), (ell(0.045, 0.018, 1.66, 0.035), "#B8B2A6")],
+     -0.45)                                                     # hòn đá nhô lên giữa đường, ngay trước bụi gai: Lumo vấp
 BURRS = ((-0.3, 0.55), (-0.27, 0.78), (-0.05, 0.9), (0.17, 0.84), (0.3, 0.62), (-0.37, 0.33), (0.04, 0.62), (0.22, 0.3),
          (-0.14, 0.4))
 part("Bush_Shape", bush, [(ell(0.42, 0.38, 0, 0.38), "#6E9F3F"), (ell(0.3, 0.3, -0.18, 0.5), "#7DB04A"),
@@ -263,7 +265,7 @@ lean(lumo, 0.0, -3)                                             # ưỡn ngực,
 walk(lumo.root, w0, SHOT["S2"][0], -3.8, -1.4, 6, 0.045)
 walk(lumo.root, SHOT["S2"][0], SHOT["S3"][0], -1.4, 1.3, 6, 0.045)
 at(lumo.root, SHOT["S3"][0] + 0.15, 1.52, 0.03)
-STOP_X, SOT_X = 1.68, 1.82                                     # SỘT: mõm lút trong bụi gai, mắt nhắm tịt còn thấy
+STOP_X, SOT_X = 1.5, 1.8                                        # dừng cách bụi gai một bước, hòn đá ở giữa; SỘT: đầu lút trong bụi
 at(lumo.root, w1, STOP_X, 0)
 loop(lumo.tail, 0.0, w1, 0.5, 18, 36)                           # đuôi vểnh, ve vẩy theo bước
 for i, t in enumerate(steps(w0, w1 - 0.2, 0.3)):                # đầu nhún theo bước
@@ -306,29 +308,37 @@ lean(lumo, l0 + 1.15, 2)
 ry(lumo.head, l0 + 0.9, 0)
 ry(lumo.head, l0 + 1.15, -8)
 bl(lumo, l1 + 0.05)
-# bước thêm một bước: SỘT!
+# bước tới, mũi chân vấp hòn đá, chúi người ngã vào bụi gai: SỘT! (đà, quán tính, nảy lại; không ngả cứng như tấm ván)
 s0, s1 = LUMO_STEP
 at(lumo.root, s0, STOP_X, 0)
-at(lumo.root, s0 + 0.13, (STOP_X + SOT_X) / 2, 0.04)
+at(lumo.root, s0 + 0.16, STOP_X + 0.08, 0.04)                  # sải bước, nhổm lên
+at(lumo.root, TRIP, STOP_X + 0.14, 0.02)                        # chân trước vướng hòn đá
 at(lumo.root, SOT, SOT_X, 0)
-lean(lumo, s0, 2)
-lean(lumo, SOT, 10)
-ry(lumo.head, SOT - 0.05, -8)
-ry(lumo.head, SOT + 0.05, 4)
-fc(lumo, SOT, "squint", 13)                                     # nhắm tịt mắt
+lean(lumo, s0, -4)
+lean(lumo, TRIP, 2)
+lean(lumo, TRIP + 0.08, 16)                                     # chúi người tới
+lean(lumo, SOT, 28)
+lean(lumo, SOT + 0.1, 32)                                       # quán tính: còn chúi thêm sau lúc chạm
+lean(lumo, SOT + 0.25, 27)
+fc(lumo, TRIP, "shock", 2)                                      # vấp: tròn mắt, miệng chữ O
+ry(lumo.head, TRIP, -10)
+ry(lumo.head, SOT - 0.05, -4)
+ry(lumo.head, SOT + 0.05, 6)
+fc(lumo, SOT, "squint", 34)                                     # nhắm tịt mắt
+hold(TRIP + 0.06, -125)                                         # hai tay hất lên theo cú vấp (thấp hơn tai)
 ears(lumo, SOT - 0.05, 0)
 ears(lumo, SOT + 0.05, -40)
 ry(lumo.tail, SOT - 0.05, 30)
 ry(lumo.tail, SOT + 0.05, 50)                                   # đuôi dựng đứng
 squash(lumo, SOT, 1.05, 0.95)
 squash(lumo, SOT + 0.15, 1, 1)
-hold(SOT, PUSH)
+hold(SOT + 0.15, -40)                                           # tay buông xuống, bản đồ thõng thấp
 jitter(bush, SOT, SOT + 0.4, 0.015, 0.05)
 for i, ob in enumerate(bush_bits):                              # vài chiếc lá bụi gai bật ra
     fly_bit(ob, SOT, (2.2, 0.75 + 0.06 * i), (1.9 + 0.2 * i, 0.02), SOT + 0.9 + 0.1 * i, 220, 0.25)
 # kẹt trong bụi gai, ngọ nguậy
 for i, t in enumerate(steps(SOT + 0.3, BACK_OUT[0] - 0.1, 0.3)):
-    lean(lumo, t, 9 if i % 2 else 6)
+    lean(lumo, t, 31 if i % 2 else 25)                          # đầu vẫn lút trong bụi
     ears(lumo, t, -40 if i % 2 else -30)
 loop(lumo.tail, SOT + 0.2, BACK_OUT[0], 0.25, 38, 55)
 # lùi ra, quả gai dính trên chóp mũi
@@ -336,7 +346,7 @@ b0, b1 = BACK_OUT
 at(lumo.root, b0, SOT_X, 0)
 at(lumo.root, b0 + 0.18, 1.73, 0.03)
 at(lumo.root, b1, 1.7, 0)
-lean(lumo, b0, 7)
+lean(lumo, b0, 26)
 lean(lumo, b0 + 0.18, -8)
 lean(lumo, b1, 0)
 show(burr, b0 + 0.05, True)

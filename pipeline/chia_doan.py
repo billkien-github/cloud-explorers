@@ -1,14 +1,14 @@
 """
 Đề xuất cách chia một cảnh thành các đoạn để sinh Seedance, mỗi đoạn một lần gọi API (quy tắc: 04_PRODUCTION/SEEDANCE.md,
 mục "Chia cảnh thành đoạn"):
-    python pipeline/chia_doan.py <timing.py của cảnh> [--max 15|30] [--duoi 0.5] [--so-cach 3]
+    python pipeline/chia_doan.py <timing.py của cảnh> [--max 30] [--duoi 0.5] [--so-cach 3]
 
 - Chỉ chia ở điểm cắt máy giữa hai cú liền nhau trong SHOTS, không bao giờ chia giữa một cú.
 - Mỗi đoạn: độ dài trong cảnh (SEGMENT) cộng phần đuôi (cú máy cuối giữ thêm, lúc dựng cắt bỏ) tối đa --max giây
   (15 cho dòng Seedance 2.0, 30 cho 2.5). SECONDS = SEGMENT + đuôi, làm tròn lên số nguyên, ít nhất 4.
 - Chọn ít đoạn nhất; cùng số đoạn thì ưu tiên đoạn ngắn nhất dài nhất có thể (không có đoạn vụn), rồi đoạn dài nhất ngắn
   nhất có thể (đều nhau). In vài cách tốt nhất, mỗi chỗ nối kèm ghi chú của hai cú máy hai bên để chọn theo nhịp truyện.
-- Cú máy nào một mình đã dài quá --max thì báo và thoát mã 1: thêm điểm cắt trong previz 2D, hay dùng 2.5 (hỏi người dùng).
+- Cú máy nào một mình đã dài quá --max thì báo và thoát mã 1: thêm điểm cắt trong previz 2D.
 Chỉ dùng thư viện chuẩn, không cần Blender.
 """
 import argparse
@@ -67,7 +67,7 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description="Đề xuất cách chia cảnh thành các đoạn sinh Seedance")
     ap.add_argument("timing")
-    ap.add_argument("--max", type=int, default=15, help="giây tối đa mỗi lần sinh: 15 (dòng 2.0) hay 30 (2.5)")
+    ap.add_argument("--max", type=int, default=30, help="giây tối đa mỗi lần sinh (Seedance 2.5: 30)")
     ap.add_argument("--duoi", type=float, default=0.5, help="giây giữ thêm cú máy cuối mỗi đoạn, lúc dựng cắt bỏ")
     ap.add_argument("--so-cach", type=int, default=3)
     a = ap.parse_args()
