@@ -55,6 +55,14 @@ Concept: `02_ASSET_LIBRARY/Props/<Tên>/concept/`.
 
 **Story Lens cho manh mối thế nào** (giữ nguyên mọi tập): Nori cầm cán, đưa mặt kính lên trước mắt, nhìn một thứ. Bình thường nhìn qua kính chỉ thấy mọi thứ to hơn một chút, ánh tím nhạt, như qua kính lúp. Nhìn vào thứ đang giấu một bí ẩn mà Nori muốn hiểu, mặt kính sáng lên và hiện **một hình gợi ý**: hình vẽ đơn giản kiểu tranh sách truyện, một vật hay một ý (cái bập bênh, bông tuyết), không chữ, không mũi tên. Khán giả thấy hình qua cú cận mặt kính. Hình giữ vài giây rồi mờ đi; nhìn lại đúng thứ đó chỉ hiện lại hình cũ, không thêm gì. Hình chỉ gợi ý, không phải câu trả lời: Nori phải tự nối hình với những gì quanh mình. Kính không chỉ đường, không chiếu hình ra ngoài, không làm vật bên ngoài sáng lên, không đọc chữ, không báo nguy hiểm, không cho thấy tương lai. Hòn đảo Wonder Hub lóe xanh ngọc thì mặt kính lóe xanh ngọc cùng nhịp (Season 0, như Wonder Compass). Story Lens trông như kính lúp nên không bao giờ hướng về phía mặt trời, và nằm trong nắng cũng không hội tụ thành chấm sáng trên giấy hay vật nào (trẻ không bắt chước soi kính lúp ngoài nắng).
 
+**Inventor Pack hoạt động thế nào** (giữ nguyên mọi tập):
+- **Mở:** Tavi nói cái máy cần làm gì, đặt ba lô xuống rồi xoay biểu tượng bánh răng ở túi trước. Cuộn bản vẽ trên nóc trải ra, nét sáng xanh ngọc tự vẽ bản vẽ của cái máy đó (chỉ có hình, không có chữ). Nắp bật, dụng cụ và linh kiện bung ra như hoa nở, đúng những thứ trong bản vẽ.
+- **Lắp:** ba lô không tự lắp. Tavi lắp bằng tay theo bản vẽ, máy càng to càng lâu.
+- **Mỗi lần một máy:** đang có một máy thì ba lô chỉ cho thêm bộ phận của chính máy đó (nắp che nút đỏ, móc ròng rọc ở tập 01). Xoay để lấy máy khác thì chỉ có tiếng PHỤT, hai ống tinh thể nháy hai lần. Xoay ngược biểu tượng thì máy đang có tự tháo ra, mọi linh kiện của ba lô bay về ba lô, đồ không phải của ba lô rơi lại tại chỗ. Tháo xong mới lắp được máy khác.
+- **Hay lỗi:** linh kiện đôi khi thiếu hay thừa một món (tập 01 thiếu đúng một bánh răng); lắp sai một chỗ thì máy chạy lệch ý. Lỗi chỉ lộ ra khi chạy thử. Tavi tìm lỗi bằng cách so máy với bản vẽ.
+- Máy chạy bằng lõi tinh thể: không dây điện, không ổ cắm, không tia lửa điện.
+- Đài thiên văn trên hòn đảo Wonder Hub lóe xanh ngọc thì hai ống tinh thể lóe theo cùng nhịp. Ở EP000B, lần đầu hòn đảo lóe từ khi ba lô ở với Tavi, cuộn bản vẽ còn tự trải ra, phác một cỗ máy khổng lồ rồi chỉ còn hình đài thiên văn. Ngoài lúc đó, ba lô chỉ vẽ cái máy Tavi nói ra. Ba lô không chỉ đường, không báo nguy hiểm.
+
 ## Diễn
 
 Dựng model, rig từng nhân vật (bộ phận nào làm riêng, bộ phận nào chuyển động), bộ ảnh tham chiếu và prompt ChatGPT: `02_ASSET_LIBRARY/MODELING.md`.
@@ -62,3 +70,5 @@ Dựng model, rig từng nhân vật (bộ phận nào làm riêng, bộ phận 
 **Giới hạn khi diễn:** tay Lumo rất ngắn so với đầu (vai tới cổ tay chỉ 0.22 m), chỉ với tới ngang cằm: không gãi đầu, che mắt, ôm đầu hay vỗ tay trước miệng được; tay giơ cao nhất chỉ tới ngang tai. Động tác ngượng, bối rối dùng nhún vai, xòe tay, cụp tai, nghiêng đầu.
 
 Nori: tay ngắn mọc ở nửa dưới thân tròn, cầm được vật nhỏ bằng một tay, sách nhỏ hay một trang giấy bằng hai tay; đưa Story Lens lên trước mắt bằng cách cầm cán giơ lên. Không chân: không đứng, không ngồi, dừng thì lơ lửng. Không có túi: Story Lens luôn cầm trong tay, cần hai tay thì đặt kính xuống trước. Cảm xúc dùng cánh (rũ xuống, vỗ nhanh), râu sao (cụp, sáng lóe), nghiêng thân.
+
+Tay Tavi cũng ngắn, đầu lại rộng hơn hai vai (bộ cutout: vai ở độ cao 0.36, vai tới bàn tay 0.21, kính bảo hộ trên mũ ở khoảng 0.75): tay giơ cao nhất tới ngang mõm, không với tới mắt, kính, mũ hay đỉnh đầu. Gãi cằm được. Kính bảo hộ lên xuống bằng đầu: gật mạnh một cái thì kính trượt từ mũ xuống mắt (CẠCH), hất đầu ra sau thì kính bật lên mũ. Đội lại kính: cầm dây kính ngang ngực, cúi đầu chui vào rồi ngẩng lên. Đồ rơi lên đầu thì lắc đầu cho văng ra.

@@ -10,13 +10,12 @@ Diễn dựng cho cả cảnh để các đoạn nối liền; khung 1 của đo
 trong đoạn. Tên phim không dựng (thêm ở hậu kỳ; chữ lọt vào video dẫn sẽ lọt vào take).
 Toạ độ (m): đất (mặt đường rừng) ở Z 0, máy quay phía -Y nhìn về +Y, trục X theo previz 2D: Lumo đi ra từ lối rẽ trong rừng (-2.62, Y 2.8), rẽ phải, dừng 1.68
 trước bụi gai (2.5), vách đá từ 2.75; chú chim trên cành ngay trên đường (1.3, -0.15, cao 1.2), trước mặt Lumo khi Lumo
-quay lại; đường rẽ vào rừng (về +Y) ở -3.5…-2.6; mép dốc lá khô -3.85, chân dốc nền rêu Z -1.3 ở -7.2; đống lá -7.3;
-phiến đá rêu con bướm đậu -8.05 (phía trước, Y -0.1); phiến đá có ánh vàng -9.35 trên bậc đá chân tường (Y 0.55; ẩn tới GOLD_GLOW); tường
-phế tích từ -9 sang trái (Y 0.9–1.3). Hướng nhìn phải 62°, trái -62°: quay giữa hai hướng luôn đi qua mặt trước.
+quay lại; đường rẽ vào rừng (về +Y) ở -3.5…-2.6. Dốc lá khô, đống lá, phiến đá rêu, phiến đá có ánh vàng (ẩn tới
+GOLD_GLOW), tường phế tích dùng chung với Cảnh 2: ruins_blocks.py. Hướng nhìn phải 62°, trái -62°: quay giữa hai hướng
+luôn đi qua mặt trước.
 Hai cú cận bản đồ (S2, S6) là cú nhìn của Lumo: máy đặt ở chỗ mắt, đầu Lumo ẩn trong hai cú này.
 Màu: Lumo cam, chú chim nâu (mỗi nhân vật một màu, ô trắng = hướng mặt); bối cảnh, đạo cụ xám; bướm, ánh vàng phát sáng.
 """
-import importlib.util
 import math
 import pathlib
 import sys
@@ -27,52 +26,13 @@ from mathutils import Vector
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = next(p for p in HERE.parents if (p / "CLAUDE.md").exists())
-sys.path.insert(0, str(ROOT / "pipeline"))
+sys.path[:0] = [str(ROOT / "pipeline"), str(HERE)]
 from blocks import *  # noqa: E402,F403  khối, vật liệu, nhân vật dạng khối, keyframe theo giây, máy quay
+from ruins_blocks import LOW_Z, PILE_AT, STONE_TOP, bfly, build_ruins, flap, ground_z  # noqa: E402
 
 RIGHT, LEFT = 62, -62
 HOLD = 1 / 24                                                    # một khung: key ẩn và key hiện cách nhau ít hơn thì rơi vào cùng khung
-LOW_Z = -1.3                                                     # nền rêu dưới chân dốc
-SLOPE = [(-3.85, 0.0), (-3.95, -0.01), (-4.05, -0.04), (-4.15, -0.08), (-4.3, -0.14), (-6.6, -1.18), (-6.8, -1.25),
-         (-7.0, -1.29), (-7.2, LOW_Z)]                           # mép tròn, dốc thoải khoảng 25°, chân dốc êm
 BIRD_AT = Vector((1.3, -0.15, 1.2))
-PILE_AT = Vector((-7.3, 0.0, LOW_Z))
-STONE_TOP = Vector((-8.03, -0.1, LOW_Z + 0.22))
-GLOW_AT = Vector((-9.35, 0.55, LOW_Z + 0.2))
-
-
-def load_timing(timing):
-    spec = importlib.util.spec_from_file_location("canh01_timing", ROOT / timing)
-    tm = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(tm)
-    return tm
-
-
-def ground_z(x):
-    if x >= SLOPE[0][0]:
-        return 0.0
-    for (x0, z0), (x1, z1) in zip(SLOPE, SLOPE[1:]):
-        if x1 <= x <= x0:
-            return z0 + (z1 - z0) * (x - x0) / (x1 - x0)
-    return LOW_Z
-
-
-def yaw_to(src, dst):
-    """Hướng (yaw) để nhìn từ src tới dst: 0 = -Y, 90 = +X."""
-    return math.degrees(math.atan2(dst[0] - src[0], -(dst[1] - src[1])))
-
-
-def prism(profile, y0, y1, bm=None):
-    """Khối lăng trụ: đa giác (x, z) kéo dài theo Y từ y0 tới y1."""
-    bm = bm or bmesh.new()
-    a = [bm.verts.new((x, y0, z)) for x, z in profile]
-    b = [bm.verts.new((x, y1, z)) for x, z in profile]
-    bm.faces.new(list(reversed(a)))
-    bm.faces.new(b)
-    n = len(profile)
-    for i in range(n):
-        bm.faces.new((a[i], a[(i + 1) % n], b[(i + 1) % n], b[i]))
-    return bm
 
 
 def tri_bm(w, h, th, center=(0, 0, 0), bm=None):
@@ -89,87 +49,29 @@ def tri_bm(w, h, th, center=(0, 0, 0), bm=None):
     return bm
 
 
-def rod(name, p0, p1, r, mat, col, cone_top=None):
-    """Trụ từ p0 tới p1 (thân cây, cành)."""
-    p0, p1 = Vector(p0), Vector(p1)
-    ob = add_obj(name, cyl_bm(r, (p1 - p0).length, cone_top=cone_top), mat, col, loc=(p0 + p1) / 2)
-    ob.rotation_mode = "QUATERNION"
-    ob.rotation_quaternion = (p1 - p0).to_track_quat("Z", "Y")
-    return ob
-
-
-class Act:
-    """Giữ (nghiêng, lăn, hướng) và vị trí của gốc nhân vật để mỗi key ghi đủ ba trục. Gọi theo thứ tự thời gian."""
-
-    def __init__(self, rig, x, y, yaw):
-        self.r, self.x, self.y, self.z, self.yaw, self.lean, self.roll = rig, x, y, 0.0, yaw, 0.0, 0.0
-
-    def pose(self, t, lean=None, yaw=None, roll=None):
-        self.lean = self.lean if lean is None else lean
-        self.yaw = self.yaw if yaw is None else yaw
-        self.roll = self.roll if roll is None else roll
-        rot(self.r.root, [(t, (self.lean, self.roll, self.yaw))])
-
-    def go(self, t, x=None, z=0.0, y=None):
-        self.x = self.x if x is None else x
-        self.y = self.y if y is None else y
-        self.z = z
-        key(self.r.root, "location", t, Vector((self.x, self.y, z)))
-
-
 def build(timing, offset, seconds, out_blend, segment=None):
     """seconds: độ dài video render (số nguyên giây Seedance nhận); segment: độ dài đoạn trong cảnh. Từ segment tới
     seconds chỉ giữ cú máy cuối (diễn vẫn chạy tiếp), lúc dựng cắt bỏ."""
     segment = seconds if segment is None else segment
-    tm = load_timing(timing)
+    tm = load_timing(ROOT / timing)
     start(tm.FPS, seconds, offset)
     T_END = tm.SECONDS
     S = {n: (a, b) for n, a, b in tm.SHOTS}
 
     # ============================================================ bối cảnh
-    grey = material("M_Ground", (0.42, 0.41, 0.39), 0.9)
+    W = build_ruins()                                               # rừng mây, dốc lá khô, phế tích: ../ruins_blocks.py
+    glow, pile = W.glow, W.pile
+    moss_m, litter_m, trunk_m, canopy_m = W.mats.moss, W.mats.litter, W.mats.trunk, W.mats.canopy
     path_m = material("M_Path", (0.75, 0.73, 0.68), 0.9)
-    moss_m = material("M_MossStone", (0.27, 0.29, 0.26), 0.9)
-    litter_m = material("M_LeafLitter", (0.26, 0.25, 0.24), 0.95)
     cliff_m = material("M_Cliff", (0.5, 0.49, 0.47), 0.9)
     bush_m = material("M_Bush", (0.3, 0.31, 0.3), 0.9)
-    trunk_m = material("M_Trunk", (0.27, 0.26, 0.25), 0.9)
-    canopy_m = material("M_Canopy", (0.46, 0.47, 0.45), 0.9)
-    stone_m = material("M_Stone", (0.6, 0.59, 0.57), 0.8)
-    island_m = material("M_Island", (0.52, 0.51, 0.5), 0.9)
-    sea_m = material("M_CloudSea", (0.86, 0.88, 0.9), 0.9, emit=((0.9, 0.92, 0.95), 0.4))
-    fall_m = material("M_Waterfall", (0.85, 0.88, 0.92), 0.5, emit=((0.9, 0.93, 0.96), 0.4))
     prop = material("M_Prop", (0.78, 0.78, 0.78), 0.6)
     prop_dark = material("M_PropDark", (0.12, 0.12, 0.13), 0.6)
-    gold_m = material("M_GoldGlow", (1.0, 0.75, 0.15), 0.3, emit=((1.0, 0.7, 0.1), 5.0))
-    step_m = material("M_StepDark", (0.33, 0.32, 0.3), 0.9)       # bậc đá, phiến đá sẫm để viền vàng nổi lên
-    bfly_m = material("M_Butterfly", (1.0, 0.55, 0.45), 0.4, emit=((1.0, 0.5, 0.4), 1.3))
     bird_m = material("M_Bird_Brown", (0.32, 0.15, 0.06), 0.6)
 
-    add_obj("Ground", box_bm((18.0, 18.0, 1.0), (5.08, -1.0, -0.5)), grey, "SET")                # X -3.85…14, Y -10…8
-    add_obj("Slope", prism(SLOPE + [(-7.2, -2.5), (-3.85, -2.5)], -10.0, 8.0), grey, "SET")
-    add_obj("Lowland", box_bm((9.0, 18.0, 1.0), (-11.7, -1.0, LOW_Z - 0.5)), grey, "SET")
-    add_obj("SlopeLeaves", prism([(x + 0.0, z + 0.02) for x, z in SLOPE[1:-1]] + [(x, z - 0.05) for x, z in reversed(SLOPE[1:-1])],
-                                 -2.5, 3.0), litter_m, "SET")      # lớp lá khô dày phủ kín sườn dốc
     add_obj("Path", box_bm((6.25, 0.9, 0.02), (-0.425, 0.0, 0.0)), path_m, "SET")               # đường rừng X -3.55…2.7
     fork = add_obj("PathFork", box_bm((0.8, 6.0, 0.02), (0, 3.0, 0.0)), path_m, "SET", loc=(-3.05, 0.4, 0.002))
     fork.rotation_euler = (0, 0, math.radians(-12))                 # đường rẽ vào rừng; mép dốc ở thẳng phía trước
-    add_obj("CloudSea", box_bm((120.0, 80.0, 0.1), (0, 50.0, -4.0)), sea_m, "SET")             # biển mây sau mép đảo (Y 8)
-    bm = None
-    ISL = ((-3.0, 26.0, 11.0, 4.5), (7.0, 30.0, 13.5, 3.2), (1.5, 34.0, 16.0, 2.0), (-11.0, 28.0, 9.0, 3.0))   # giữa khung lúc máy ngửa
-    for cx, cy, cz, s in ISL:
-        bm = cyl_bm(0.0, s * 1.4, (cx, cy, cz - s * 0.7), bm=bm, cone_top=s, segs=12)          # đảo lơ lửng: nón chúc xuống
-        bm = sphere_bm(s, (cx, cy, cz), (1.0, 1.0, 0.2), bm=bm, segs=12)
-    add_obj("Islands", bm, island_m, "SET")
-    bm = None
-    for cx, cy, cz, s in (ISL[0], ISL[1], ISL[3]):
-        bm = box_bm((0.5 * s, 0.2, cz + 4.0), (cx + 0.5 * s, cy - 0.3 * s, (cz - 4.0) / 2), bm=bm)   # thác đổ xuống biển mây
-    add_obj("Waterfalls", bm, fall_m, "SET")
-    for i, (x, y, h, r) in enumerate(((-3.2, 1.6, 1.3, 0.6), (-1.85, 1.9, 1.1, 0.5), (-0.55, 1.5, 1.4, 0.62), (-5.0, 3.0, 1.5, 0.7),
-                                      (2.0, 3.5, 1.6, 0.7), (-2.5, 4.5, 1.5, 0.7), (0.8, 5.0, 1.6, 0.8), (-6.0, 2.2, 1.2, 0.55))):
-        z0 = ground_z(x) if y < 2.5 else 0.0
-        rod(f"Tree{i}_Trunk", (x, y, z0 - 0.1), (x + 0.05, y, z0 + h), 0.09, trunk_m, "SET")
-        add_obj(f"Tree{i}_Canopy", sphere_bm(r, (x + 0.05, y, z0 + h + r * 0.5), (1.3, 1.0, 0.75)), canopy_m, "SET")
     # cây có cành chú chim đậu: cành vươn ra ngay trên đường, trước mặt Lumo lúc Lumo quay lại
     rod("BirdTree_Trunk", (0.55, 0.85, -0.1), (0.6, 0.85, 1.8), 0.11, trunk_m, "SET")
     add_obj("BirdTree_Canopy", sphere_bm(0.8, (0.6, 0.85, 2.2), (1.3, 1.0, 0.6)), canopy_m, "SET")
@@ -187,30 +89,6 @@ def build(timing, offset, seconds, out_blend, segment=None):
         bm = sphere_bm(r, (cx, cy, cz), bm=bm, segs=16)
     bush = add_obj("Bush", bm, bush_m, "SET")
     add_obj("TripStone", sphere_bm(0.1, (1.8, -0.02, 0.0), scale=(1.0, 0.9, 0.6), segs=12), moss_m, "SET")   # hòn đá Lumo vấp: sẫm, đủ to để thấy trên mặt đường sáng
-    # phế tích cổ dưới chân dốc, cây cối phủ; bậc đá, phiến đá có ánh vàng, phiến đá rêu, đống lá
-    add_obj("Ruins_Wall", box_bm((3.6, 0.4, 1.42), (-10.8, 1.1, LOW_Z + 0.71)), stone_m, "SET")
-    bm = None
-    for cx, cz, w, h in ((-9.3, 0.0, 0.6, 0.3), (-10.4, 0.15, 0.8, 0.25), (-11.8, 0.05, 0.9, 0.3)):
-        bm = box_bm((w, 0.42, h), (cx, 1.05, cz), bm=bm)            # đá đỉnh tường lởm chởm
-    add_obj("Ruins_Top", bm, stone_m, "SET")
-    rod("RuinTree_Trunk", (-10.3, 1.5, LOW_Z), (-10.25, 1.5, 0.9), 0.22, trunk_m, "SET")
-    add_obj("RuinTree_Canopy", sphere_bm(1.0, (-10.25, 1.5, 1.3), (1.4, 1.0, 0.6)), canopy_m, "SET")
-    rod("RuinTree_Root", (-10.1, 1.35, 0.1), (-9.4, 0.9, -0.8), 0.06, trunk_m, "SET")             # rễ phủ qua tường
-    add_obj("Step", box_bm((1.1, 0.6, 0.16), (-9.2, 0.6, LOW_Z + 0.08)), step_m, "SET")
-    add_obj("Slab", box_bm((0.42, 0.3, 0.06), (GLOW_AT.x, GLOW_AT.y, LOW_Z + 0.21)), step_m, "SET")
-    glow = add_obj("GoldGlow", box_bm((0.6, 0.48, 0.02)), gold_m, "PROPS", loc=(GLOW_AT.x, GLOW_AT.y, LOW_Z + 0.165))   # dưới phiến đá
-    add_obj("MossStone", sphere_bm(0.22, (-8.05, -0.1, LOW_Z), (1.0, 0.8, 1.0)), moss_m, "SET")
-    pile = add_obj("LeafPile", sphere_bm(0.55, scale=(1.0, 0.8, 0.85)), litter_m, "SET", loc=PILE_AT)
-
-    sun = bpy.data.objects.new("Sun", bpy.data.lights.new("Sun", "SUN"))
-    COLS["SET"].objects.link(sun)
-    sun.data.energy, sun.data.angle = 3.5, math.radians(4)
-    sun.rotation_euler = (math.radians(50), 0, math.radians(-25))
-    world = bpy.data.worlds.new("Sky")
-    bpy.context.scene.world = world
-    world.use_nodes = True
-    world.node_tree.nodes["Background"].inputs["Color"].default_value = (0.50, 0.66, 0.92, 1)
-    world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.9
 
     # ============================================================ Lumo, đồ cầm tay, chú chim, bướm
     L = build_lumo((-3.8, 0.0, 0.0))
@@ -253,13 +131,6 @@ def build(timing, offset, seconds, out_blend, segment=None):
                      loc=(-0.045, 0.0, 0.065))                      # cánh phía máy quay: vỗ bụng, vỗ bay
     B.wing_far = add_obj("Bird_WingFar", box_bm((0.012, 0.05, 0.03), (0, 0.015, -0.02)), bird_m, "CAST", parent=B.root,
                          loc=(0.045, 0.0, 0.065))
-
-    def bfly(name):
-        root = empty(name, "CAST", loc=(0, 0, -20))
-        add_obj(name + "_Body", sphere_bm(0.012, scale=(1.0, 2.0, 1.0), segs=8), bfly_m, "CAST", parent=root)
-        wings = [add_obj(f"{name}_Wing{s:+d}", box_bm((0.035, 0.03, 0.003), (s * 0.018, 0, 0)), bfly_m, "CAST", parent=root)
-                 for s in (-1, 1)]
-        return root, wings
 
     bflies = [bfly(f"Butterfly{i}") for i in range(4)]
     for root, _ in bflies[:3]:
@@ -317,13 +188,6 @@ def build(timing, offset, seconds, out_blend, segment=None):
             key(ob, "scale", S["S6"][0], Vector((1, 1, 1)))
             key(ob, "scale", S["S6"][1] - HOLD, Vector((1, 1, 1)))
             key(ob, "scale", S["S6"][1], Vector((0, 0, 0)))
-
-    def flap(wings, t0, t1, period=0.14, lo=-50, hi=50):
-        t, i = t0, 0
-        while t <= t1 + 1e-6:
-            for w, s in zip(wings, (-1, 1)):
-                rot(w, [(t, (0, s * (hi if i % 2 else lo), 0))])
-            t, i = t + period / 2, i + 1
 
     # ============================================================ Lumo: rừng mây, bụi gai
     w0, w1 = tm.LUMO_WALK_IN

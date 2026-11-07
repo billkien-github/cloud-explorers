@@ -6,6 +6,7 @@ Bộ khối 3D cho previz dẫn Seedance (quy ước: 04_PRODUCTION/SEEDANCE.md,
   quay đặt ở -Y), 90 = nhìn +X, 180 = nhìn +Y, 270 = nhìn -X. Nghiêng (X) dương = chồm về phía trước mặt.
 - Keyframe theo giây: fr(t) = khung của t trong cảnh - khung của T0 + 1, T0 = giây trong cảnh của khung 1 (đoạn cắt ra
   từ một cảnh dài).
+- Diễn: nạp timing.py (load_timing), Act giữ vị trí và (nghiêng, lăn, hướng) của gốc nhân vật, yaw_to, wag, steps.
 - Máy quay theo SHOTS (mỗi shot một camera, cắt bằng timeline marker), kiểm tra nhân vật trong khung, cài đặt render.
 Dùng: blocks.start(fps, seconds, offset), dựng bối cảnh, gọi build_lumo()…, diễn bằng key/rot, cameras(), finish().
 """
@@ -130,6 +131,28 @@ def cyl_bm(radius, depth, center=(0, 0, 0), axis="Z", bm=None, cone_top=None, se
     return bm
 
 
+def prism(profile, y0, y1, bm=None):
+    """Khối lăng trụ: đa giác (x, z) kéo dài theo Y từ y0 tới y1."""
+    bm = bm or bmesh.new()
+    a = [bm.verts.new((x, y0, z)) for x, z in profile]
+    b = [bm.verts.new((x, y1, z)) for x, z in profile]
+    bm.faces.new(list(reversed(a)))
+    bm.faces.new(b)
+    n = len(profile)
+    for i in range(n):
+        bm.faces.new((a[i], a[(i + 1) % n], b[(i + 1) % n], b[i]))
+    return bm
+
+
+def rod(name, p0, p1, r, mat, col, cone_top=None):
+    """Trụ từ p0 tới p1 (thân cây, cành)."""
+    p0, p1 = Vector(p0), Vector(p1)
+    ob = add_obj(name, cyl_bm(r, (p1 - p0).length, cone_top=cone_top), mat, col, loc=(p0 + p1) / 2)
+    ob.rotation_mode = "QUATERNION"
+    ob.rotation_quaternion = (p1 - p0).to_track_quat("Z", "Y")
+    return ob
+
+
 # ================================================================ bốn nhân vật dạng khối
 def cast_materials():
     return {
@@ -240,6 +263,39 @@ def build_piko(loc):
 
 
 # ================================================================ diễn: vài động tác dùng chung
+def load_timing(path):
+    """Nạp timing.py của cảnh (đường dẫn tuyệt đối) thành module."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(f"timing_{abs(hash(str(path)))}", path)
+    tm = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tm)
+    return tm
+
+
+def yaw_to(src, dst):
+    """Hướng (yaw) để nhìn từ src tới dst: 0 = -Y, 90 = +X."""
+    return math.degrees(math.atan2(dst[0] - src[0], -(dst[1] - src[1])))
+
+
+class Act:
+    """Giữ (nghiêng, lăn, hướng) và vị trí của gốc nhân vật để mỗi key ghi đủ ba trục. Gọi theo thứ tự thời gian."""
+
+    def __init__(self, rig, x, y, yaw):
+        self.r, self.x, self.y, self.z, self.yaw, self.lean, self.roll = rig, x, y, 0.0, yaw, 0.0, 0.0
+
+    def pose(self, t, lean=None, yaw=None, roll=None):
+        self.lean = self.lean if lean is None else lean
+        self.yaw = self.yaw if yaw is None else yaw
+        self.roll = self.roll if roll is None else roll
+        rot(self.r.root, [(t, (self.lean, self.roll, self.yaw))])
+
+    def go(self, t, x=None, z=0.0, y=None):
+        self.x = self.x if x is None else x
+        self.y = self.y if y is None else y
+        self.z = z
+        key(self.r.root, "location", t, Vector((self.x, self.y, z)))
+
+
 def wag(ob, t0, t1, period, amp, base=(0, 0, 0), axis=2):
     t, s = t0, 1
     while t < t1:

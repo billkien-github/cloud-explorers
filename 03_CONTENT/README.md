@@ -108,6 +108,13 @@ Mỗi bước xong thì chạy `/review` trước khi chốt (`.claude/skills/re
 
 **Thoại:** ngắn, ít chơi chữ, để lồng tiếng Việt và Anh không mất ý. Mỗi nhân vật nói đúng chất trong Character Bible.
 
+**Soát trước khi review kịch bản:**
+- Bảo bối hay máy có luật nhiều vế (mở thế nào, đồ nào bay về, đồ nào rơi lại): lập bảng mọi lần dùng trong tập theo bước 3 mục "Sửa và review lại" của `.claude/skills/review/SKILL.md`, kiểm cả vế phụ. Ví dụ EP000B bản nháp 1: lần mở ba lô thứ hai quên nói tên máy; con ốc thừa là linh kiện của ba lô mà không bay về khi tháo; kính đáng lẽ rơi tại chỗ lại rơi trúng mũ Tavi.
+- Động tác lặp lại (câu hô, nghi thức trước mỗi lần làm) phải nằm trong tầm với của nhân vật. Nhân vật chưa có dòng trong "Giới hạn khi diễn" của Character Bible thì đo trên concept hay bộ cutout, ghi vào đó rồi mới viết. Ví dụ EP000B: "kéo kính xuống" trước mỗi câu đếm trong khi tay Tavi không với tới mũ.
+- Đạo cụ có trạng thái (kính trên mũ hay trên mắt, ba lô đang đeo hay đặt ở đâu, cuộn giấy mở hay cuộn) và vị trí nhân vật: lập bảng theo thứ tự dòng, mỗi dòng ghi trạng thái trước và sau, kiểm cả dòng chỉ thêm một cái gật đầu hay một bước chân; đồ vật không tự đổi chỗ, phải có dòng mang nó đi. Chỗ nấp, chỗ che, chỗ với tới đo theo kích thước thật của nhân vật (đầu to gần nửa chiều cao, tay ngắn: Character Bible). Ví dụ EP000B bản nháp 2: Tavi gật cho kính xuống khi kính đang trên mắt; nấp sau bức tường ngang ngực mà đầu vẫn nhô lên; đổ đồ vào phễu trên nóc máy cao gấp đôi mình; đặt ba lô ra sân khi ba lô còn ở sau tường.
+- Gag trong 10 giây đầu: cộng thời lượng từng nhịp trước gag (cảnh toàn, giới thiệu, động tác, thoại); quá thì gộp cú, cho đạo cụ nằm sẵn. Ví dụ EP000B: lát bánh thò sẵn ở khe thay cho cảnh đặt bánh, xoa tay.
+- Máy hay đồ vật trông giống đồ gia dụng thật (máy nướng bánh, quạt…) phải cho thấy nguồn chạy kỳ ảo và lúc đã tắt trước khi nhân vật mở hay chạm vào bên trong. Nhân vật đứng xem hay nấp ở ngoài tầm với của máy đang chạy.
+
 ## Thư mục
 
 | Thư mục | Nội dung |
